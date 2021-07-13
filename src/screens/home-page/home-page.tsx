@@ -3,10 +3,7 @@ import ContentSection from "../../components/generic/content-section/content-sec
 const HomePage = () => {
   return (
     <>
-      <ContentSection
-        title="Maznichko za teb"
-        subtitle="Kolkoto po-maznichko tolko po-dobre"
-      />
+      <ContentSection title="Spotify Playlists" />
 
       <ContentSection
         title="Suggested artists"
