@@ -28,6 +28,7 @@ module.exports = {
   rules: {
     "linebreak-style": "off",
     "react/require-default-props": "off",
+    "consistent-return": "off",
     "prettier/prettier": [
       "error",
       {

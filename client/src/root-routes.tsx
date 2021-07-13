@@ -18,8 +18,8 @@ const RootRoutes = () => {
         </Switch>
       ) : (
         <Switch>
-          <Route exact path="/" component={HomePage} />
           <Route exact path="/signin" component={SignIn} />
+          <Redirect to="/signin" />
         </Switch>
       )}
     </>
