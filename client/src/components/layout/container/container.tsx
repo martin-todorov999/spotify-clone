@@ -8,7 +8,7 @@ interface IProps {
 
 const Container = ({ children }: IProps) => {
   return (
-    <div className="bg-gray-800 flex flex-row relative h-full">
+    <div className="bg-gray-800 flex flex-row h-screen">
       <SideNavigation />
       <Content>{children}</Content>
     </div>

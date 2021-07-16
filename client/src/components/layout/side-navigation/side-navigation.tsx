@@ -24,7 +24,7 @@ export const navItems: INavItemProps[] = [
 
 const SideNavigation = () => {
   return (
-    <div className="bg-gray-900 px-2 py-4 w-64">
+    <div className="bg-gray-900 px-2 py-4 w-64 h-full hidden md:block">
       <SpotifyLogo />
 
       {navItems.map((item) => (
