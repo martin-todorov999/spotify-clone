@@ -14,12 +14,29 @@ const ContentSection = ({ title, subtitle }: IContentSectionProps) => {
       </div>
 
       <div className="grid grid-cols-auto-fit gap-10">
-        <ContentCard title="Toshiba" subtitle="Artist" />
-        <ContentCard title="Toshiba" subtitle="Artist" />
-        <ContentCard title="Toshiba" subtitle="Artist" />
-        <ContentCard title="Toshiba" subtitle="Artist" />
-        <ContentCard title="Toshiba" subtitle="Artist" />
-        <ContentCard title="Toshiba" subtitle="Artist" />
+        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
+        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
+        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
+
+        <ContentCard title="Playlist Name" subtitle="Playlist description" />
+        <ContentCard title="Playlist Name" subtitle="Playlist description" />
+        <ContentCard title="Playlist Name" subtitle="Playlist description" />
+
+        <ContentCard
+          title="Podcast Name"
+          subtitle="Podcast Description"
+          variant="podcast"
+        />
+        <ContentCard
+          title="Podcast Name"
+          subtitle="Podcast Description"
+          variant="podcast"
+        />
+        <ContentCard
+          title="Podcast Name"
+          subtitle="Podcast Description"
+          variant="podcast"
+        />
       </div>
     </div>
   );

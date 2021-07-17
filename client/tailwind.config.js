@@ -12,6 +12,12 @@ module.exports = {
     gridTemplateColumns: {
       "auto-fit": "repeat(auto-fit, minmax(13rem, 1fr))",
     },
+    minWidth: {
+      32: "8rem",
+    },
+    minHeight: {
+      32: "8rem",
+    },
   },
   variants: {
     extend: {},
