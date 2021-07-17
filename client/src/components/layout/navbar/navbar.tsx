@@ -1,7 +1,9 @@
+import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import Button from "../../generic/button/button";
 import IconButton from "../../generic/icon-button/icon-button";
+import SearchField from "../../generic/search-field/search-field";
 
 interface INavBarProps {
   isScrolled: boolean;
@@ -9,6 +11,12 @@ interface INavBarProps {
 
 const NavBar = ({ isScrolled }: INavBarProps) => {
   const history = useHistory();
+  const location = useLocation();
+  const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
+
+  useEffect(() => {
+    setShowSearchBar(location.pathname === "/search");
+  }, [location]);
 
   const handleBack = () => {
     history.goBack();
@@ -24,7 +32,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         isScrolled ? "bg-transparent" : "bg-gray-900"
       } top-0 sticky h-12 p-8 shadow-lg flex items-center justify-between transition duration-500 ease-out`}
     >
-      <div>
+      <div className="flex flex-row items-center">
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
@@ -42,6 +50,14 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         >
           <FaChevronRight />
         </IconButton>
+
+        {showSearchBar && (
+          <SearchField
+            autoFocus
+            wrapperClasses="ml-4"
+            placeholder="Artists, songs, or podcasts."
+          />
+        )}
       </div>
 
       <div>
