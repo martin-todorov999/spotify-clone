@@ -38,5 +38,7 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "import/no-extraneous-dependencies": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
   },
 };

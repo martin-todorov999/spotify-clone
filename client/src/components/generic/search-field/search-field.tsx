@@ -1,8 +1,10 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { VscChromeClose } from "react-icons/vsc";
 import _ from "lodash";
 import SpotifyWebApi from "spotify-web-api-node";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/reducers";
 
 interface ISearchFieldProps {
   wrapperClasses?: string;
@@ -17,14 +19,16 @@ const SearchField = ({
 }: ISearchFieldProps) => {
   const inputField = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  // const accessToken = "";
-  // const spotifyApi = new SpotifyWebApi({
-  //   clientId: "d1b6a57fb43949f5b15ff1f50e47e764",
-  // });
+  const [searchResults, setSearchResults] = useState([]);
+  const { accessToken } = useSelector((state: RootState) => state.session);
 
-  // useEffect(() => {
-
-  // }, [accessToken])
+  const spotifyApi = useMemo(
+    () =>
+      new SpotifyWebApi({
+        clientId: "d1b6a57fb43949f5b15ff1f50e47e764",
+      }),
+    []
+  );
 
   useEffect(() => {
     if (autoFocus && inputField.current) {
@@ -32,11 +36,27 @@ const SearchField = ({
     }
   }, [autoFocus]);
 
+  useEffect(() => {
+    if (accessToken) {
+      spotifyApi.setAccessToken(accessToken);
+    }
+  }, [accessToken, spotifyApi]);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
-  const handleSearch = _.debounce(() => {}, 500);
+  const handleSearch = _.debounce((query: string) => {
+    spotifyApi.searchTracks(query).then((res) => {
+      console.log(res);
+    });
+  }, 500);
+
+  useEffect(() => {
+    if (accessToken && inputValue) {
+      handleSearch(inputValue);
+    }
+  }, [inputValue, accessToken, handleSearch]);
 
   const handleClearInput = () => {
     setInputValue("");
