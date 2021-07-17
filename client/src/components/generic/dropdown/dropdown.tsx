@@ -65,7 +65,7 @@ const DropDown = ({ title, avatar, items }: IDropDownProps) => {
               key={item.title}
               type="button"
               onClick={item.onClick}
-              className="hover:bg-gray-600 py-2 px-4 rounded-md cursor-pointe text-left w-full h-full"
+              className="hover:bg-gray-600 py-2 px-4 rounded-md cursor-pointe text-left text-white w-full h-full"
             >
               {item.title}
             </button>

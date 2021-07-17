@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
+import { logOut } from "../../../redux/actions/session";
 import { RootState } from "../../../redux/reducers";
 import Button from "../../generic/button/button";
 import DropDown from "../../generic/dropdown/dropdown";
@@ -17,9 +18,10 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
   const location = useLocation();
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
   const { accessToken } = useSelector((state: RootState) => state.session);
+  const dispatch = useDispatch();
 
   const handleLogOut = () => {
-    console.log("LOG OUT");
+    dispatch(logOut());
   };
 
   const dropdownItems = [

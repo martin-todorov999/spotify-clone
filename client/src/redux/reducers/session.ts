@@ -1,20 +1,18 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = { sessionToken: null };
+const initialState = { accessToken: null };
 
 const sessionReducer = (
   state = initialState,
-  action: PayloadAction<string>
+  action: PayloadAction<string | null>
 ) => {
   switch (action.type) {
     case "LOG_IN":
       return {
         accessToken: action.payload,
       };
-    // case "LOG_OUT":
-    //   return {
-    //     accessToken: null,
-    //   };
+    case "LOG_OUT":
+      return initialState;
     default:
       return state;
   }

@@ -5,8 +5,8 @@ export const logIn = (accessToken: string) => {
   };
 };
 
-export const decrement = () => {
+export const logOut = () => {
   return {
-    type: "DECREMENT",
+    type: "LOG_OUT",
   };
 };
