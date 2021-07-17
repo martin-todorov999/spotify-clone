@@ -1,10 +1,8 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { VscChromeClose } from "react-icons/vsc";
-import _ from "lodash";
-import SpotifyWebApi from "spotify-web-api-node";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../redux/reducers";
+import { useDispatch } from "react-redux";
+import { setQuery } from "../../../redux/actions/search";
 
 interface ISearchFieldProps {
   wrapperClasses?: string;
@@ -12,55 +10,39 @@ interface ISearchFieldProps {
   autoFocus?: boolean;
 }
 
+export interface ISearchResult {
+  artist: string;
+  title: string;
+  uri: string;
+  albumUrl: string;
+}
+
 const SearchField = ({
   wrapperClasses,
   placeholder,
   autoFocus,
 }: ISearchFieldProps) => {
+  const dispatch = useDispatch();
   const inputField = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState<string>("");
-  const [searchResults, setSearchResults] = useState([]);
-  const { accessToken } = useSelector((state: RootState) => state.session);
 
-  const spotifyApi = useMemo(
-    () =>
-      new SpotifyWebApi({
-        clientId: "d1b6a57fb43949f5b15ff1f50e47e764",
-      }),
-    []
-  );
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleClearInput = () => {
+    setInputValue("");
+  };
+
+  useEffect(() => {
+    dispatch(setQuery(inputValue));
+  }, [inputValue, dispatch]);
 
   useEffect(() => {
     if (autoFocus && inputField.current) {
       inputField.current.focus();
     }
   }, [autoFocus]);
-
-  useEffect(() => {
-    if (accessToken) {
-      spotifyApi.setAccessToken(accessToken);
-    }
-  }, [accessToken, spotifyApi]);
-
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleSearch = _.debounce((query: string) => {
-    spotifyApi.searchTracks(query).then((res) => {
-      console.log(res);
-    });
-  }, 500);
-
-  useEffect(() => {
-    if (accessToken && inputValue) {
-      handleSearch(inputValue);
-    }
-  }, [inputValue, accessToken, handleSearch]);
-
-  const handleClearInput = () => {
-    setInputValue("");
-  };
 
   return (
     <form method="GET">

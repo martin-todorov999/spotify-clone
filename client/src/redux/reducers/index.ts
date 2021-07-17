@@ -1,12 +1,10 @@
 import { combineReducers } from "redux";
-import counterReducer from "./counter";
-import loggedReducer from "./isLogged";
+import searchReducer from "./search";
 import sessionReducer from "./session";
 
 const rootReducer = combineReducers({
-  counterReducer,
-  loggedReducer,
   session: sessionReducer,
+  search: searchReducer,
 });
 
 export default rootReducer;
