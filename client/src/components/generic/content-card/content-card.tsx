@@ -1,19 +1,31 @@
+import { useDispatch } from "react-redux";
 import useSortImages from "../../../hooks/utils/useSortImages";
+import { setTrackUri } from "../../../redux/actions/playback";
+import { clearQuery } from "../../../redux/actions/search";
 
 interface IContentCardProps {
   item: SpotifyApi.TrackObjectFull;
 }
 
 const ContentCard = ({ item }: IContentCardProps) => {
+  const images = useSortImages(item.album.images);
+  const dispatch = useDispatch();
+
   // let roundedVariant = "rounded-sm";
 
   // if (variant === "podcast") roundedVariant = "rounded-3xl";
   // if (variant === "artist") roundedVariant = "rounded-full";
 
-  const images = useSortImages(item.album.images);
+  const handlePlayTrack = () => {
+    // dispatch(clearQuery());
+    dispatch(setTrackUri(item.uri));
+  };
 
   return (
-    <div className="bg-gray-700 rounded-lg p-4 min-w-32 min-h-32 shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer flex flex-col">
+    <div
+      onClick={handlePlayTrack}
+      className="bg-gray-700 rounded-lg p-4 min-w-32 min-h-32 shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer flex flex-col"
+    >
       {/* <div
         style={{ paddingBottom: "100%" }}
         className={`bg-gray-500 ${roundedVariant} w-full relative mb-4`}
@@ -25,7 +37,9 @@ const ContentCard = ({ item }: IContentCardProps) => {
       />
       {/* </div> */}
       <h1 className="text-white">{item.name}</h1>
-      <h3 className="text-gray-400">{item.type}</h3>
+      <h3 className="text-gray-400">
+        {item.artists.map((artist) => artist.name).join(", ")}
+      </h3>
     </div>
   );
 };

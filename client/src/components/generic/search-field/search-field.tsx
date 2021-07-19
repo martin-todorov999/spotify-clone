@@ -1,8 +1,9 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { VscChromeClose } from "react-icons/vsc";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setQuery } from "../../../redux/actions/search";
+import { RootState } from "../../../redux/reducers";
 
 interface ISearchFieldProps {
   wrapperClasses?: string;
@@ -25,6 +26,7 @@ const SearchField = ({
   const dispatch = useDispatch();
   const inputField = useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = useState<string>("");
+  const { query } = useSelector((state: RootState) => state.search);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
@@ -37,6 +39,10 @@ const SearchField = ({
   useEffect(() => {
     dispatch(setQuery(inputValue));
   }, [inputValue, dispatch]);
+
+  useEffect(() => {
+    if (!query) setInputValue("");
+  }, [query]);
 
   useEffect(() => {
     if (autoFocus && inputField.current) {

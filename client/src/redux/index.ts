@@ -10,7 +10,7 @@ const composeEnhancers =
 
 const persistConfig = {
   key: "root",
-  whitelist: ["session"],
+  whitelist: ["session", "playback"],
   storage,
 };
 

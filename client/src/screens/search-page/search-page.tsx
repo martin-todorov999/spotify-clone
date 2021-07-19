@@ -18,11 +18,12 @@ const SearchPage = () => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
-  const handleSearch = _.debounce((searchQuery: string) => {
+  // Figure out how to debounce and cancel so as to only send 1 request
+  const handleSearch = (searchQuery: string) => {
     spotifyApi.searchTracks(searchQuery).then((res) => {
       setSearchResults(res.body.tracks?.items);
     });
-  }, 500);
+  };
 
   useEffect(() => {
     if (accessToken && query) {
