@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
+import spotifyApi from "../../../api";
 import { logOut } from "../../../redux/actions/session";
 import { RootState } from "../../../redux/reducers";
 import Button from "../../generic/button/button";
@@ -15,10 +16,12 @@ interface INavBarProps {
 
 const NavBar = ({ isScrolled }: INavBarProps) => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const location = useLocation();
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
-  const { accessToken } = useSelector((state: RootState) => state.session);
-  const dispatch = useDispatch();
+  const { accessToken, user } = useSelector(
+    (state: RootState) => state.session
+  );
 
   const handleLogOut = () => {
     dispatch(logOut());
@@ -85,24 +88,16 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
 
       <div>
         {!accessToken ? (
-          <>
-            <Button
-              title="Sign Up"
-              variant="link"
-              classes="hover:bg-gray-700 text-white mr-4"
-              href="https://accounts.spotify.com/authorize?client_id=d1b6a57fb43949f5b15ff1f50e47e764&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
-            />
-            <Button
-              title="Log In"
-              variant="link"
-              classes="bg-lime-600 hover:bg-lime-700 text-white"
-              href="https://accounts.spotify.com/authorize?client_id=d1b6a57fb43949f5b15ff1f50e47e764&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
-            />
-          </>
+          <Button
+            title="Log In"
+            variant="link"
+            classes="bg-lime-600 hover:bg-lime-700 text-white"
+            href="https://accounts.spotify.com/authorize?client_id=d1b6a57fb43949f5b15ff1f50e47e764&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-library-read%20user-library-modify%20user-top-read%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private%20playlist-modify-private%20playlist-modify-public"
+          />
         ) : (
           <DropDown
-            title="Firstname Lastname"
-            avatar="https://pickaface.net/gallery/avatar/unr_random_180410_1905_z1exb.png"
+            title={user?.display_name}
+            avatar={user?.images![0].url}
             items={dropdownItems}
           />
         )}

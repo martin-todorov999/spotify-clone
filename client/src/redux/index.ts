@@ -1,8 +1,9 @@
 import { createStore } from "redux";
-import { compose } from "@reduxjs/toolkit";
+import { applyMiddleware, compose } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistStore, persistReducer } from "redux-persist";
 import rootReducer from "./reducers";
+import handleRefreshToken from "./middleware";
 
 const composeEnhancers =
   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -14,7 +15,10 @@ const persistConfig = {
 };
 
 const persistantReducer = persistReducer(persistConfig, rootReducer);
-const store = createStore(persistantReducer, composeEnhancers());
+const store = createStore(
+  persistantReducer,
+  compose(applyMiddleware(handleRefreshToken), composeEnhancers())
+);
 const persistor = persistStore(store);
 
 export { persistor, store };

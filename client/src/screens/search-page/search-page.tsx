@@ -1,20 +1,12 @@
 import _ from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import SpotifyWebApi from "spotify-web-api-node";
+import spotifyApi from "../../api";
 import ContentCard from "../../components/generic/content-card/content-card";
-import ContentSection from "../../components/generic/content-section/content-section";
-import { ISearchResult } from "../../components/generic/search-field/search-field";
+import NoSearchResults from "../../components/search-page/no-search-results";
 import { RootState } from "../../redux/reducers";
 
 const SearchPage = () => {
-  const spotifyApi = useMemo(
-    () =>
-      new SpotifyWebApi({
-        clientId: "d1b6a57fb43949f5b15ff1f50e47e764",
-      }),
-    []
-  );
   const { query } = useSelector((state: RootState) => state.search);
   const [searchResults, setSearchResults] = useState<
     SpotifyApi.TrackObjectFull[] | undefined
@@ -22,20 +14,10 @@ const SearchPage = () => {
   const { accessToken } = useSelector((state: RootState) => state.session);
 
   useEffect(() => {
-    if (accessToken) {
-      spotifyApi.setAccessToken(accessToken);
-    }
-  }, [accessToken, spotifyApi]);
+    if (accessToken) spotifyApi.setAccessToken(accessToken);
+  }, [accessToken]);
 
   console.log(searchResults);
-
-  // const smallestAlbumImage = track.album.images.reduce((smallest, current) => {
-  //   if (current.height! < smallest.height!) {
-  //     return current;
-  //   }
-
-  //   return smallest;
-  // }, track.album.images[0]);
 
   const handleSearch = _.debounce((searchQuery: string) => {
     spotifyApi.searchTracks(searchQuery).then((res) => {
@@ -53,16 +35,21 @@ const SearchPage = () => {
   }, [query, accessToken]);
 
   return (
-    <>
-      {searchResults?.map((result) => (
-        <ContentCard
-          title={result.artists[0].name}
-          subtitle={result.type}
-          imageUrl={result.album.images[0].url}
-        />
-      ))}
+    <div className="flex flex-col items-center justify-center h-full w-full">
+      {searchResults?.length ? (
+        searchResults?.map((result) => (
+          <ContentCard
+            title={result.artists[0].name}
+            subtitle={result.type}
+            imageUrl={result.album.images[0].url}
+          />
+        ))
+      ) : (
+        <NoSearchResults query={query} />
+      )}
+
       {/* <ContentSection title="Your top genres" /> */}
-    </>
+    </div>
   );
 };
 

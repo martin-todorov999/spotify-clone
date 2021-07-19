@@ -1,18 +1,48 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = { accessToken: null };
+interface ISessionState {
+  accessToken: string | null;
+  refreshToken: string | null;
+  expiresIn: number | null;
+  accessTokenTimestamp: number | null;
+  user: SpotifyApi.CurrentUsersProfileResponse | null;
+}
+
+const initialState: ISessionState = {
+  accessToken: null,
+  refreshToken: null,
+  expiresIn: null,
+  accessTokenTimestamp: null,
+  user: null,
+};
 
 const sessionReducer = (
   state = initialState,
-  action: PayloadAction<string | null>
+  action: PayloadAction<ISessionState>
 ) => {
   switch (action.type) {
     case "LOG_IN":
       return {
-        accessToken: action.payload,
+        ...state,
+        accessToken: action.payload.accessToken,
+        refreshToken: action.payload.refreshToken,
+        expiresIn: action.payload.expiresIn,
+        accessTokenTimestamp: action.payload.accessTokenTimestamp,
+      };
+    case "REFRESH_TOKEN":
+      return {
+        ...state,
+        accessToken: action.payload.accessToken,
+        expiresIn: action.payload.expiresIn,
+        accessTokenTimestamp: action.payload.accessTokenTimestamp,
       };
     case "LOG_OUT":
       return initialState;
+    case "SET_USER":
+      return {
+        ...state,
+        user: action.payload.user,
+      };
     default:
       return state;
   }

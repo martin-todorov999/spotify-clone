@@ -7,8 +7,8 @@ export interface IDropDownItem {
 }
 
 interface IDropDownProps {
-  title: string;
-  avatar?: string;
+  title: string | undefined;
+  avatar?: string | undefined;
   items: IDropDownItem[];
 }
 
