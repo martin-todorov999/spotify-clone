@@ -1,4 +1,3 @@
-import { useDispatch } from "react-redux";
 import { Route, Switch } from "react-router";
 import useAuth from "./hooks/useAuth";
 import HomePage from "./screens/home-page/home-page";

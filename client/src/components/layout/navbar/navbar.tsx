@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
-import spotifyApi from "../../../api";
 import { logOut } from "../../../redux/actions/session";
 import { RootState } from "../../../redux/reducers";
 import Button from "../../generic/button/button";
@@ -97,7 +96,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         ) : (
           <DropDown
             title={user?.display_name}
-            avatar={user?.images![0].url}
+            avatar={user?.images && user?.images[0].url}
             items={dropdownItems}
           />
         )}
