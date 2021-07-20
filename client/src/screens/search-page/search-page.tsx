@@ -1,8 +1,7 @@
-import _ from "lodash";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import spotifyApi from "../../api";
-import ContentCard from "../../components/generic/content-card/content-card";
+import TrackCard from "../../components/generic/content-card/track-card";
 import ContentSection from "../../components/generic/content-section/content-section";
 import NoSearchResults from "../../components/search-page/no-search-results";
 import { RootState } from "../../redux/reducers";
@@ -39,7 +38,7 @@ const SearchPage = () => {
       {searchResults?.length ? (
         <ContentSection title="Search results">
           {searchResults?.map((result) => (
-            <ContentCard key={result.id} item={result} />
+            <TrackCard key={result.id} track={result} />
           ))}
         </ContentSection>
       ) : (

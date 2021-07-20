@@ -1,45 +1,32 @@
-import { useDispatch } from "react-redux";
-import useSortImages from "../../../hooks/utils/useSortImages";
-import { setTrackUri } from "../../../redux/actions/playback";
-import { clearQuery } from "../../../redux/actions/search";
-
 interface IContentCardProps {
-  item: SpotifyApi.TrackObjectFull;
+  title: string;
+  subtitle: string;
+  url: string;
+  roundedVariant: "rounded-sm" | "rounded-3xl" | "rounded-full";
+  onClick: () => void;
 }
 
-const ContentCard = ({ item }: IContentCardProps) => {
-  const images = useSortImages(item.album.images);
-  const dispatch = useDispatch();
-
-  // let roundedVariant = "rounded-sm";
-
-  // if (variant === "podcast") roundedVariant = "rounded-3xl";
-  // if (variant === "artist") roundedVariant = "rounded-full";
-
-  const handlePlayTrack = () => {
-    // dispatch(clearQuery());
-    dispatch(setTrackUri(item.uri));
-  };
-
+const ContentCard = ({
+  title,
+  subtitle,
+  url,
+  roundedVariant,
+  onClick,
+}: IContentCardProps) => {
   return (
     <div
-      onClick={handlePlayTrack}
-      className="bg-gray-700 rounded-lg p-4 min-w-32 min-h-32 shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer flex flex-col"
+      onClick={onClick}
+      className="bg-gray-700 flex flex-col rounded-lg h-full w-full p-4 shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer"
     >
-      {/* <div
-        style={{ paddingBottom: "100%" }}
-        className={`bg-gray-500 ${roundedVariant} w-full relative mb-4`}
-      > */}
       <img
         alt="media"
-        src={images[Math.round((images.length - 1) / 2) || 0].url}
-        className="h-full w-full object-contain"
+        src={url}
+        className={`min-w-32 min-h-32 mb-4 object-contain ${roundedVariant}`}
       />
-      {/* </div> */}
-      <h1 className="text-white">{item.name}</h1>
-      <h3 className="text-gray-400">
-        {item.artists.map((artist) => artist.name).join(", ")}
-      </h3>
+      <div className="flex flex-col line-clamp-2">
+        <h1 className="text-white font-semibold text-lg">{title}</h1>
+        <h3 className="text-gray-400 font-normal text-md">{subtitle}</h3>
+      </div>
     </div>
   );
 };

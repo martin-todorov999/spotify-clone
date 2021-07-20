@@ -18,32 +18,7 @@ const ContentSection = ({
         {subtitle && <h3 className="text-gray-400">{subtitle}</h3>}
       </div>
 
-      <div className="grid grid-cols-auto-fit gap-10">
-        {children}
-        {/* <ContentCard title="First Last" subtitle="Artist" variant="artist" />
-        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
-        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
-
-        <ContentCard title="Playlist Name" subtitle="Playlist description" />
-        <ContentCard title="Playlist Name" subtitle="Playlist description" />
-        <ContentCard title="Playlist Name" subtitle="Playlist description" />
-
-        <ContentCard
-          title="Podcast Name"
-          subtitle="Podcast Description"
-          variant="podcast"
-        />
-        <ContentCard
-          title="Podcast Name"
-          subtitle="Podcast Description"
-          variant="podcast"
-        />
-        <ContentCard
-          title="Podcast Name"
-          subtitle="Podcast Description"
-          variant="podcast"
-        /> */}
-      </div>
+      <div className="grid grid-cols-auto-fit gap-10">{children}</div>
     </div>
   );
 };

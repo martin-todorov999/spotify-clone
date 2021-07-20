@@ -47,4 +47,22 @@ app.post("/refresh", (req, res) => {
     });
 });
 
+app.get("/featured-playlists", (req, res) => {
+  spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
+    spotifyApi.setAccessToken(access_token);
+
+    spotifyApi
+      .getFeaturedPlaylists({ limit: 6, locale: "en" })
+      .then(({ body }) => {
+        res.json({
+          body,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.sendStatus(error.statusCode);
+      });
+  });
+});
+
 app.listen(6969);

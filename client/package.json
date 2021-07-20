@@ -5,6 +5,7 @@
   "dependencies": {
     "@craco/craco": "^6.1.2",
     "@reduxjs/toolkit": "^1.6.0",
+    "@tailwindcss/line-clamp": "^0.2.1",
     "@tailwindcss/postcss7-compat": "^2.1.4",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
