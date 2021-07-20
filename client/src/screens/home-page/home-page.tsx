@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import ContentCard from "../../components/generic/content-card/content-card";
 import PlaylistCard from "../../components/generic/content-card/playlist-card";
 import ContentSection from "../../components/generic/content-section/content-section";
 import { RootState } from "../../redux/reducers";

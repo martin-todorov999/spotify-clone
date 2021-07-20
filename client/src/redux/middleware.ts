@@ -17,15 +17,11 @@ const handleRefreshToken = (store: any) => (next: any) => (action: any) => {
         .post("http://localhost:6969/refresh", {
           refreshToken,
         })
-        .then((res) => {
+        .then(({ data }) => {
           const timestamp = new Date().getTime();
 
           store.dispatch(
-            refreshAccessToken(
-              res.data.accessToken,
-              res.data.expiresIn,
-              timestamp
-            )
+            refreshAccessToken(data.accessToken, data.expiresIn, timestamp)
           );
         });
     }

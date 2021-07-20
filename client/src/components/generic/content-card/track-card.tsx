@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import useSortImages from "../../../hooks/utils/useSortImages";
-import { setTrackUri } from "../../../redux/actions/playback";
+import { setUri } from "../../../redux/actions/playback";
 import ContentCard from "./content-card";
 
 interface ITrackCardProps {
@@ -13,7 +13,7 @@ const TrackCard = ({ track }: ITrackCardProps) => {
   const imageUrl = images[Math.round((images.length - 1) / 2) || 0].url;
 
   const handlePlayTrack = () => {
-    dispatch(setTrackUri(track.uri));
+    dispatch(setUri(track.uri));
   };
 
   return (

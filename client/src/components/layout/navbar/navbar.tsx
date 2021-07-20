@@ -24,6 +24,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
 
   const handleLogOut = () => {
     dispatch(logOut());
+    history.push("/");
   };
 
   const dropdownItems = [
@@ -61,7 +62,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } mr-4 transition duration-500 ease-out`}
+          } text-white mr-4 transition duration-500 ease-out`}
           onClick={handleBack}
         >
           <FaChevronLeft />
@@ -70,7 +71,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } transition duration-500 ease-out`}
+          } text-white transition duration-500 ease-out`}
           onClick={handleForward}
         >
           <FaChevronRight />

@@ -1,12 +1,12 @@
-export const setTrackUri = (uri: string) => {
+export const setUri = (uri: string) => {
   return {
-    type: "SET_TRACK_URI",
+    type: "SET_URI",
     payload: uri,
   };
 };
 
-export const clearTrackUri = () => {
+export const clearUri = () => {
   return {
-    type: "CLEAR_TRACK_URI",
+    type: "CLEAR_URI",
   };
 };

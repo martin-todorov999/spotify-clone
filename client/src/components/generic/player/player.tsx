@@ -1,23 +1,25 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SpotifyPlayer from "react-spotify-web-playback";
 import { RootState } from "../../../redux/reducers";
 
 const Player = () => {
   const { accessToken } = useSelector((state: RootState) => state.session);
-  const { trackUri } = useSelector((state: RootState) => state.playback);
+  const { uri } = useSelector((state: RootState) => state.playback);
   const [play, setPlay] = useState<boolean>(false);
 
   useEffect(() => {
     setPlay(true);
-  }, [trackUri]);
+  }, [uri]);
 
-  return accessToken && trackUri ? (
+  return accessToken && uri ? (
     <div className="absolute bottom-0 w-full">
       <SpotifyPlayer
-        token={accessToken}
-        uris={[trackUri]}
+        // autoPlay
         showSaveIcon
+        syncExternalDevice
+        token={accessToken}
+        uris={[uri]}
         play={play}
         callback={(state) => {
           if (!state.isPlaying) setPlay(false);
