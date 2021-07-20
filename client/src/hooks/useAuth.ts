@@ -1,12 +1,17 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
+import spotifyApi from "../api";
+import { logIn, refreshAccessToken, setUser } from "../redux/actions/session";
 
 const useAuth = (code: string | null) => {
   const history = useHistory();
+  const dispatch = useDispatch();
   const [accessToken, setAccessToken] = useState<string>();
   const [refreshToken, setRefreshToken] = useState<string>();
   const [expiresIn, setExpiresIn] = useState<number>();
+  const [accessTokenTimestamp, setAccessTokenTimestamp] = useState<number>();
 
   useEffect(() => {
     if (code) {
@@ -14,18 +19,39 @@ const useAuth = (code: string | null) => {
         .post("http://localhost:6969/login", {
           code,
         })
-        .then((res) => {
-          setAccessToken(res.data.accessToken);
-          setRefreshToken(res.data.refreshToken);
-          setExpiresIn(res.data.expiresIn);
+        .then(({ data }) => {
+          setAccessToken(data.accessToken);
+          setRefreshToken(data.refreshToken);
+          setExpiresIn(data.expiresIn);
+
+          if (data.accessToken && data.refreshToken && data.expiresIn) {
+            const timestamp = new Date().getTime();
+            setAccessTokenTimestamp(timestamp);
+
+            dispatch(
+              logIn(
+                data.accessToken,
+                data.refreshToken,
+                data.expiresIn,
+                timestamp
+              )
+            );
+
+            spotifyApi.setAccessToken(data.accessToken);
+
+            spotifyApi.getMe().then(({ body }) => {
+              dispatch(setUser(body));
+            });
+          }
 
           history.push("/");
         })
         .catch(() => {
-          history.push("/signin");
+          history.push("/");
         });
     }
-  }, [code, history]);
+    // eslint-disable-next-line
+  }, [code]);
 
   useEffect(() => {
     if (refreshToken && expiresIn) {
@@ -34,20 +60,30 @@ const useAuth = (code: string | null) => {
           .post("http://localhost:6969/refresh", {
             refreshToken,
           })
-          .then((res) => {
-            setAccessToken(res.data.accessToken);
-            setExpiresIn(res.data.expiresIn);
+          .then(({ data }) => {
+            setAccessToken(data.accessToken);
+            setExpiresIn(data.expiresIn);
+
+            if (data.accessToken && data.refreshToken && data.expiresIn) {
+              const timestamp = new Date().getTime();
+              setAccessTokenTimestamp(timestamp);
+
+              dispatch(
+                refreshAccessToken(data.accessToken, data.expiresIn, timestamp)
+              );
+            }
           })
           .catch(() => {
-            history.push("/signin");
+            history.push("/");
           });
-      }, (expiresIn - 60) * 1000);
+      }, (expiresIn - 60 * 5) * 1000);
 
       return () => clearInterval(interval);
     }
-  }, [refreshToken, expiresIn, history]);
+    // eslint-disable-next-line
+  }, [refreshToken, expiresIn]);
 
-  return accessToken;
+  return { accessToken, refreshToken, expiresIn, accessTokenTimestamp };
 };
 
 export default useAuth;
