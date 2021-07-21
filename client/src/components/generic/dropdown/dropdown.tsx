@@ -4,6 +4,7 @@ import { AiOutlineCaretDown, AiOutlineCaretUp } from "react-icons/ai";
 export interface IDropDownItem {
   title: string;
   onClick: () => void;
+  divider?: boolean;
 }
 
 interface IDropDownProps {
