@@ -1,4 +1,4 @@
-import { Route, Switch } from "react-router";
+import { Redirect, Route, Switch } from "react-router";
 import useAuth from "./hooks/useAuth";
 import HomePage from "./screens/home-page/home-page";
 import PlaylistPage from "./screens/playlist-page/playlist-page";
@@ -14,6 +14,8 @@ const RootRoutes = () => {
         <Route exact path="/" component={HomePage} />
         <Route exact path="/search" component={SearchPage} />
         <Route exact path="/playlist/:id" component={PlaylistPage} />
+
+        <Redirect to="/" />
       </Switch>
     </>
   );
