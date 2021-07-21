@@ -1,5 +1,6 @@
 import _ from "lodash";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import NavBar from "../navbar/navbar";
 
 interface IProps {
@@ -8,7 +9,16 @@ interface IProps {
 
 const Content = ({ children }: IProps) => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
-  let isScrolledFlag = false;
+  const [isScrolledFlag, setIsScrolledFlag] = useState<boolean>(false);
+  const [isPlaylistPage, setIsPlaylistPage] = useState<boolean>(false);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    setIsPlaylistPage(
+      location.pathname.replace(/^\/([^/]*).*$/, "$1") === "playlist"
+    );
+  }, [location]);
 
   const debounceIsScrolled = _.debounce((val) => {
     setIsScrolled(val);
@@ -19,18 +29,20 @@ const Content = ({ children }: IProps) => {
     // height of the NavBar times two. Couldn't find a clean way to retrieve the NavBar height automagically
 
     if (scrollHasChanged !== isScrolledFlag) {
-      isScrolledFlag = scrollHasChanged;
+      setIsScrolledFlag(scrollHasChanged);
       debounceIsScrolled(scrollHasChanged);
     }
   };
 
   return (
     <div className="flex flex-col flex-grow relative overflow-y-auto">
-      <NavBar isScrolled={isScrolled} />
+      <NavBar isScrolled={isScrolled} isPlaylistPage={isPlaylistPage} />
 
       <div
         onScroll={handleScroll}
-        className="container flex flex-col items-center md:block flex-grow mx-auto py-4 px-8 overflow-y-auto"
+        className={`${
+          !isPlaylistPage ? "py-4 px-8 container" : "w-full"
+        } flex flex-col items-center md:block flex-grow mx-auto  overflow-y-auto`}
       >
         <>{children}</>
       </div>

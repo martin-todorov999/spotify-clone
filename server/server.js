@@ -65,4 +65,22 @@ app.get("/featured-playlists", (req, res) => {
   });
 });
 
+app.get("/playlist/:id", (req, res) => {
+  spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
+    spotifyApi.setAccessToken(access_token);
+
+    spotifyApi
+      .getPlaylist(req.params.id)
+      .then(({ body }) => {
+        res.json({
+          body,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.sendStatus(error.statusCode);
+      });
+  });
+});
+
 app.listen(6969);

@@ -11,9 +11,10 @@ import SearchField from "../../generic/search-field/search-field";
 
 interface INavBarProps {
   isScrolled: boolean;
+  isPlaylistPage: boolean;
 }
 
-const NavBar = ({ isScrolled }: INavBarProps) => {
+const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -24,7 +25,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
 
   const handleLogOut = () => {
     dispatch(logOut());
-    history.push("/");
+    window.location.href = "/";
   };
 
   const dropdownItems = [
@@ -52,11 +53,23 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
     history.goForward();
   };
 
+  const navbarClasses = () => {
+    let classes = "";
+
+    if (isPlaylistPage) {
+      classes = `absolute ${
+        isScrolled ? "bg-gray-800 shadow-lg" : "shadow-none"
+      }`;
+    } else {
+      classes = `shadow-lg ${isScrolled ? "bg-gray-800" : "bg-gray-900"}`;
+    }
+
+    return classes;
+  };
+
   return (
     <div
-      className={`${
-        isScrolled ? "bg-transparent" : "bg-gray-900"
-      } top-0 sticky h-12 p-8 shadow-lg flex items-center justify-between transition duration-500 ease-out z-50`}
+      className={`${navbarClasses()} top-0 h-12 w-full p-8 flex items-center justify-between transition duration-500 ease-out z-50`}
     >
       <div className="flex flex-row items-center">
         <IconButton
