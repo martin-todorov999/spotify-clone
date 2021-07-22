@@ -9,11 +9,7 @@ import NavItem from "../nav-item/nav-item";
 import { setUri } from "../../../../redux/actions/playback";
 import PlaylistRow from "./playlist-row";
 
-interface IPlaylistsProps {
-  handleModal: () => void;
-}
-
-const Playlists = ({ handleModal }: IPlaylistsProps) => {
+const Playlists = () => {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.session);
   const [playlists, setPlaylists] =
@@ -59,7 +55,10 @@ const Playlists = ({ handleModal }: IPlaylistsProps) => {
         icon={BsPlusSquareFill}
         title="Create Playlist"
         route={accessToken ? "/playlist/:id" : pathname}
-        onClick={handleModal}
+        popup={{
+          title: "Create a playlist",
+          subtitle: "Log in to create and share playlists.",
+        }}
       />
 
       <NavItem
@@ -68,7 +67,10 @@ const Playlists = ({ handleModal }: IPlaylistsProps) => {
         title="Liked Songs"
         route={accessToken ? "/collection/tracks" : pathname}
         iconClasses="bg-gradient-to-br from-blue-900 via-purple-700 to-blue-300 rounded p-1 filter hover:brightness-125"
-        onClick={handleModal}
+        popup={{
+          title: "Liked songs",
+          subtitle: "Log in to view your liked songs.",
+        }}
       />
 
       <hr className="m-4 mb-2 border-gray-600" />

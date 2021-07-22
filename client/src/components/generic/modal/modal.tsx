@@ -38,13 +38,13 @@ const Modal = ({ closeModal }: IModalProps) => {
           <Button
             title="Sign up free"
             variant="button"
-            classes="bg-lime-500 hover:bg-lime-600 text-xs w-full h-12 uppercase"
+            classes="bg-lime-500 hover:bg-lime-600 text-xs w-full py-4"
           />
 
           <Button
             title="Download app"
             variant="button"
-            classes="bg-white hover:bg-gray-200 text-xs text-black w-full h-12 uppercase"
+            classes="bg-white hover:bg-gray-200 text-xs text-gray-900 w-full py-4"
           />
 
           <div className="flex flex-row items-center justify-center">
@@ -54,7 +54,7 @@ const Modal = ({ closeModal }: IModalProps) => {
               title="Log in"
               variant="link"
               href="https://accounts.spotify.com/authorize?client_id=d1b6a57fb43949f5b15ff1f50e47e764&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-library-read%20user-library-modify%20user-top-read%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private%20playlist-modify-private%20playlist-modify-public"
-              classes="text-xs uppercase cursor-pointer"
+              classes="text-xs cursor-pointer"
             />
           </div>
         </div>

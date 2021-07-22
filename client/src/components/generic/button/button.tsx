@@ -9,7 +9,7 @@ interface IButtonProps {
 const Button = ({ title, variant, classes, href, onClick }: IButtonProps) => {
   const isLink = variant === "link";
 
-  const className = `font-bold py-2 px-4 rounded-3xl transition duration-150 ease-out ${
+  const className = `font-bold tracking-widest uppercase py-3 px-8 rounded-3xl transition duration-150 ease-out ${
     classes && classes
   }`;
 

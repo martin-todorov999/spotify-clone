@@ -1,11 +1,9 @@
-import { useState } from "react";
 import { AiOutlineHome } from "react-icons/ai";
 import { BiSearch } from "react-icons/bi";
 import { VscLibrary } from "react-icons/vsc";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { RootState } from "../../../redux/reducers";
-import Modal from "../../generic/modal/modal";
 import NavItem, {
   INavItemProps,
 } from "../../generic/side-navigation/nav-item/nav-item";
@@ -13,13 +11,8 @@ import Playlists from "../../generic/side-navigation/playlists/playlists";
 import SpotifyLogo from "../../generic/side-navigation/spotify-logo/spotify-logo";
 
 const SideNavigation = () => {
-  const [openModal, setOpenModal] = useState<boolean>(false);
-  const { accessToken } = useSelector((state: RootState) => state.session);
   const { pathname } = useLocation();
-
-  const handleNavItemClick = () => {
-    if (!accessToken) setOpenModal(true);
-  };
+  const { accessToken } = useSelector((state: RootState) => state.session);
 
   const navItems: INavItemProps[] = [
     {
@@ -36,8 +29,11 @@ const SideNavigation = () => {
       icon: VscLibrary,
       title: "Your Library",
       route: accessToken ? "/collection/playlists" : pathname,
-      disableActive: true,
-      onClick: handleNavItemClick,
+      disableActive: !accessToken,
+      popup: {
+        title: "Your Library",
+        subtitle: "Log in to view your library.",
+      },
     },
   ];
 
@@ -52,13 +48,12 @@ const SideNavigation = () => {
           title={item.title}
           route={item.route}
           disableActive={item.disableActive}
+          popup={item.popup}
           onClick={item.onClick}
         />
       ))}
 
-      <Playlists handleModal={handleNavItemClick} />
-
-      {openModal && <Modal closeModal={() => setOpenModal(false)} />}
+      <Playlists />
     </div>
   );
 };
