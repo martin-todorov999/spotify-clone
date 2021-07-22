@@ -37,7 +37,7 @@ const Popup = ({ top, left, title, subtitle, setOpen }: IPopupProps) => {
         top,
         left,
       }}
-      className="bg-blue-500 absolute h-32 w-80 z-40 rounded-lg p-4 text-white flex flex-col justify-between"
+      className="bg-blue-500 absolute h-32 w-80 z-40 rounded-lg p-4 text-white flex flex-col justify-between shadow-lg"
     >
       <div
         style={{
