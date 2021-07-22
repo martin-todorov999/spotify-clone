@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
+import Modal from "../generic/modal/modal";
 
 interface IInteractionRowProps {
   playlist: SpotifyApi.PlaylistObjectFull;
@@ -18,6 +19,7 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
     (state: RootState) => state.session
   );
   const [isFollowed, setIsFollowed] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
@@ -34,7 +36,7 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
   }, [user, playlist.id, playlist.owner.id]);
 
   const handlePlay = () => {
-    console.log("play");
+    if (!user) setOpenModal(true);
 
     console.log(playlist.owner.id);
   };
@@ -74,6 +76,8 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
         onClick={handlePlay}
         className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer"
       />
+
+      {openModal && <Modal />}
     </div>
   );
 };

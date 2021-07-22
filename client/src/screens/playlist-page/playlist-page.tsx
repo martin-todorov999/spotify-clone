@@ -2,12 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
-import useEstimateTime from "../../hooks/utils/useEstimateTime";
+import { useDispatch } from "react-redux";
 import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import Loader from "../../components/generic/loader/loader";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 
 const PlaylistPage = () => {
+  const dispatch = useDispatch();
   const { id } = useParams<{ id: string }>();
   const [playlist, setPlaylist] = useState<SpotifyApi.PlaylistObjectFull>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -15,8 +16,11 @@ const PlaylistPage = () => {
   const { data } = usePalette(playlist?.images[0].url || "");
 
   useEffect(() => {
-    if (data.darkMuted) setPrimaryColor(data.darkMuted);
-  }, [data]);
+    if (data.darkMuted) {
+      setPrimaryColor(data.darkMuted);
+      dispatch({ type: "SET_PRIMARY_COLOR", payload: data.darkMuted });
+    }
+  }, [data, dispatch]);
 
   useEffect(() => {
     if (id) {
