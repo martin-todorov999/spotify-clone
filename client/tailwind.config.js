@@ -22,6 +22,7 @@ module.exports = {
   variants: {
     extend: {
       borderWidth: ["last"],
+      brightness: ["hover"],
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { BsPlusSquareFill, BsHeartFill } from "react-icons/bs";
+import { BsPlusSquareFill } from "react-icons/bs";
+import { HiHeart } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import spotifyApi from "../../../../api";
 import { RootState } from "../../../../redux/reducers";
@@ -54,9 +55,10 @@ const Playlists = () => {
       />
 
       <NavItem
-        icon={BsHeartFill}
+        icon={HiHeart}
         title="Liked Songs"
         route="/collection/tracks"
+        iconClasses="bg-gradient-to-br from-blue-900 via-purple-700 to-blue-300 rounded p-1 filter hover:brightness-125"
       />
 
       <hr className="m-4 mb-2 border-gray-600" />

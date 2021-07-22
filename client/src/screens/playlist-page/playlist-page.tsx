@@ -59,10 +59,12 @@ const PlaylistPage = () => {
             }}
             className="bg-gray-800 flex flex-col px-8 pb-8"
           >
-            <InteractionRow />
+            <InteractionRow playlist={playlist} />
 
             {playlist?.tracks.items.map((item) => (
-              <h1 className="text-white">{item.track.name}</h1>
+              <h1 key={item.track.id} className="text-white">
+                {item.track.name}
+              </h1>
             ))}
           </div>
         </div>
