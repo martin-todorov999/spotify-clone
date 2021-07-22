@@ -99,7 +99,7 @@ const ContextMenu = ({
         top: invertContextMenu ? mouseY - contextMenuHeight : mouseY,
         left: mouseX,
       }}
-      className="bg-gray-700 flex flex-col absolute z-50 shadow-lg rounded-md p-1 mx-4"
+      className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >
       {menuItems.map((item) => (
         <>

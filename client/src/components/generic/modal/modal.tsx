@@ -19,7 +19,9 @@ const Modal = ({ closeModal }: IModalProps) => {
       <div
         style={{
           // The digits or letters after primaryColor indicate opacity in hexidecimal
-          backgroundImage: `linear-gradient(${primaryColor}, #1F2937)`,
+          backgroundImage: `linear-gradient(${
+            primaryColor || "#1F2937"
+          }, #1F2937)`,
         }}
         className="h-3/4 md:h-1/2 w-full max-w-xs sm:max-w-sm md:max-w-3xl lg:max-w-4xl flex flex-col md:flex-row items-center justify-center relative mx-auto my-auto rounded-lg shadow-lg"
       >

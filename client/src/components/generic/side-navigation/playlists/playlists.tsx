@@ -2,13 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { BsPlusSquareFill } from "react-icons/bs";
 import { HiHeart } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import spotifyApi from "../../../../api";
 import { RootState } from "../../../../redux/reducers";
 import NavItem from "../nav-item/nav-item";
 import { setUri } from "../../../../redux/actions/playback";
 import PlaylistRow from "./playlist-row";
 
-const Playlists = () => {
+interface IPlaylistsProps {
+  handleModal: () => void;
+}
+
+const Playlists = ({ handleModal }: IPlaylistsProps) => {
   const dispatch = useDispatch();
   const { accessToken } = useSelector((state: RootState) => state.session);
   const [playlists, setPlaylists] =
@@ -17,6 +22,7 @@ const Playlists = () => {
     useState<SpotifyApi.CurrentPlaybackResponse>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const playlistContainerRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (accessToken) {
@@ -49,16 +55,20 @@ const Playlists = () => {
       <h1 className="uppercase text-gray-400 font-medium m-4">Playlists</h1>
 
       <NavItem
+        disableActive
         icon={BsPlusSquareFill}
         title="Create Playlist"
-        route="/playlist/:id"
+        route={accessToken ? "/playlist/:id" : pathname}
+        onClick={handleModal}
       />
 
       <NavItem
+        disableActive
         icon={HiHeart}
         title="Liked Songs"
-        route="/collection/tracks"
+        route={accessToken ? "/collection/tracks" : pathname}
         iconClasses="bg-gradient-to-br from-blue-900 via-purple-700 to-blue-300 rounded p-1 filter hover:brightness-125"
+        onClick={handleModal}
       />
 
       <hr className="m-4 mb-2 border-gray-600" />

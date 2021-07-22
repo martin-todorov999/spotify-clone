@@ -36,25 +36,13 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
   }, [user, playlist.id, playlist.owner.id]);
 
   const handlePlay = () => {
-    if (!user) setOpenModal(true);
+    if (!user || !accessToken) setOpenModal(true);
 
     console.log(playlist.owner.id);
   };
 
-  const handleFollow = () => {
-    if (user && !isFollowed) {
-      spotifyApi.followPlaylist(playlist.id).then(() => setIsFollowed(true));
-    }
-  };
-
-  const handleUnfollow = () => {
-    if (user && isFollowed) {
-      spotifyApi.unfollowPlaylist(playlist.id).then(() => setIsFollowed(false));
-    }
-  };
-
   const handleFollowButton = () => {
-    if (!user) {
+    if (!user || !accessToken) {
       return setOpenModal(true);
     }
 
