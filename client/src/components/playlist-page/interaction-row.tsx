@@ -53,6 +53,18 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
     }
   };
 
+  const handleFollowButton = () => {
+    if (!user) {
+      return setOpenModal(true);
+    }
+
+    if (isFollowed) {
+      spotifyApi.unfollowPlaylist(playlist.id).then(() => setIsFollowed(false));
+    } else {
+      spotifyApi.followPlaylist(playlist.id).then(() => setIsFollowed(true));
+    }
+  };
+
   return (
     <div className="py-8 flex flex-row items-center justify-start">
       <RiPlayCircleFill
@@ -62,12 +74,12 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
 
       {isFollowed && user ? (
         <HiHeart
-          onClick={handleUnfollow}
+          onClick={handleFollowButton}
           className="text-4xl text-lime-500 rounded-full cursor-pointer mr-8"
         />
       ) : (
         <HiOutlineHeart
-          onClick={handleFollow}
+          onClick={handleFollowButton}
           className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer mr-8"
         />
       )}
@@ -77,7 +89,7 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
         className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer"
       />
 
-      {openModal && <Modal />}
+      {openModal && <Modal closeModal={() => setOpenModal(false)} />}
     </div>
   );
 };

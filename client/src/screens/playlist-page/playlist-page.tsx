@@ -16,9 +16,9 @@ const PlaylistPage = () => {
   const { data } = usePalette(playlist?.images[0].url || "");
 
   useEffect(() => {
-    if (data.darkMuted) {
-      setPrimaryColor(data.darkMuted);
-      dispatch({ type: "SET_PRIMARY_COLOR", payload: data.darkMuted });
+    if (data.darkVibrant) {
+      setPrimaryColor(data.darkVibrant);
+      dispatch({ type: "SET_PRIMARY_COLOR", payload: data.darkVibrant });
     }
   }, [data, dispatch]);
 
