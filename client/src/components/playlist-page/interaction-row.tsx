@@ -57,20 +57,21 @@ const InteractionRow = ({ playlist }: IInteractionRowProps) => {
     <div className="py-8 flex flex-row items-center justify-start">
       <RiPlayCircleFill
         onClick={handlePlay}
-        className="text-6xl text-lime-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-100 ease-in-out mr-8"
+        className="text-7xl text-lime-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-100 ease-in-out mr-8"
       />
 
-      {isFollowed && user ? (
-        <HiHeart
-          onClick={handleFollowButton}
-          className="text-4xl text-lime-500 rounded-full cursor-pointer mr-8"
-        />
-      ) : (
-        <HiOutlineHeart
-          onClick={handleFollowButton}
-          className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer mr-8"
-        />
-      )}
+      {playlist.owner.id !== user?.id &&
+        (isFollowed && user ? (
+          <HiHeart
+            onClick={handleFollowButton}
+            className="text-4xl text-lime-500 rounded-full cursor-pointer mr-8"
+          />
+        ) : (
+          <HiOutlineHeart
+            onClick={handleFollowButton}
+            className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer mr-8"
+          />
+        ))}
 
       <HiOutlineDotsHorizontal
         onClick={handlePlay}
