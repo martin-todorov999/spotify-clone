@@ -38,7 +38,7 @@ const SideNavigation = () => {
   ];
 
   return (
-    <div className="bg-gray-900 flex flex-col px-2 py-4 w-64 h-full hidden md:flex md:flex-col overflow-hidden">
+    <div className="bg-gray-900 flex flex-col px-2 py-4 w-64 min-w-64 h-full hidden md:flex md:flex-col overflow-hidden">
       <SpotifyLogo />
 
       {navItems.map((item) => (

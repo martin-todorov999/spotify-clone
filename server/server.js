@@ -137,4 +137,22 @@ app.get("/categories/:id/playlists", (req, res) => {
   });
 });
 
+app.get("/search", (req, res) => {
+  spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
+    spotifyApi.setAccessToken(access_token);
+
+    spotifyApi
+      .search(req.query.query, req.query.types, { limit: req.query.limit })
+      .then(({ body }) => {
+        res.json({
+          body,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.sendStatus(error.statusCode);
+      });
+  });
+});
+
 app.listen(6969);

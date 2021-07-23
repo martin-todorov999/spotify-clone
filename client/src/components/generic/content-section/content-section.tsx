@@ -12,7 +12,7 @@ const ContentSection = ({
   return (
     <div className="mb-8">
       <div className="mb-4">
-        <h1 className="text-white text-3xl font-bold">{title}</h1>
+        <h1 className="text-white text-2xl font-bold">{title}</h1>
         {subtitle && <h3 className="text-gray-400">{subtitle}</h3>}
       </div>
 

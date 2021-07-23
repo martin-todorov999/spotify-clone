@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import useSortImages from "../../../hooks/utils/useSortImages";
+import { useAverageSizeImage } from "../../../hooks/utils/useSortImages";
 import { setUri } from "../../../redux/actions/playback";
 import ContentCard from "./content-card";
 
@@ -9,8 +9,7 @@ interface ITrackCardProps {
 
 const TrackCard = ({ track }: ITrackCardProps) => {
   const dispatch = useDispatch();
-  const images = useSortImages(track.album.images);
-  const imageUrl = images[Math.round((images.length - 1) / 2) || 0].url;
+  const image = useAverageSizeImage(track.album.images);
 
   const handlePlayTrack = () => {
     dispatch(setUri(track.uri));
@@ -20,7 +19,7 @@ const TrackCard = ({ track }: ITrackCardProps) => {
     <ContentCard
       title={track.name}
       subtitle={track.artists.map((artist) => artist.name).join(", ")}
-      url={imageUrl}
+      url={image.url}
       roundedVariant="rounded"
       onClick={handlePlayTrack}
     />

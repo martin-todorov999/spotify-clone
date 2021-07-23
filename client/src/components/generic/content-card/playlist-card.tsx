@@ -1,6 +1,5 @@
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
-import useSortImages from "../../../hooks/utils/useSortImages";
+import { useAverageSizeImage } from "../../../hooks/utils/useSortImages";
 import ContentCard from "./content-card";
 
 interface IPlaylistCardProps {
@@ -9,8 +8,7 @@ interface IPlaylistCardProps {
 
 const PlaylistCard = ({ playlist }: IPlaylistCardProps) => {
   const history = useHistory();
-  const images = useSortImages(playlist.images);
-  const imageUrl = images[Math.round((images.length - 1) / 2) || 0].url;
+  const image = useAverageSizeImage(playlist.images);
 
   const handlePlayPlaylist = () => {
     history.push(`/playlist/${playlist.id}`);
@@ -22,7 +20,7 @@ const PlaylistCard = ({ playlist }: IPlaylistCardProps) => {
       subtitle={
         playlist.description || playlist.owner.display_name || playlist.type
       }
-      url={imageUrl}
+      url={image.url}
       roundedVariant="rounded-3xl"
       onClick={handlePlayPlaylist}
     />

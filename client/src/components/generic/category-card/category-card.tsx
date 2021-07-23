@@ -1,5 +1,5 @@
 import { useHistory } from "react-router";
-import useSortImages from "../../../hooks/utils/useSortImages";
+import { useSortImages } from "../../../hooks/utils/useSortImages";
 
 interface ICategoryCardProps {
   category: SpotifyApi.CategoryObject;

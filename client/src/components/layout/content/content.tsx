@@ -36,7 +36,7 @@ const Content = ({ children }: IProps) => {
   };
 
   return (
-    <div className="flex flex-col flex-grow relative overflow-y-auto">
+    <div className="w-full flex flex-col flex-grow relative overflow-y-auto">
       <NavBar isScrolled={isScrolled} isPlaylistPage={isFullscreenPage} />
 
       <div

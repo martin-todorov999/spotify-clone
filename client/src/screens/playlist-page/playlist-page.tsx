@@ -7,7 +7,7 @@ import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import Loader from "../../components/generic/loader/loader";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import TracksHeader from "../../components/playlist-page/tracks-header";
-import TrackRow from "../../components/playlist-page/track-row";
+import TrackRow from "../../components/playlist-page/playlist-track-row";
 import Modal from "../../components/generic/modal/modal";
 import { RootState } from "../../redux/reducers";
 

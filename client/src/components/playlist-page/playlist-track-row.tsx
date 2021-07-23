@@ -3,29 +3,25 @@ import en from "javascript-time-ago/locale/en";
 import { BsPlayFill } from "react-icons/bs";
 import { MdExplicit } from "react-icons/md";
 import { useState } from "react";
+import { useSortImages } from "../../hooks/utils/useSortImages";
 
 TimeAgo.addDefaultLocale(en);
 
-interface ITrackRowProps {
+interface IPlaylistTrackRowProps {
   item: SpotifyApi.PlaylistTrackObject;
   index: number;
   handlePlay: (id: string) => void;
 }
 
-const TrackRow = ({ item, index, handlePlay }: ITrackRowProps) => {
+const PlaylistTrackRow = ({
+  item,
+  index,
+  handlePlay,
+}: IPlaylistTrackRowProps) => {
   const timeAgo = new TimeAgo("en-US");
   const [hover, setHover] = useState<boolean>(false);
 
-  const getSmallestImage = (images: SpotifyApi.ImageObject[]) => {
-    const sorted = images.sort(function (imageA, imageB) {
-      if (imageA.height && imageB.height) {
-        return imageA.height > imageB.height ? 1 : -1;
-      }
-      return -1;
-    });
-
-    return sorted[0];
-  };
+  const smallestImage = useSortImages(item.track.album.images)[0];
 
   const parseDuration = (milliseconds: number) => {
     const minutes = Math.floor(milliseconds / 60000);
@@ -55,7 +51,7 @@ const TrackRow = ({ item, index, handlePlay }: ITrackRowProps) => {
       <div className="w-6/12 flex flex-row items-center justify-start pr-2">
         <img
           alt="album art"
-          src={getSmallestImage(item.track.album.images).url}
+          src={smallestImage.url}
           className="h-10 w-10 rounded-sm mr-4"
         />
         <div className="flex flex-col items-start justify-center">
@@ -88,4 +84,4 @@ const TrackRow = ({ item, index, handlePlay }: ITrackRowProps) => {
   );
 };
 
-export default TrackRow;
+export default PlaylistTrackRow;
