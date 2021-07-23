@@ -47,12 +47,30 @@ app.post("/refresh", (req, res) => {
     });
 });
 
-app.get("/featured-playlists", (req, res) => {
+app.get("/browse/featured-playlists", (req, res) => {
   spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
     spotifyApi.setAccessToken(access_token);
 
     spotifyApi
-      .getFeaturedPlaylists({ limit: 6, locale: "en" })
+      .getFeaturedPlaylists({ limit: 8, locale: "en" })
+      .then(({ body }) => {
+        res.json({
+          body,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.sendStatus(error.statusCode);
+      });
+  });
+});
+
+app.get("/browse/new-releases", (req, res) => {
+  spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
+    spotifyApi.setAccessToken(access_token);
+
+    spotifyApi
+      .getNewReleases({ limit: 8, locale: "en" })
       .then(({ body }) => {
         res.json({
           body,

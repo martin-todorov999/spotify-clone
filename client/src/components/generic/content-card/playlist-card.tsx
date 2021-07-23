@@ -23,7 +23,7 @@ const PlaylistCard = ({ playlist, size }: IPlaylistCardProps) => {
       }
       url={image.url}
       size={size}
-      roundedVariant="rounded-3xl"
+      roundedVariant="rounded"
       onClick={handlePlayPlaylist}
     />
   );

@@ -51,8 +51,8 @@ const PlaylistTrackRow = ({
       </div>
       <div className="w-6/12 flex flex-row items-center justify-start pr-2">
         <img
-          alt="album art"
-          src={smallestImage.url}
+          alt="art"
+          src={smallestImage ? smallestImage.url : ""}
           className="h-10 w-10 rounded-sm mr-4"
         />
         <div className="flex flex-col items-start justify-center">

@@ -1,5 +1,5 @@
 interface IContentSectionProps {
-  title: string;
+  title?: string;
   subtitle?: string;
   children?: React.ReactNode;
   containerClasses?: string;
@@ -16,7 +16,7 @@ const ContentSection = ({
   return (
     <div className={`${containerClasses || "mb-8"}`}>
       <div className="mb-4">
-        <h1 className="text-white text-2xl font-bold">{title}</h1>
+        {title && <h1 className="text-white text-2xl font-bold">{title}</h1>}
         {subtitle && <h3 className="text-gray-400">{subtitle}</h3>}
       </div>
 

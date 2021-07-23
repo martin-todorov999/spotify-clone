@@ -48,16 +48,17 @@ const CategoryPage = () => {
         })
         .catch((error) => {
           console.log(error);
-        })
-        .finally(() => setIsLoading(false));
+        });
     }
   }, [id]);
+
+  useEffect(() => {
+    if (category && playlists) setIsLoading(false);
+  }, [category, playlists]);
 
   const handleClickPlaylist = (playlistId: string) => {
     history.push(`/playlist/${playlistId}`);
   };
-
-  console.log(playlists);
 
   return (
     <>
