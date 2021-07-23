@@ -99,8 +99,12 @@ const SearchPage = () => {
                 <TopResult result={popularResult} />
               </ContentSection>
             )}
-            <ContentSection title="Top result">
-              {searchResults.tracks?.items.map((track) => (
+            <ContentSection
+              title="Songs"
+              containerClasses="mb-8 flex-grow"
+              childrenContainerClasses="flex flex-col"
+            >
+              {searchResults.tracks?.items.slice(0, 4).map((track) => (
                 <TrackRow track={track} handlePlay={handlePlay} />
               ))}
             </ContentSection>

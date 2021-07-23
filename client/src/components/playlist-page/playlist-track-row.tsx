@@ -37,7 +37,7 @@ const PlaylistTrackRow = ({
       className="flex flex-row text-gray-400 hover:bg-gray-700 py-2 rounded-md"
     >
       <div className="w-16 flex flex-row items-center justify-center">
-        <h3 className="text-lg font-normal uppercase">
+        <h3 className="text-lg font-normal">
           {hover ? (
             <BsPlayFill
               onClick={() => handlePlay(item.track.id)}
@@ -55,25 +55,25 @@ const PlaylistTrackRow = ({
           className="h-10 w-10 rounded-sm mr-4"
         />
         <div className="flex flex-col items-start justify-center">
-          <h3 className="text-white text-xs font-medium tracking-wide uppercase mb-1 line-clamp-1">
+          <h3 className="text-white text-sm font-medium tracking-wide mb-1 line-clamp-1">
             {item.track.name}
           </h3>
 
           <div className="flex flex-row items-center">
             {item.track.explicit && <MdExplicit className="mr-1" />}
-            <h3 className="text-xs font-normal tracking-wide uppercase line-clamp-1">
+            <h3 className="text-sm font-normal tracking-wide line-clamp-1">
               {item.track.artists.map((artist) => artist.name).join(", ")}
             </h3>
           </div>
         </div>
       </div>
       <div className="w-4/12 flex flex-row items-center justify-start pr-2">
-        <h3 className="text-xs font-normal tracking-wide uppercase line-clamp-1">
+        <h3 className="text-sm font-normal tracking-wide line-clamp-1">
           {item.track.album.name}
         </h3>
       </div>
       <div className="w-2/12 flex flex-row items-center justify-start">
-        <h3 className="text-xs font-normal tracking-wide uppercase">
+        <h3 className="text-sm font-normal tracking-wide">
           {timeAgo.format(new Date(item.added_at))}
         </h3>
       </div>
