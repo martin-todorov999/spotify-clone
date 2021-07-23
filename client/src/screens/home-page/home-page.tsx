@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import ContentCard from "../../components/generic/content-card/content-card";
 import PlaylistCard from "../../components/generic/content-card/playlist-card";
 import ContentSection from "../../components/generic/content-section/content-section";
@@ -8,6 +9,7 @@ import Loader from "../../components/generic/loader/loader";
 import { RootState } from "../../redux/reducers";
 
 const HomePage = () => {
+  const history = useHistory();
   const { accessToken } = useSelector((state: RootState) => state.session);
   const [featuredPlaylists, setFeaturedPlaylists] =
     useState<SpotifyApi.ListOfFeaturedPlaylistsResponse>();
@@ -41,6 +43,12 @@ const HomePage = () => {
     if (featuredPlaylists && newReleases) setIsLoading(false);
   }, [featuredPlaylists, newReleases]);
 
+  const handleNewReleaseRedirect = (item: SpotifyApi.AlbumObjectSimplified) => {
+    if (item.type === "album") {
+      history.push(`/album/${item.id}`);
+    }
+  };
+
   return (
     <>
       {isLoading || !featuredPlaylists ? (
@@ -69,7 +77,7 @@ const HomePage = () => {
                       .join(", ")}
                     url={item.images[0].url}
                     roundedVariant="rounded"
-                    onClick={() => console.log(item)}
+                    onClick={() => handleNewReleaseRedirect(item)}
                   />
                 ))}
               </ContentSection>

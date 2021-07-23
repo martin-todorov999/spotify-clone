@@ -137,6 +137,24 @@ app.get("/categories/:id", (req, res) => {
   });
 });
 
+app.get("/albums/:id", (req, res) => {
+  spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
+    spotifyApi.setAccessToken(access_token);
+
+    spotifyApi
+      .getAlbum(req.params.id, { locale: "en" })
+      .then(({ body }) => {
+        res.json({
+          body,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        res.sendStatus(error.statusCode);
+      });
+  });
+});
+
 app.get("/categories/:id/playlists", (req, res) => {
   spotifyApi.clientCredentialsGrant().then(({ body: { access_token } }) => {
     spotifyApi.setAccessToken(access_token);

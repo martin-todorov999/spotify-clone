@@ -58,7 +58,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
     let classes = "";
 
     if (isPlaylistPage) {
-      classes = `absolute ${
+      classes = `absolute bg-black bg-opacity-25 ${
         isScrolled ? "bg-gray-800 shadow-lg" : "shadow-none"
       }`;
     } else {

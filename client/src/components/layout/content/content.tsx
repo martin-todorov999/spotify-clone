@@ -14,11 +14,17 @@ const Content = ({ children }: IProps) => {
 
   const location = useLocation();
 
+  const regexPathname = () => {
+    return location.pathname.replace(/^\/([^/]*).*$/, "$1");
+  };
+
   useEffect(() => {
     setIsFulscreenPage(
-      location.pathname.replace(/^\/([^/]*).*$/, "$1") === "playlist" ||
-        location.pathname.replace(/^\/([^/]*).*$/, "$1") === "category"
+      regexPathname() === "playlist" ||
+        regexPathname() === "category" ||
+        regexPathname() === "album"
     );
+    // eslint-disable-next-line
   }, [location]);
 
   const debounceIsScrolled = _.debounce((val) => {

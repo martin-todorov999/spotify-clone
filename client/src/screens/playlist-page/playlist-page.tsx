@@ -10,6 +10,7 @@ import TracksHeader from "../../components/playlist-page/tracks-header";
 import TrackRow from "../../components/playlist-page/playlist-track-row";
 import Modal from "../../components/generic/modal/modal";
 import { RootState } from "../../redux/reducers";
+import spotifyApi from "../../api";
 
 const PlaylistPage = () => {
   const dispatch = useDispatch();
@@ -32,17 +33,29 @@ const PlaylistPage = () => {
 
   useEffect(() => {
     if (id) {
-      axios
-        .get(`http://localhost:6969/playlist/${id}`)
-        .then(({ data: { body } }) => {
-          setPlaylist(body);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => setIsLoading(false));
+      if (accessToken && user) {
+        spotifyApi.setAccessToken(accessToken);
+
+        spotifyApi
+          .getPlaylist(id)
+          .then(({ body }) => setPlaylist(body))
+          .catch((error) => console.log(error));
+      } else {
+        axios
+          .get(`http://localhost:6969/playlist/${id}`)
+          .then(({ data: { body } }) => {
+            setPlaylist(body);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     }
-  }, [id]);
+  }, [id, accessToken, user]);
+
+  useEffect(() => {
+    if (playlist) setIsLoading(false);
+  }, [playlist]);
 
   const handlePlay = (trackId: string) => {
     if (!user || !accessToken) setOpenModal(true);
@@ -65,7 +78,15 @@ const PlaylistPage = () => {
                 className="h-full shadow-2xl mr-8"
               />
 
-              <PlaylistInfo playlist={playlist} primaryColor={primaryColor} />
+              <PlaylistInfo
+                type={playlist.type}
+                name={playlist.name}
+                description={playlist.description}
+                ownerName={playlist.owner.display_name}
+                followers={playlist.followers.total}
+                tracksCount={playlist.tracks.total}
+                primaryColor={primaryColor}
+              />
             </div>
 
             <div

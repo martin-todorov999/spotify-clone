@@ -1,7 +1,6 @@
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import { BsPlayFill } from "react-icons/bs";
-import { MdExplicit } from "react-icons/md";
 import { useState } from "react";
 import { useSortImages } from "../../hooks/utils/useSortImages";
 import TrackArtists from "../generic/track-row/track-artists";
@@ -14,6 +13,15 @@ interface IPlaylistTrackRowProps {
   handlePlay: (id: string) => void;
 }
 
+export const parseDuration = (milliseconds: number, verbose?: boolean) => {
+  const minutes = Math.floor(milliseconds / 60000);
+  const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
+
+  return `${minutes}${verbose ? " min " : ":"}${
+    Number(seconds) < 10 ? "0" : ""
+  }${seconds}${verbose ? " sec" : ""}`;
+};
+
 const PlaylistTrackRow = ({
   item,
   index,
@@ -23,13 +31,6 @@ const PlaylistTrackRow = ({
   const [hover, setHover] = useState<boolean>(false);
 
   const smallestImage = useSortImages(item.track.album.images)[0];
-
-  const parseDuration = (milliseconds: number) => {
-    const minutes = Math.floor(milliseconds / 60000);
-    const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
-
-    return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
-  };
 
   return (
     <div
