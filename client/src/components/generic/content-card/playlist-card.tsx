@@ -4,9 +4,10 @@ import ContentCard from "./content-card";
 
 interface IPlaylistCardProps {
   playlist: SpotifyApi.PlaylistObjectSimplified;
+  size?: "small" | "large";
 }
 
-const PlaylistCard = ({ playlist }: IPlaylistCardProps) => {
+const PlaylistCard = ({ playlist, size }: IPlaylistCardProps) => {
   const history = useHistory();
   const image = useAverageSizeImage(playlist.images);
 
@@ -21,6 +22,7 @@ const PlaylistCard = ({ playlist }: IPlaylistCardProps) => {
         playlist.description || playlist.owner.display_name || playlist.type
       }
       url={image.url}
+      size={size}
       roundedVariant="rounded-3xl"
       onClick={handlePlayPlaylist}
     />

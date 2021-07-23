@@ -2,6 +2,7 @@ import { BsPlayFill } from "react-icons/bs";
 import { MdExplicit } from "react-icons/md";
 import { useState } from "react";
 import { useSortImages } from "../../hooks/utils/useSortImages";
+import TrackArtists from "../generic/track-row/track-artists";
 
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull;
@@ -42,16 +43,11 @@ const TrackRow = ({ track, handlePlay }: ITrackRowProps) => {
           )}
         </div>
         <div className="flex flex-col items-start justify-center">
-          <h3 className="text-white text-sm font-medium tracking-wide mb-1 line-clamp-1">
+          <h3 className="text-white text-sm font-medium tracking-wide line-clamp-1">
             {track.name}
           </h3>
 
-          <div className="flex flex-row items-center">
-            {track.explicit && <MdExplicit className="mr-1" />}
-            <h3 className="text-sm font-normal tracking-wide line-clamp-1">
-              {track.artists.map((artist) => artist.name).join(", ")}
-            </h3>
-          </div>
+          <TrackArtists track={track} />
         </div>
       </div>
 

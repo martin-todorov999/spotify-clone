@@ -42,8 +42,8 @@ const Content = ({ children }: IProps) => {
       <div
         onScroll={handleScroll}
         className={`${
-          !isFullscreenPage ? "py-4 px-8 container" : "w-full"
-        } flex flex-col items-center md:block flex-grow mx-auto  overflow-y-auto`}
+          !isFullscreenPage ? "py-4 px-8" : "w-full"
+        } flex flex-col items-center md:block flex-grow overflow-y-auto overflow-x-hidden`}
       >
         <>{children}</>
       </div>

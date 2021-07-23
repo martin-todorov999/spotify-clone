@@ -4,6 +4,7 @@ import { BsPlayFill } from "react-icons/bs";
 import { MdExplicit } from "react-icons/md";
 import { useState } from "react";
 import { useSortImages } from "../../hooks/utils/useSortImages";
+import TrackArtists from "../generic/track-row/track-artists";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -55,16 +56,11 @@ const PlaylistTrackRow = ({
           className="h-10 w-10 rounded-sm mr-4"
         />
         <div className="flex flex-col items-start justify-center">
-          <h3 className="text-white text-sm font-medium tracking-wide mb-1 line-clamp-1">
+          <h3 className="text-white text-sm font-medium tracking-wide line-clamp-1">
             {item.track.name}
           </h3>
 
-          <div className="flex flex-row items-center">
-            {item.track.explicit && <MdExplicit className="mr-1" />}
-            <h3 className="text-sm font-normal tracking-wide line-clamp-1">
-              {item.track.artists.map((artist) => artist.name).join(", ")}
-            </h3>
-          </div>
+          <TrackArtists track={item.track} />
         </div>
       </div>
       <div className="w-4/12 flex flex-row items-center justify-start pr-2">

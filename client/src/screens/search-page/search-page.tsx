@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import spotifyApi from "../../api";
-import TrackCard from "../../components/generic/content-card/track-card";
+import ContentCard from "../../components/generic/content-card/content-card";
 import ContentSection from "../../components/generic/content-section/content-section";
 import NoSearchResults from "../../components/search-page/no-search-results";
 import TopResult from "../../components/search-page/top-result";
@@ -17,6 +17,7 @@ const SearchPage = () => {
   const [popularResult, setPopularResult] = useState<
     SpotifyApi.ArtistObjectFull | SpotifyApi.TrackObjectFull
   >();
+  const [noResults, setNoResults] = useState<boolean>(true);
 
   useEffect(() => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
@@ -25,11 +26,9 @@ const SearchPage = () => {
   const handleSearch = (searchQuery: string) => {
     if (accessToken) {
       spotifyApi
-        .search(
-          searchQuery,
-          ["album", "artist", "playlist", "track", "episode"],
-          { limit: 8 }
-        )
+        .search(searchQuery, ["album", "artist", "playlist", "track"], {
+          limit: 8,
+        })
         .then(({ body }) => {
           setSearchResults(body);
         });
@@ -38,7 +37,7 @@ const SearchPage = () => {
         .get("http://localhost:6969/search", {
           params: {
             query: searchQuery,
-            types: ["album", "artist", "playlist", "track", "episode"],
+            types: ["album", "artist", "playlist", "track"],
             limit: 8,
           },
         })
@@ -50,6 +49,16 @@ const SearchPage = () => {
         });
     }
   };
+
+  useEffect(() => {
+    setNoResults(
+      !searchResults?.albums?.items.length &&
+        !searchResults?.artists?.items.length &&
+        !searchResults?.episodes?.items.length &&
+        !searchResults?.playlists?.items.length &&
+        !searchResults?.tracks?.items.length
+    );
+  }, [searchResults]);
 
   useEffect(() => {
     if (query) {
@@ -85,39 +94,108 @@ const SearchPage = () => {
     }
   }, [searchResults?.artists, searchResults?.tracks]);
 
-  console.log(searchResults);
-
   const handlePlay = () => {};
 
   return (
     <>
-      {searchResults ? (
-        <>
-          <div className="flex flex-row items-center">
-            {popularResult && (
-              <ContentSection title="Top result">
-                <TopResult result={popularResult} />
+      {!query || noResults ? (
+        <NoSearchResults query={query} />
+      ) : (
+        searchResults && (
+          <>
+            <div className="flex flex-row items-center">
+              {popularResult && (
+                <ContentSection title="Top result">
+                  <TopResult result={popularResult} />
+                </ContentSection>
+              )}
+              {searchResults.tracks?.items.length && (
+                <ContentSection
+                  title="Songs"
+                  containerClasses="mb-8 flex-grow"
+                  childrenContainerClasses="flex flex-col"
+                >
+                  {searchResults.tracks?.items.slice(0, 4).map((track) => (
+                    <TrackRow
+                      key={track.id}
+                      track={track}
+                      handlePlay={handlePlay}
+                    />
+                  ))}
+                </ContentSection>
+              )}
+            </div>
+
+            {searchResults.artists?.items.length && (
+              <ContentSection title="Artists">
+                {searchResults?.artists?.items.map((result) => (
+                  <ContentCard
+                    key={result.id}
+                    title={result.name}
+                    subtitle={result.type}
+                    url={
+                      result.images.length ? result.images[0].url : undefined
+                    }
+                    roundedVariant="rounded-full"
+                    onClick={handlePlay}
+                  />
+                ))}
               </ContentSection>
             )}
-            <ContentSection
-              title="Songs"
-              containerClasses="mb-8 flex-grow"
-              childrenContainerClasses="flex flex-col"
-            >
-              {searchResults.tracks?.items.slice(0, 4).map((track) => (
-                <TrackRow track={track} handlePlay={handlePlay} />
-              ))}
-            </ContentSection>
-          </div>
 
-          <ContentSection title="Search results">
-            {searchResults?.tracks?.items.map((result) => (
-              <TrackCard key={result.id} track={result} />
-            ))}
-          </ContentSection>
-        </>
-      ) : (
-        <NoSearchResults query={query} />
+            {searchResults.albums?.items.length && (
+              <ContentSection title="Albums">
+                {searchResults?.albums?.items.map((result) => (
+                  <ContentCard
+                    key={result.id}
+                    title={result.name}
+                    subtitle={result.artists
+                      .map((artist) => artist.name)
+                      .join(", ")}
+                    url={
+                      result.images.length ? result.images[0].url : undefined
+                    }
+                    roundedVariant="rounded"
+                    onClick={handlePlay}
+                  />
+                ))}
+              </ContentSection>
+            )}
+
+            {searchResults.playlists?.items.length && (
+              <ContentSection title="Playlists">
+                {searchResults?.playlists?.items.map((result) => (
+                  <ContentCard
+                    key={result.id}
+                    title={result.name}
+                    subtitle={`By ${result.owner.display_name || "unknown"}`}
+                    url={
+                      result.images.length ? result.images[0].url : undefined
+                    }
+                    roundedVariant="rounded"
+                    onClick={handlePlay}
+                  />
+                ))}
+              </ContentSection>
+            )}
+
+            {/* {searchResults.episodes?.items.length && (
+              <ContentSection title="Episodes">
+                {searchResults?.episodes?.items.map((result) => (
+                  <ContentCard
+                    key={result.id}
+                    title={result.name}
+                    url={
+                      result.images.length ? result.images[0].url : undefined
+                    }
+                    roundedVariant="rounded"
+                    onClick={handlePlay}
+                  />
+                ))}
+              </ContentSection>
+            )} */}
+          </>
+        )
       )}
     </>
   );

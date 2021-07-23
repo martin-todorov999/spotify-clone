@@ -70,7 +70,7 @@ app.get("/playlist/:id", (req, res) => {
     spotifyApi.setAccessToken(access_token);
 
     spotifyApi
-      .getPlaylist(req.params.id)
+      .getPlaylist(req.params.id, { locale: "en" })
       .then(({ body }) => {
         res.json({
           body,
@@ -88,7 +88,7 @@ app.get("/categories", (req, res) => {
     spotifyApi.setAccessToken(access_token);
 
     spotifyApi
-      .getCategories()
+      .getCategories({ locale: "en" })
       .then(({ body }) => {
         res.json({
           body,
@@ -142,7 +142,10 @@ app.get("/search", (req, res) => {
     spotifyApi.setAccessToken(access_token);
 
     spotifyApi
-      .search(req.query.query, req.query.types, { limit: req.query.limit })
+      .search(req.query.query, req.query.types, {
+        limit: req.query.limit,
+        locale: "en",
+      })
       .then(({ body }) => {
         res.json({
           body,

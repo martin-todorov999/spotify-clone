@@ -57,6 +57,8 @@ const CategoryPage = () => {
     history.push(`/playlist/${playlistId}`);
   };
 
+  console.log(playlists);
+
   return (
     <>
       {isLoading || !playlists || !category ? (

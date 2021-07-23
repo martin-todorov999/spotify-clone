@@ -22,7 +22,8 @@ const ContentSection = ({
 
       <div
         className={`${
-          childrenContainerClasses || "grid grid-cols-auto-fit gap-6"
+          childrenContainerClasses ||
+          "flex flex-wrap gap-6 justify-center sm:justify-start"
         }`}
       >
         {children}

@@ -35,7 +35,11 @@ const HomePage = () => {
         featuredPlaylists.message && (
           <ContentSection title={featuredPlaylists.message}>
             {featuredPlaylists.playlists.items.map((playlist) => (
-              <PlaylistCard key={playlist.id} playlist={playlist} />
+              <PlaylistCard
+                key={playlist.id}
+                playlist={playlist}
+                size="large"
+              />
             ))}
           </ContentSection>
         )

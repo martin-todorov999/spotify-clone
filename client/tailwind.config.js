@@ -9,15 +9,23 @@ module.exports = {
         lime: colors.lime,
       },
     },
-    gridTemplateColumns: {
-      "auto-fit": "repeat(auto-fit, minmax(11rem, 1fr))",
-    },
     minWidth: {
       32: "8rem",
       64: "16rem",
     },
     minHeight: {
       32: "8rem",
+      64: "16rem",
+    },
+    maxWidth: {
+      32: "8rem",
+      52: "13rem",
+      64: "16rem",
+    },
+    maxHeight: {
+      32: "8rem",
+      52: "13rem",
+      64: "16rem",
     },
   },
   variants: {
