@@ -21,7 +21,7 @@ const TrackCard = ({ track }: ITrackCardProps) => {
       title={track.name}
       subtitle={track.artists.map((artist) => artist.name).join(", ")}
       url={imageUrl}
-      roundedVariant="rounded-sm"
+      roundedVariant="rounded"
       onClick={handlePlayTrack}
     />
   );

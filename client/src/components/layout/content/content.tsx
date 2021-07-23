@@ -10,13 +10,14 @@ interface IProps {
 const Content = ({ children }: IProps) => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isScrolledFlag, setIsScrolledFlag] = useState<boolean>(false);
-  const [isPlaylistPage, setIsPlaylistPage] = useState<boolean>(false);
+  const [isFullscreenPage, setIsFulscreenPage] = useState<boolean>(false);
 
   const location = useLocation();
 
   useEffect(() => {
-    setIsPlaylistPage(
-      location.pathname.replace(/^\/([^/]*).*$/, "$1") === "playlist"
+    setIsFulscreenPage(
+      location.pathname.replace(/^\/([^/]*).*$/, "$1") === "playlist" ||
+        location.pathname.replace(/^\/([^/]*).*$/, "$1") === "category"
     );
   }, [location]);
 
@@ -36,12 +37,12 @@ const Content = ({ children }: IProps) => {
 
   return (
     <div className="flex flex-col flex-grow relative overflow-y-auto">
-      <NavBar isScrolled={isScrolled} isPlaylistPage={isPlaylistPage} />
+      <NavBar isScrolled={isScrolled} isPlaylistPage={isFullscreenPage} />
 
       <div
         onScroll={handleScroll}
         className={`${
-          !isPlaylistPage ? "py-4 px-8 container" : "w-full"
+          !isFullscreenPage ? "py-4 px-8 container" : "w-full"
         } flex flex-col items-center md:block flex-grow mx-auto  overflow-y-auto`}
       >
         <>{children}</>

@@ -1,6 +1,7 @@
 import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import { BsPlayFill } from "react-icons/bs";
+import { MdExplicit } from "react-icons/md";
 import { useState } from "react";
 
 TimeAgo.addDefaultLocale(en);
@@ -58,22 +59,25 @@ const TrackRow = ({ item, index, handlePlay }: ITrackRowProps) => {
           className="h-10 w-10 rounded-sm mr-4"
         />
         <div className="flex flex-col items-start justify-center">
-          <h3 className="text-white text-xs font-medium tracking-widest uppercase mb-1 line-clamp-1">
+          <h3 className="text-white text-xs font-medium tracking-wide uppercase mb-1 line-clamp-1">
             {item.track.name}
           </h3>
 
-          <h3 className="text-xs font-normal tracking-widest uppercase line-clamp-1">
-            {item.track.artists.map((artist) => artist.name).join(", ")}
-          </h3>
+          <div className="flex flex-row items-center">
+            {item.track.explicit && <MdExplicit className="mr-1" />}
+            <h3 className="text-xs font-normal tracking-wide uppercase line-clamp-1">
+              {item.track.artists.map((artist) => artist.name).join(", ")}
+            </h3>
+          </div>
         </div>
       </div>
       <div className="w-4/12 flex flex-row items-center justify-start pr-2">
-        <h3 className="text-xs font-normal tracking-widest uppercase line-clamp-1">
+        <h3 className="text-xs font-normal tracking-wide uppercase line-clamp-1">
           {item.track.album.name}
         </h3>
       </div>
       <div className="w-2/12 flex flex-row items-center justify-start">
-        <h3 className="text-xs font-normal tracking-widest uppercase">
+        <h3 className="text-xs font-normal tracking-wide uppercase">
           {timeAgo.format(new Date(item.added_at))}
         </h3>
       </div>

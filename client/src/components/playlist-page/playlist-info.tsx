@@ -1,7 +1,5 @@
-import { useSelector } from "react-redux";
 import useContrastText from "../../hooks/utils/useContrastText";
 import useEstimateTime from "../../hooks/utils/useEstimateTime";
-import { RootState } from "../../redux/reducers";
 
 interface IPlaylistInfoProps {
   playlist: SpotifyApi.PlaylistObjectFull;

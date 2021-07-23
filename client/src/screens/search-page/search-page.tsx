@@ -8,16 +8,15 @@ import { RootState } from "../../redux/reducers";
 
 const SearchPage = () => {
   const { query } = useSelector((state: RootState) => state.search);
+  const { accessToken } = useSelector((state: RootState) => state.session);
   const [searchResults, setSearchResults] = useState<
     SpotifyApi.TrackObjectFull[] | undefined
   >([]);
-  const { accessToken } = useSelector((state: RootState) => state.session);
 
   useEffect(() => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
-  // Figure out how to debounce and cancel so as to only send 1 request
   const handleSearch = (searchQuery: string) => {
     spotifyApi.searchTracks(searchQuery).then((res) => {
       setSearchResults(res.body.tracks?.items);

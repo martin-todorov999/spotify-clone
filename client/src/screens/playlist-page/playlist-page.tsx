@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
 import { useDispatch, useSelector } from "react-redux";
@@ -73,7 +73,7 @@ const PlaylistPage = () => {
                 // The digits or letters after primaryColor indicate opacity in hexidecimal
                 backgroundImage: `linear-gradient(${primaryColor}99, #1F2937 10%)`,
               }}
-              className="bg-gray-800 flex flex-col px-8 pb-8"
+              className="bg-gray-800 flex flex-col flex-grow px-8 pb-8"
             >
               <InteractionRow
                 playlist={playlist}
@@ -84,12 +84,15 @@ const PlaylistPage = () => {
               <TracksHeader />
 
               {playlist?.tracks.items.map((item, index) => (
-                <TrackRow
-                  key={item.track.id}
-                  item={item}
-                  index={index}
-                  handlePlay={handlePlay}
-                />
+                <Fragment key={item.track && item.track.id}>
+                  {item.track && (
+                    <TrackRow
+                      item={item}
+                      index={index}
+                      handlePlay={handlePlay}
+                    />
+                  )}
+                </Fragment>
               ))}
             </div>
           </div>

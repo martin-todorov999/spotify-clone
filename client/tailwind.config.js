@@ -10,7 +10,7 @@ module.exports = {
       },
     },
     gridTemplateColumns: {
-      "auto-fit": "repeat(auto-fit, minmax(13rem, 1fr))",
+      "auto-fit": "repeat(auto-fit, minmax(11rem, 1fr))",
     },
     minWidth: {
       32: "8rem",
@@ -23,6 +23,7 @@ module.exports = {
     extend: {
       borderWidth: ["last"],
       brightness: ["hover"],
+      backgroundImage: ["hover", "focus"],
     },
   },
   plugins: [require("@tailwindcss/line-clamp")],

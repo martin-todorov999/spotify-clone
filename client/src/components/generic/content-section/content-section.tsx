@@ -1,5 +1,3 @@
-import ContentCard from "../content-card/content-card";
-
 interface IContentSectionProps {
   title: string;
   subtitle?: string;
@@ -18,7 +16,7 @@ const ContentSection = ({
         {subtitle && <h3 className="text-gray-400">{subtitle}</h3>}
       </div>
 
-      <div className="grid grid-cols-auto-fit gap-10">{children}</div>
+      <div className="grid grid-cols-auto-fit gap-6">{children}</div>
     </div>
   );
 };
