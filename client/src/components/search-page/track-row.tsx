@@ -6,18 +6,18 @@ import TrackArtists from "../generic/track-row/track-artists";
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
   index?: number;
-  handlePlay: (id: string) => void;
+  handlePlay: (uri: string) => void;
 }
+
+export const isFullTrack = (
+  item: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified
+): item is SpotifyApi.TrackObjectFull => {
+  return (item as SpotifyApi.TrackObjectFull).album !== undefined;
+};
 
 const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
   const [hover, setHover] = useState<boolean>(false);
   const trackIndex = index || 0;
-
-  const isFullTrack = (
-    item: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified
-  ): item is SpotifyApi.TrackObjectFull => {
-    return (item as SpotifyApi.TrackObjectFull).album !== undefined;
-  };
 
   const smallestImage = useSortImages(
     isFullTrack(track) ? track.album.images : []
@@ -49,7 +49,7 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
               />
               {hover && (
                 <BsPlayFill
-                  onClick={() => handlePlay(track.id)}
+                  onClick={() => handlePlay(track.uri)}
                   className="absolute text-white text-2xl cursor-pointer"
                 />
               )}
@@ -59,7 +59,7 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
               <h3 className="text-lg font-normal">
                 {hover ? (
                   <BsPlayFill
-                    onClick={() => handlePlay(track.id)}
+                    onClick={() => handlePlay(track.uri)}
                     className="text-white text-2xl cursor-pointer"
                   />
                 ) : (

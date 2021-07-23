@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import { RiPlayCircleFill } from "react-icons/ri";
 import { RootState } from "../../../redux/reducers";
 import Button from "../button/button";
+import { authUrl } from "../../../api";
 
 interface IModalProps {
   closeModal: () => void;
@@ -53,7 +54,7 @@ const Modal = ({ closeModal }: IModalProps) => {
             <Button
               title="Log in"
               variant="link"
-              href="https://accounts.spotify.com/authorize?client_id=d1b6a57fb43949f5b15ff1f50e47e764&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-library-read%20user-library-modify%20user-top-read%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private%20playlist-modify-private%20playlist-modify-public"
+              href={authUrl}
               classes="text-xs cursor-pointer"
             />
           </div>

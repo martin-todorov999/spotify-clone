@@ -1,15 +1,19 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import spotifyApi from "../../api";
 import ContentCard from "../../components/generic/content-card/content-card";
 import ContentSection from "../../components/generic/content-section/content-section";
 import NoSearchResults from "../../components/search-page/no-search-results";
 import TopResult from "../../components/search-page/top-result";
 import TrackRow from "../../components/search-page/track-row";
+import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
 
 const SearchPage = () => {
+  const history = useHistory();
+  const dispatch = useDispatch();
   const { query } = useSelector((state: RootState) => state.search);
   const { accessToken } = useSelector((state: RootState) => state.session);
   const [searchResults, setSearchResults] =
@@ -94,7 +98,15 @@ const SearchPage = () => {
     }
   }, [searchResults?.artists, searchResults?.tracks]);
 
-  const handlePlay = () => {};
+  const handlePlayTrack = (uri: string) => {
+    if (accessToken) {
+      dispatch(setUri(uri));
+    }
+  };
+
+  const handleClickAlbum = (id: string) => {
+    history.push(`/album/${id}`);
+  };
 
   return (
     <>
@@ -106,7 +118,10 @@ const SearchPage = () => {
             <div className="flex flex-row items-center">
               {popularResult && (
                 <ContentSection title="Top result" containerClasses="mb-8 mr-4">
-                  <TopResult result={popularResult} />
+                  <TopResult
+                    result={popularResult}
+                    handlePlay={handlePlayTrack}
+                  />
                 </ContentSection>
               )}
               {searchResults.tracks?.items.length && (
@@ -119,7 +134,7 @@ const SearchPage = () => {
                     <TrackRow
                       key={track.id}
                       track={track}
-                      handlePlay={handlePlay}
+                      handlePlay={handlePlayTrack}
                     />
                   ))}
                 </ContentSection>
@@ -137,7 +152,7 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded-full"
-                    onClick={handlePlay}
+                    onClick={() => console.log("artists")}
                   />
                 ))}
               </ContentSection>
@@ -156,7 +171,7 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded"
-                    onClick={handlePlay}
+                    onClick={() => handleClickAlbum(result.id)}
                   />
                 ))}
               </ContentSection>
@@ -173,7 +188,7 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded"
-                    onClick={handlePlay}
+                    onClick={() => console.log("playlist")}
                   />
                 ))}
               </ContentSection>

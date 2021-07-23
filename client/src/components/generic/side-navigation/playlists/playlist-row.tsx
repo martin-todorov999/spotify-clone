@@ -1,6 +1,7 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useState } from "react";
 import { RiVolumeUpLine, RiPauseLine } from "react-icons/ri";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { RootState } from "../../../../redux/reducers";
 import spotifyApi from "../../../../api";
 import ContextMenu from "../../context-menu/context-menu";
@@ -18,6 +19,7 @@ const PlaylistRow = ({
   setIsPlaying,
   containerRef,
 }: IPlaylistRowProps) => {
+  const history = useHistory();
   const { uri } = useSelector((state: RootState) => state.playback);
   const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [mouseX, setMouseX] = useState<number>(0);
@@ -42,14 +44,23 @@ const PlaylistRow = ({
     setContextMenuOpen(true);
   };
 
+  const handlePlaylistRedirect = () => {
+    history.push(`/playlist/${playlist.id}`);
+  };
+
   return (
     <>
       <div
         onContextMenu={handleContextMenu}
         className="flex flex-row justify-between items-center text-gray-400 hover:text-white"
       >
-        <h3 className="text-md line-clamp-1 mb-2 mr-2">{playlist.name}</h3>
-
+        {/* eslint-disable-next-line */}
+        <h3
+          onClick={handlePlaylistRedirect}
+          className="text-sm line-clamp-1 mb-3 mr-2"
+        >
+          {playlist.name}
+        </h3>
         {playlist.uri === uri &&
           (isPlaying ? (
             <RiVolumeUpLine

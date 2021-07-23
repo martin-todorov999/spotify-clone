@@ -30,14 +30,10 @@ const Playlists = () => {
 
       spotifyApi.getMyCurrentPlaybackState().then(({ body }) => {
         if (body) {
-          console.log(body);
-
           setPlayback(body);
           setIsPlaying(body.is_playing);
 
           if (body.context && body.context.uri) {
-            console.log(body.context);
-
             dispatch(setUri(body.context?.uri));
           }
         }

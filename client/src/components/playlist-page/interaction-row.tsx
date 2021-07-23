@@ -13,7 +13,7 @@ interface IInteractionRowProps {
   id: string;
   ownerId?: string;
   isPlaylist?: boolean;
-  handlePlay: (id: string) => void;
+  handlePlay: () => void;
   setOpenModal: (open: boolean) => void;
 }
 
@@ -28,6 +28,7 @@ const InteractionRow = ({
     (state: RootState) => state.session
   );
   const [isLiked, setIsLiked] = useState<boolean>(false);
+  const [showLikeButton, setShowLikeButton] = useState<boolean>(true);
 
   useEffect(() => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
@@ -42,6 +43,10 @@ const InteractionRow = ({
         });
     }
   }, [user, id, ownerId, isPlaylist]);
+
+  useEffect(() => {
+    setShowLikeButton(isPlaylist ? ownerId !== user?.id : true);
+  }, [isPlaylist, ownerId, user]);
 
   const handleFollowButton = () => {
     if (!user || !accessToken) {
@@ -60,23 +65,22 @@ const InteractionRow = ({
   return (
     <div className="py-8 flex flex-row items-center justify-start">
       <RiPlayCircleFill
-        onClick={() => handlePlay(id)}
+        onClick={() => handlePlay()}
         className="text-7xl text-lime-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-100 ease-in-out mr-8"
       />
 
-      {ownerId !== user?.id ||
-        (!isPlaylist &&
-          (isLiked && user ? (
-            <HiHeart
-              onClick={handleFollowButton}
-              className="text-4xl text-lime-500 rounded-full cursor-pointer mr-8"
-            />
-          ) : (
-            <HiOutlineHeart
-              onClick={handleFollowButton}
-              className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer mr-8"
-            />
-          )))}
+      {showLikeButton &&
+        (user && isLiked ? (
+          <HiHeart
+            onClick={handleFollowButton}
+            className="text-4xl text-lime-500 rounded-full cursor-pointer mr-8"
+          />
+        ) : (
+          <HiOutlineHeart
+            onClick={handleFollowButton}
+            className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer mr-8"
+          />
+        ))}
 
       <HiOutlineDotsHorizontal className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer" />
     </div>

@@ -10,7 +10,7 @@ TimeAgo.addDefaultLocale(en);
 interface IPlaylistTrackRowProps {
   item: SpotifyApi.PlaylistTrackObject;
   index: number;
-  handlePlay: (id: string) => void;
+  handlePlay: (uri: string) => void;
 }
 
 export const parseDuration = (milliseconds: number, verbose?: boolean) => {
@@ -42,7 +42,7 @@ const PlaylistTrackRow = ({
         <h3 className="text-lg font-normal">
           {hover ? (
             <BsPlayFill
-              onClick={() => handlePlay(item.track.id)}
+              onClick={() => handlePlay(item.track.uri)}
               className="text-white text-2xl cursor-pointer"
             />
           ) : (

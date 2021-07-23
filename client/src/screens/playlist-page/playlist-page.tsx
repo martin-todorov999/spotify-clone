@@ -11,6 +11,7 @@ import PlaylistTrackRow from "../../components/playlist-page/playlist-track-row"
 import Modal from "../../components/generic/modal/modal";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
+import { setUri } from "../../redux/actions/playback";
 
 const PlaylistPage = () => {
   const dispatch = useDispatch();
@@ -57,8 +58,20 @@ const PlaylistPage = () => {
     if (playlist) setIsLoading(false);
   }, [playlist]);
 
-  const handlePlay = (trackId: string) => {
-    if (!user || !accessToken) setOpenModal(true);
+  const handlePlayTrack = (uri: string) => {
+    if (!user || !accessToken) {
+      setOpenModal(true);
+    } else {
+      dispatch(setUri(uri));
+    }
+  };
+
+  const handlePlayAll = () => {
+    if (!user || !accessToken) {
+      setOpenModal(true);
+    } else if (playlist?.tracks.items[0]) {
+      dispatch(setUri(playlist?.tracks.items[0].track.uri));
+    }
   };
 
   return (
@@ -103,7 +116,7 @@ const PlaylistPage = () => {
                 ownerId={playlist.owner.id}
                 isPlaylist
                 setOpenModal={setOpenModal}
-                handlePlay={handlePlay}
+                handlePlay={handlePlayAll}
               />
 
               <TracksHeader />
@@ -114,7 +127,7 @@ const PlaylistPage = () => {
                     <PlaylistTrackRow
                       item={item}
                       index={index}
-                      handlePlay={handlePlay}
+                      handlePlay={handlePlayTrack}
                     />
                   )}
                 </Fragment>

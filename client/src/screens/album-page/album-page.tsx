@@ -11,6 +11,7 @@ import TracksHeader from "../../components/playlist-page/tracks-header";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import Modal from "../../components/generic/modal/modal";
 import TrackRow from "../../components/search-page/track-row";
+import { setUri } from "../../redux/actions/playback";
 
 const AlbumPage = () => {
   const dispatch = useDispatch();
@@ -61,7 +62,21 @@ const AlbumPage = () => {
     if (!user || !accessToken) setOpenModal(true);
   };
 
-  console.log(album);
+  const handlePlayTrack = (uri: string) => {
+    if (!user || !accessToken) {
+      setOpenModal(true);
+    } else {
+      dispatch(setUri(uri));
+    }
+  };
+
+  const handlePlayAll = () => {
+    if (!user || !accessToken) {
+      setOpenModal(true);
+    } else if (album?.tracks.items[0]) {
+      dispatch(setUri(album.tracks.items[0].uri));
+    }
+  };
 
   return (
     <>
@@ -109,7 +124,7 @@ const AlbumPage = () => {
               <InteractionRow
                 id={album.id}
                 setOpenModal={setOpenModal}
-                handlePlay={handlePlay}
+                handlePlay={handlePlayAll}
               />
 
               <TracksHeader simplified />
@@ -119,7 +134,7 @@ const AlbumPage = () => {
                   <TrackRow
                     track={item}
                     index={index}
-                    handlePlay={handlePlay}
+                    handlePlay={handlePlayTrack}
                   />
                 </Fragment>
               ))}

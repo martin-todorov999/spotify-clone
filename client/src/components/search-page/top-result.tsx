@@ -5,9 +5,10 @@ import TrackArtists from "../generic/track-row/track-artists";
 
 interface ITopResultProps {
   result: SpotifyApi.ArtistObjectFull | SpotifyApi.TrackObjectFull;
+  handlePlay: (uri: string) => void;
 }
 
-const TopResult = ({ result }: ITopResultProps) => {
+const TopResult = ({ result, handlePlay }: ITopResultProps) => {
   const [hover, setHover] = useState<boolean>(false);
 
   const isArtist = (
@@ -20,13 +21,11 @@ const TopResult = ({ result }: ITopResultProps) => {
     isArtist(result) ? result.images : result.album.images
   );
 
-  const handlePlay = () => {};
-
   return (
     <div
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 hover:shadow-xl h-full w-96 rounded p-6 text-white transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"
+      className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 hover:shadow-xl h-full w-96 rounded p-4 text-white transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"
     >
       <img
         src={image.url}
@@ -36,7 +35,7 @@ const TopResult = ({ result }: ITopResultProps) => {
         } h-24 w-24 mb-4`}
       />
 
-      <div className="flex flex-row items-end justify-between">
+      <div className="flex flex-row items-end justify-between relative">
         <div>
           <h1 className="font-bold text-3xl mb-2 line-clamp-1">
             {result.name}
@@ -56,8 +55,8 @@ const TopResult = ({ result }: ITopResultProps) => {
 
         {hover && (
           <RiPlayCircleFill
-            onClick={handlePlay}
-            className="text-6xl text-lime-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-100 ease-in-out"
+            onClick={() => handlePlay(result.uri)}
+            className="shadow-xl absolute right-0 text-6xl text-lime-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-100 ease-in-out"
           />
         )}
       </div>
