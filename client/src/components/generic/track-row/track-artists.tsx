@@ -1,7 +1,7 @@
 import { MdExplicit } from "react-icons/md";
 
 interface ITrackArists {
-  track: SpotifyApi.TrackObjectFull;
+  track: SpotifyApi.TrackObjectSimplified;
 }
 
 const TrackArtists = ({ track }: ITrackArists) => {

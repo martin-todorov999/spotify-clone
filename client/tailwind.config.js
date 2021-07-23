@@ -17,16 +17,6 @@ module.exports = {
       32: "8rem",
       64: "16rem",
     },
-    maxWidth: {
-      32: "8rem",
-      52: "13rem",
-      64: "16rem",
-    },
-    maxHeight: {
-      32: "8rem",
-      52: "13rem",
-      64: "16rem",
-    },
   },
   variants: {
     extend: {

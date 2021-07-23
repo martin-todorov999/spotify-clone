@@ -105,7 +105,7 @@ const SearchPage = () => {
           <>
             <div className="flex flex-row items-center">
               {popularResult && (
-                <ContentSection title="Top result">
+                <ContentSection title="Top result" containerClasses="mb-8 mr-4">
                   <TopResult result={popularResult} />
                 </ContentSection>
               )}

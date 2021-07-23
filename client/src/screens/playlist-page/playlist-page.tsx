@@ -7,7 +7,7 @@ import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import Loader from "../../components/generic/loader/loader";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import TracksHeader from "../../components/playlist-page/tracks-header";
-import TrackRow from "../../components/playlist-page/playlist-track-row";
+import PlaylistTrackRow from "../../components/playlist-page/playlist-track-row";
 import Modal from "../../components/generic/modal/modal";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
@@ -92,12 +92,16 @@ const PlaylistPage = () => {
             <div
               style={{
                 // The digits or letters after primaryColor indicate opacity in hexidecimal
-                backgroundImage: `linear-gradient(${primaryColor}99, #1F2937 10%)`,
+                backgroundImage: `linear-gradient(${primaryColor}99, #1F2937 ${
+                  playlist.tracks.total < 20 ? "25%" : "10%"
+                })`,
               }}
               className="bg-gray-800 flex flex-col flex-grow px-8 pb-8"
             >
               <InteractionRow
-                playlist={playlist}
+                id={playlist.id}
+                ownerId={playlist.owner.id}
+                isPlaylist
                 setOpenModal={setOpenModal}
                 handlePlay={handlePlay}
               />
@@ -107,7 +111,7 @@ const PlaylistPage = () => {
               {playlist?.tracks.items.map((item, index) => (
                 <Fragment key={item.track && item.track.id}>
                   {item.track && (
-                    <TrackRow
+                    <PlaylistTrackRow
                       item={item}
                       index={index}
                       handlePlay={handlePlay}

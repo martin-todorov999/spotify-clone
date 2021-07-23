@@ -35,6 +35,9 @@ const PlaylistInfo = ({
   const textSecondary = useContrastText(primaryColor)
     ? "text-gray-800"
     : "text-gray-300";
+  const formattedLikes = followers
+    ? followers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    : undefined;
 
   return (
     <div className="h-full w-full pt-8 flex flex-col justify-end">
@@ -75,10 +78,9 @@ const PlaylistInfo = ({
 
         <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>&bull;</h3>
 
-        {followers && (
+        {followers && formattedLikes && (
           <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
-            {followers.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-            {" likes"}
+            {`${formattedLikes} ${formattedLikes > "1" ? "likes" : "like"}`}
           </h3>
         )}
 
@@ -91,8 +93,7 @@ const PlaylistInfo = ({
         <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>&bull;</h3>
 
         <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
-          {tracksCount}
-          {" songs,"}
+          {`${tracksCount} ${tracksCount > 1 ? "songs" : "song"},`}
         </h3>
 
         <h3 className={`text-sm font-normal ${textSecondary}`}>
