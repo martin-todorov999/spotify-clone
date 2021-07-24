@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { RootState } from "../../../../redux/reducers";
 import spotifyApi from "../../../../api";
 import ContextMenu from "../../context-menu/context-menu";
-import handleRedirectClick from "../../../../utils";
+import { handleRedirectClick } from "../../../../utils";
 
 interface IPlaylistRowProps {
   playlist: SpotifyApi.PlaylistObjectSimplified;

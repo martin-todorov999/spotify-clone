@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { IconType } from "react-icons";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { RootState } from "../../../../redux/reducers";
+import { regexPathname } from "../../../../utils";
 import Popup from "../../popup/popup";
 
 export interface INavItemProps {
@@ -25,6 +26,7 @@ const NavItem = ({
   popup,
 }: INavItemProps) => {
   const Icon = icon;
+  // const location = useLocation();
   const navLinkRef = useRef<HTMLAnchorElement>(null);
   const [open, setOpen] = useState<boolean>(false);
   const { accessToken } = useSelector((state: RootState) => state.session);
@@ -38,6 +40,18 @@ const NavItem = ({
       <NavLink
         ref={navLinkRef}
         exact
+        isActive={(match, location) => {
+          if (
+            !match?.isExact &&
+            route &&
+            regexPathname(route) === "collection" &&
+            regexPathname(location.pathname) === "collection"
+          ) {
+            return true;
+          }
+
+          return match?.isExact || false;
+        }}
         to={route || "/"}
         onClick={popup && !accessToken ? handleOpenPopup : onClick}
         activeStyle={{ color: !disableActive ? "white" : "" }} // text-white inside activeClassName doesnt seem to work - probably related to class order with the regular classes overriding the active classes

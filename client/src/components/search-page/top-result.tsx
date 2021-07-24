@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RiPlayCircleFill } from "react-icons/ri";
 import { useHistory } from "react-router";
-import handleRedirectClick from "../../utils";
+import { handleRedirectClick } from "../../utils";
 import { getAverageSizeImage } from "../../utils/images";
 import TrackArtists from "../generic/track-row/track-artists";
 

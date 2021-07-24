@@ -118,7 +118,7 @@ const PlaylistPage = () => {
               <TracksHeader />
 
               {playlist?.tracks.items.map((item, index) => (
-                <Fragment key={item.added_at + item.track.id}>
+                <Fragment key={item.added_at + (item.track && item.track.id)}>
                   {item.track && (
                     <PlaylistTrackRow
                       item={item}

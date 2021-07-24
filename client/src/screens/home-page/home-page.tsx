@@ -9,7 +9,7 @@ import Loader from "../../components/generic/loader/loader";
 import RecentlyPlayedCard from "../../components/generic/recently-played-card/recently-played-card";
 import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
-import handleRedirectClick from "../../utils";
+import { handleRedirectClick } from "../../utils";
 import { getAverageSizeImage } from "../../utils/images";
 
 const HomePage = () => {

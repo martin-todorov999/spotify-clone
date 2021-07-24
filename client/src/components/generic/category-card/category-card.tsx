@@ -1,6 +1,6 @@
 import { useHistory } from "react-router";
 import useSortImages from "../../../hooks/utils/useSortImages";
-import handleRedirectClick from "../../../utils";
+import { handleRedirectClick } from "../../../utils";
 
 interface ICategoryCardProps {
   category: SpotifyApi.CategoryObject;

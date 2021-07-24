@@ -8,7 +8,7 @@ import { RootState } from "../../redux/reducers";
 import CategoryInfo from "../../components/category-page/category-info";
 import ContentSection from "../../components/generic/content-section/content-section";
 import ContentCard from "../../components/generic/content-card/content-card";
-import handleRedirectClick from "../../utils";
+import { handleRedirectClick } from "../../utils";
 
 const CategoryPage = () => {
   const history = useHistory();

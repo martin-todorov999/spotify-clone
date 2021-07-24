@@ -10,7 +10,7 @@ import TopResult from "../../components/search-page/top-result";
 import TrackRow from "../../components/search-page/track-row";
 import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
-import handleRedirectClick from "../../utils";
+import { handleRedirectClick } from "../../utils";
 
 const SearchPage = () => {
   const history = useHistory();
