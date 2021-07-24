@@ -1,7 +1,10 @@
-import { BsPlayFill } from "react-icons/bs";
-import { useState } from "react";
+import { BsPlayFill, BsPauseFill } from "react-icons/bs";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useSortImages } from "../../hooks/utils/useSortImages";
 import TrackArtists from "../generic/track-row/track-artists";
+import { RootState } from "../../redux/reducers";
+import spotifyApi from "../../api";
 
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
@@ -16,8 +19,11 @@ export const isFullTrack = (
 };
 
 const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
-  const [hover, setHover] = useState<boolean>(false);
   const trackIndex = index || 0;
+  const [hover, setHover] = useState<boolean>(false);
+  const { uri } = useSelector((state: RootState) => state.playback);
+  const { accessToken } = useSelector((state: RootState) => state.session);
+  const [showPause, setShowPause] = useState<boolean>(false);
 
   const smallestImage = useSortImages(
     isFullTrack(track) ? track.album.images : []
@@ -28,6 +34,19 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
     const seconds = ((milliseconds % 60000) / 1000).toFixed(0);
 
     return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
+  };
+
+  const handlePlayTrack = () => {
+    handlePlay(track.uri);
+    setShowPause(true);
+  };
+
+  const handlePause = () => {
+    if (accessToken) {
+      spotifyApi.setAccessToken(accessToken);
+      spotifyApi.pause();
+      setShowPause(false);
+    }
   };
 
   return (
@@ -49,7 +68,7 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
               />
               {hover && (
                 <BsPlayFill
-                  onClick={() => handlePlay(track.uri)}
+                  onClick={handlePlayTrack}
                   className="absolute text-white text-2xl cursor-pointer"
                 />
               )}
@@ -57,13 +76,22 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
           ) : (
             <div className="h-10 w-10 flex items-center justify-center">
               <h3 className="text-lg font-normal">
-                {hover ? (
-                  <BsPlayFill
-                    onClick={() => handlePlay(track.uri)}
-                    className="text-white text-2xl cursor-pointer"
+                {showPause ? (
+                  <BsPauseFill
+                    onClick={handlePause}
+                    className="text-lime-500 text-2xl cursor-pointer"
                   />
                 ) : (
-                  trackIndex + 1
+                  <>
+                    {hover ? (
+                      <BsPlayFill
+                        onClick={handlePlayTrack}
+                        className="text-white text-2xl cursor-pointer"
+                      />
+                    ) : (
+                      trackIndex + 1
+                    )}
+                  </>
                 )}
               </h3>
             </div>

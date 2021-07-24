@@ -78,19 +78,27 @@ const PlaylistInfo = ({
 
         <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>&bull;</h3>
 
-        {followers && formattedLikes && (
-          <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
-            {`${formattedLikes} ${formattedLikes > "1" ? "likes" : "like"}`}
-          </h3>
+        {formattedLikes && (
+          <>
+            <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
+              {`${formattedLikes} ${formattedLikes > "1" ? "likes" : "like"}`}
+            </h3>
+            <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>
+              &bull;
+            </h3>
+          </>
         )}
 
         {year && (
-          <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
-            {year}
-          </h3>
+          <>
+            <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
+              {year}
+            </h3>
+            <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>
+              &bull;
+            </h3>
+          </>
         )}
-
-        <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>&bull;</h3>
 
         <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
           {`${tracksCount} ${tracksCount > 1 ? "songs" : "song"},`}

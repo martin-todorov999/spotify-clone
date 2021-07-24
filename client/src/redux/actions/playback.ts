@@ -5,6 +5,13 @@ export const setUri = (uri: string) => {
   };
 };
 
+export const setAlbumUri = (albumUri: string) => {
+  return {
+    type: "SET_ALBUM_URI",
+    payload: albumUri,
+  };
+};
+
 export const clearUri = () => {
   return {
     type: "CLEAR_URI",

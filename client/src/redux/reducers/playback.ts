@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = { uri: null };
+const initialState = { uri: null, albumUri: null };
 
 const playbackReducer = (
   state = initialState,
@@ -10,6 +10,11 @@ const playbackReducer = (
     case "SET_URI":
       return {
         uri: action.payload,
+      };
+    case "SET_ALBUM_URI":
+      return {
+        ...state,
+        albumUri: action.payload,
       };
     case "CLEAR_URI":
       return initialState;

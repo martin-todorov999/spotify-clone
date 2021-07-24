@@ -58,23 +58,11 @@ const AlbumPage = () => {
     if (album) setIsLoading(false);
   }, [album]);
 
-  const handlePlay = (trackId: string) => {
-    if (!user || !accessToken) setOpenModal(true);
-  };
-
-  const handlePlayTrack = (uri: string) => {
+  const handlePlay = (uri: string) => {
     if (!user || !accessToken) {
       setOpenModal(true);
     } else {
       dispatch(setUri(uri));
-    }
-  };
-
-  const handlePlayAll = () => {
-    if (!user || !accessToken) {
-      setOpenModal(true);
-    } else if (album?.tracks.items[0]) {
-      dispatch(setUri(album.tracks.items[0].uri));
     }
   };
 
@@ -124,7 +112,7 @@ const AlbumPage = () => {
               <InteractionRow
                 id={album.id}
                 setOpenModal={setOpenModal}
-                handlePlay={handlePlayAll}
+                handlePlay={() => handlePlay(album.uri)}
               />
 
               <TracksHeader simplified />
@@ -134,7 +122,7 @@ const AlbumPage = () => {
                   <TrackRow
                     track={item}
                     index={index}
-                    handlePlay={handlePlayTrack}
+                    handlePlay={handlePlay}
                   />
                 </Fragment>
               ))}

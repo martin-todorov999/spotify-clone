@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { Fragment, RefObject, useEffect, useRef, useState } from "react";
 import { IDropDownItem } from "../dropdown/dropdown";
 
 interface IContextMenuProps {
@@ -102,7 +102,7 @@ const ContextMenu = ({
       className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >
       {menuItems.map((item) => (
-        <>
+        <Fragment key={item.title}>
           <button
             type="button"
             onClick={item.onClick}
@@ -112,7 +112,7 @@ const ContextMenu = ({
           </button>
 
           {item.divider && <hr className="border-gray-600" />}
-        </>
+        </Fragment>
       ))}
     </div>
   );

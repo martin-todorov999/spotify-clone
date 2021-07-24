@@ -65,7 +65,7 @@ const InteractionRow = ({
   return (
     <div className="py-8 flex flex-row items-center justify-start">
       <RiPlayCircleFill
-        onClick={() => handlePlay()}
+        onClick={handlePlay}
         className="text-7xl text-lime-500 rounded-full cursor-pointer transform hover:scale-110 transition duration-100 ease-in-out mr-8"
       />
 

@@ -193,22 +193,6 @@ const SearchPage = () => {
                 ))}
               </ContentSection>
             )}
-
-            {/* {searchResults.episodes?.items.length && (
-              <ContentSection title="Episodes">
-                {searchResults?.episodes?.items.map((result) => (
-                  <ContentCard
-                    key={result.id}
-                    title={result.name}
-                    url={
-                      result.images.length ? result.images[0].url : undefined
-                    }
-                    roundedVariant="rounded"
-                    onClick={handlePlay}
-                  />
-                ))}
-              </ContentSection>
-            )} */}
           </>
         )
       )}

@@ -58,7 +58,7 @@ const PlaylistPage = () => {
     if (playlist) setIsLoading(false);
   }, [playlist]);
 
-  const handlePlayTrack = (uri: string) => {
+  const handlePlay = (uri: string) => {
     if (!user || !accessToken) {
       setOpenModal(true);
     } else {
@@ -66,13 +66,9 @@ const PlaylistPage = () => {
     }
   };
 
-  const handlePlayAll = () => {
-    if (!user || !accessToken) {
-      setOpenModal(true);
-    } else if (playlist?.tracks.items[0]) {
-      dispatch(setUri(playlist?.tracks.items[0].track.uri));
-    }
-  };
+  useEffect(() => {
+    setIsLoading(true);
+  }, [id]);
 
   return (
     <>
@@ -116,18 +112,18 @@ const PlaylistPage = () => {
                 ownerId={playlist.owner.id}
                 isPlaylist
                 setOpenModal={setOpenModal}
-                handlePlay={handlePlayAll}
+                handlePlay={() => handlePlay(playlist.uri)}
               />
 
               <TracksHeader />
 
               {playlist?.tracks.items.map((item, index) => (
-                <Fragment key={item.track && item.track.id}>
+                <Fragment key={item.added_at + item.track.id}>
                   {item.track && (
                     <PlaylistTrackRow
                       item={item}
                       index={index}
-                      handlePlay={handlePlayTrack}
+                      handlePlay={handlePlay}
                     />
                   )}
                 </Fragment>
