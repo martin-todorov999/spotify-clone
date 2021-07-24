@@ -51,7 +51,7 @@ const TopGenres = () => {
     setTopGenres(
       genres
         .filter((genre, index) => genres.indexOf(genre) === index)
-        .slice(0, 3)
+        .slice(0, 4)
     );
   }, [topArtists]);
 
