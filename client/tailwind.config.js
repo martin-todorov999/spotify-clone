@@ -8,19 +8,40 @@ module.exports = {
       colors: {
         lime: colors.lime,
       },
-    },
-    gridTemplateColumns: {
-      "auto-fit": "repeat(auto-fit, minmax(13rem, 1fr))",
+      backdropBrightness: {
+        115: "1.15",
+      },
     },
     minWidth: {
       32: "8rem",
+      64: "16rem",
     },
     minHeight: {
       32: "8rem",
+      64: "16rem",
+    },
+    maxWidth: {
+      32: "8rem",
+      52: "13rem",
+      64: "16rem",
+      xs: "20rem",
+      sm: "24rem",
+      "3xl": "48rem",
+      "4xl": "56rem",
+    },
+    maxHeight: {
+      32: "8rem",
+      52: "13rem",
+      64: "16rem",
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      borderWidth: ["last"],
+      brightness: ["hover"],
+      backgroundImage: ["hover", "focus"],
+      backdropBrightness: ["hover", "focus"],
+    },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/line-clamp")],
 };

@@ -1,12 +1,19 @@
-export const setTrackUri = (uri: string) => {
+export const setUri = (uri: string) => {
   return {
-    type: "SET_TRACK_URI",
+    type: "SET_URI",
     payload: uri,
   };
 };
 
-export const clearTrackUri = () => {
+export const setAlbumUri = (albumUri: string) => {
   return {
-    type: "CLEAR_TRACK_URI",
+    type: "SET_ALBUM_URI",
+    payload: albumUri,
+  };
+};
+
+export const clearUri = () => {
+  return {
+    type: "CLEAR_URI",
   };
 };

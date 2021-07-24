@@ -1,10 +1,15 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/reducers";
 import BrowseAll from "./browse-all";
+import TopGenres from "./top-genres";
 
 interface INoSearchResultsProps {
   query: string;
 }
 
 const NoSearchResults = ({ query }: INoSearchResultsProps) => {
+  const { accessToken } = useSelector((state: RootState) => state.session);
+
   return (
     <>
       {query ? (
@@ -16,7 +21,10 @@ const NoSearchResults = ({ query }: INoSearchResultsProps) => {
           </h2>
         </div>
       ) : (
-        <BrowseAll />
+        <>
+          {accessToken && <TopGenres />}
+          <BrowseAll />
+        </>
       )}
     </>
   );

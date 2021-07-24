@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router";
+import { authUrl } from "../../../api";
 import { logOut } from "../../../redux/actions/session";
 import { RootState } from "../../../redux/reducers";
 import Button from "../../generic/button/button";
@@ -11,9 +12,10 @@ import SearchField from "../../generic/search-field/search-field";
 
 interface INavBarProps {
   isScrolled: boolean;
+  isPlaylistPage: boolean;
 }
 
-const NavBar = ({ isScrolled }: INavBarProps) => {
+const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -21,9 +23,11 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
   const { accessToken, user } = useSelector(
     (state: RootState) => state.session
   );
+  const { primaryColor } = useSelector((state: RootState) => state.utils);
 
   const handleLogOut = () => {
     dispatch(logOut());
+    window.location.href = "/";
   };
 
   const dropdownItems = [
@@ -51,17 +55,30 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
     history.goForward();
   };
 
+  const navbarClasses = () => {
+    let classes = "";
+
+    if (isPlaylistPage) {
+      classes = `absolute bg-black bg-opacity-25 ${
+        isScrolled ? "bg-gray-800 shadow-lg" : "shadow-none"
+      }`;
+    } else {
+      classes = `shadow-lg ${isScrolled ? "bg-gray-800" : "bg-gray-900"}`;
+    }
+
+    return classes;
+  };
+
   return (
     <div
-      className={`${
-        isScrolled ? "bg-transparent" : "bg-gray-900"
-      } top-0 sticky h-12 p-8 shadow-lg flex items-center justify-between transition duration-500 ease-out z-50`}
+      style={{ background: isScrolled && isPlaylistPage ? primaryColor : "" }}
+      className={`${navbarClasses()} top-0 h-min md:h-12 w-full p-4 md:p-8 flex flex-col md:flex-row items-center justify-between transition duration-500 ease-out z-40`}
     >
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center mb-4 md:mb-0">
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } mr-4 transition duration-500 ease-out`}
+          } text-white mr-4 transition duration-500 ease-out hidden md:block`}
           onClick={handleBack}
         >
           <FaChevronLeft />
@@ -70,7 +87,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } transition duration-500 ease-out`}
+          } text-white transition duration-500 ease-out hidden md:block`}
           onClick={handleForward}
         >
           <FaChevronRight />
@@ -79,7 +96,7 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
         {showSearchBar && (
           <SearchField
             autoFocus
-            wrapperClasses="ml-4"
+            wrapperClasses="md:ml-4"
             placeholder="Artists, songs, or podcasts."
           />
         )}
@@ -90,8 +107,8 @@ const NavBar = ({ isScrolled }: INavBarProps) => {
           <Button
             title="Log In"
             variant="link"
-            classes="bg-lime-600 hover:bg-lime-700 text-white"
-            href="https://accounts.spotify.com/authorize?client_id=d1b6a57fb43949f5b15ff1f50e47e764&response_type=code&redirect_uri=http://localhost:3000&scope=streaming%20user-library-read%20user-library-modify%20user-top-read%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state%20playlist-read-private%20playlist-modify-private%20playlist-modify-public"
+            classes="bg-white hover:bg-gray-300 text-gray-900 text-sm"
+            href={authUrl}
           />
         ) : (
           <DropDown

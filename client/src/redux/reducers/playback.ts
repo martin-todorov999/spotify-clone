@@ -1,17 +1,22 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 
-const initialState = { trackUri: "" };
+const initialState = { uri: null, albumUri: null };
 
 const playbackReducer = (
   state = initialState,
-  action: PayloadAction<string | null>
+  action: PayloadAction<string[] | null>
 ) => {
   switch (action.type) {
-    case "SET_TRACK_URI":
+    case "SET_URI":
       return {
-        trackUri: action.payload,
+        uri: action.payload,
       };
-    case "CLEAR_TRACK_URI":
+    case "SET_ALBUM_URI":
+      return {
+        ...state,
+        albumUri: action.payload,
+      };
+    case "CLEAR_URI":
       return initialState;
     default:
       return state;

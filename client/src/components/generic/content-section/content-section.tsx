@@ -1,48 +1,32 @@
-import ContentCard from "../content-card/content-card";
-
 interface IContentSectionProps {
-  title: string;
+  title?: string;
   subtitle?: string;
   children?: React.ReactNode;
+  containerClasses?: string;
+  childrenContainerClasses?: string;
 }
 
 const ContentSection = ({
   title,
   subtitle,
   children,
+  containerClasses,
+  childrenContainerClasses,
 }: IContentSectionProps) => {
   return (
-    <div className="mb-8">
+    <div className={`${containerClasses || "mb-8"}`}>
       <div className="mb-4">
-        <h1 className="text-white text-3xl font-bold">{title}</h1>
+        {title && <h1 className="text-white text-2xl font-bold">{title}</h1>}
         {subtitle && <h3 className="text-gray-400">{subtitle}</h3>}
       </div>
 
-      <div className="grid grid-cols-auto-fit gap-10">
+      <div
+        className={`${
+          childrenContainerClasses ||
+          "flex flex-wrap gap-6 justify-center sm:justify-start"
+        }`}
+      >
         {children}
-        {/* <ContentCard title="First Last" subtitle="Artist" variant="artist" />
-        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
-        <ContentCard title="First Last" subtitle="Artist" variant="artist" />
-
-        <ContentCard title="Playlist Name" subtitle="Playlist description" />
-        <ContentCard title="Playlist Name" subtitle="Playlist description" />
-        <ContentCard title="Playlist Name" subtitle="Playlist description" />
-
-        <ContentCard
-          title="Podcast Name"
-          subtitle="Podcast Description"
-          variant="podcast"
-        />
-        <ContentCard
-          title="Podcast Name"
-          subtitle="Podcast Description"
-          variant="podcast"
-        />
-        <ContentCard
-          title="Podcast Name"
-          subtitle="Podcast Description"
-          variant="podcast"
-        /> */}
       </div>
     </div>
   );
