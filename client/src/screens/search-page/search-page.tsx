@@ -104,8 +104,8 @@ const SearchPage = () => {
     }
   };
 
-  const handleClickAlbum = (id: string) => {
-    history.push(`/album/${id}`);
+  const handleRedirectClick = (id: string, route: "playlist" | "album") => {
+    history.push(`/${route}/${id}`);
   };
 
   return (
@@ -171,7 +171,7 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded"
-                    onClick={() => handleClickAlbum(result.id)}
+                    onClick={() => handleRedirectClick(result.id, "album")}
                   />
                 ))}
               </ContentSection>
@@ -188,7 +188,7 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded"
-                    onClick={() => console.log("playlist")}
+                    onClick={() => handleRedirectClick(result.id, "playlist")}
                   />
                 ))}
               </ContentSection>

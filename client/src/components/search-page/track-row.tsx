@@ -49,6 +49,10 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
     }
   };
 
+  useEffect(() => {
+    setShowPause(uri === track.uri);
+  }, [uri, track.uri]);
+
   return (
     <div
       onMouseEnter={() => setHover(true)}
