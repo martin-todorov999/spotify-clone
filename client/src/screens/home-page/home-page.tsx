@@ -15,13 +15,17 @@ const HomePage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { accessToken } = useSelector((state: RootState) => state.session);
+  const { accessToken, user } = useSelector(
+    (state: RootState) => state.session
+  );
   const [featuredPlaylists, setFeaturedPlaylists] =
     useState<SpotifyApi.ListOfFeaturedPlaylistsResponse>();
   const [newReleases, setNewReleases] =
     useState<SpotifyApi.ListOfNewReleasesResponse>();
   const [recentlyPlayed, setRecentlyPlayed] =
     useState<SpotifyApi.UsersRecentlyPlayedTracksResponse>();
+  const [userPlaylists, setUserPlaylists] =
+    useState<SpotifyApi.ListOfUsersPlaylistsResponse>();
 
   useEffect(() => {
     if (!accessToken) {
@@ -51,8 +55,14 @@ const HomePage = () => {
           setRecentlyPlayed(body);
         })
         .finally(() => setIsLoading(false));
+
+      if (user)
+        spotifyApi.getUserPlaylists(user.id, { limit: 8 }).then(({ body }) => {
+          console.log(body);
+          setUserPlaylists(body);
+        });
     }
-  }, [accessToken]);
+  }, [accessToken, user]);
 
   useEffect(() => {
     if (featuredPlaylists && newReleases) setIsLoading(false);
@@ -100,6 +110,14 @@ const HomePage = () => {
                   />
                 ))}
               </ContentSection>
+
+              {userPlaylists && (
+                <ContentSection title="Your playlists">
+                  {userPlaylists.items.map((playlist) => (
+                    <PlaylistCard key={playlist.id} playlist={playlist} />
+                  ))}
+                </ContentSection>
+              )}
             </>
           ) : (
             <>

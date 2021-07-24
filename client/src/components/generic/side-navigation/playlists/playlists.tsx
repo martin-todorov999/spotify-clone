@@ -30,6 +30,8 @@ const Playlists = () => {
 
       spotifyApi.getMyCurrentPlaybackState().then(({ body }) => {
         if (body) {
+          console.log(body);
+
           setPlayback(body);
           setIsPlaying(body.is_playing);
 

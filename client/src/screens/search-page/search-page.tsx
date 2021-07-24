@@ -115,9 +115,12 @@ const SearchPage = () => {
       ) : (
         searchResults && (
           <>
-            <div className="flex flex-row items-center">
+            <div className="flex flex-col md:flex-row items-center">
               {popularResult && (
-                <ContentSection title="Top result" containerClasses="mb-8 mr-4">
+                <ContentSection
+                  title="Top result"
+                  containerClasses="mb-8 w-full md:w-min md:mr-4"
+                >
                   <TopResult
                     result={popularResult}
                     handlePlay={handlePlayTrack}

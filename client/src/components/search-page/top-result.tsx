@@ -25,7 +25,7 @@ const TopResult = ({ result, handlePlay }: ITopResultProps) => {
     <div
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 hover:shadow-xl h-full w-96 rounded p-4 text-white transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"
+      className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 hover:shadow-xl h-full w-full md:w-96 rounded p-4 text-white transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"
     >
       <img
         src={image.url}

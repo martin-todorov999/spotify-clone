@@ -59,7 +59,7 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
       onMouseLeave={() => setHover(false)}
       className="flex flex-row text-gray-400 hover:bg-gray-700 p-2 rounded-md justify-between"
     >
-      <div className="w-6/12 flex flex-row items-center justify-start pr-2">
+      <div className="w-full md:w-6/12 flex flex-row items-center justify-start pr-2">
         <div className="relative flex items-center justify-center mr-4">
           {isFullTrack(track) ? (
             <>
@@ -110,7 +110,7 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
         </div>
       </div>
 
-      <div className="w-32 flex flex-row items-center justify-center">
+      <div className="w-min md:w-32 flex flex-row items-center justify-center">
         {parseDuration(track.duration_ms)}
       </div>
     </div>

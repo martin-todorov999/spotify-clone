@@ -72,13 +72,13 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
   return (
     <div
       style={{ background: isScrolled && isPlaylistPage ? primaryColor : "" }}
-      className={`${navbarClasses()} top-0 h-12 w-full p-8 flex items-center justify-between transition duration-500 ease-out z-40`}
+      className={`${navbarClasses()} top-0 h-min md:h-12 w-full p-4 md:p-8 flex flex-col md:flex-row items-center justify-between transition duration-500 ease-out z-40`}
     >
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center mb-4 md:mb-0">
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } text-white mr-4 transition duration-500 ease-out`}
+          } text-white mr-4 transition duration-500 ease-out hidden md:block`}
           onClick={handleBack}
         >
           <FaChevronLeft />
@@ -87,7 +87,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
         <IconButton
           classes={`${
             isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } text-white transition duration-500 ease-out`}
+          } text-white transition duration-500 ease-out hidden md:block`}
           onClick={handleForward}
         >
           <FaChevronRight />
@@ -96,7 +96,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
         {showSearchBar && (
           <SearchField
             autoFocus
-            wrapperClasses="ml-4"
+            wrapperClasses="md:ml-4"
             placeholder="Artists, songs, or podcasts."
           />
         )}

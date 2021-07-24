@@ -18,9 +18,7 @@ const PlaylistCard = ({ playlist, size }: IPlaylistCardProps) => {
   return (
     <ContentCard
       title={playlist.name}
-      subtitle={
-        playlist.description || playlist.owner.display_name || playlist.type
-      }
+      subtitle={playlist.description || `By ${playlist.owner.display_name}`}
       url={image.url}
       size={size}
       roundedVariant="rounded"
