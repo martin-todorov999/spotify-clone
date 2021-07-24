@@ -44,3 +44,10 @@ export const setUser = (user: SpotifyApi.CurrentUsersProfileResponse) => {
     },
   };
 };
+
+export const rehydrationComplete = () => {
+  return {
+    type: "REHYDRATION_COMPLETE",
+    payload: null,
+  };
+};

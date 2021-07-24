@@ -1,4 +1,5 @@
 import { PayloadAction } from "@reduxjs/toolkit";
+import { REHYDRATE } from "redux-persist/lib/constants";
 
 interface ISessionState {
   accessToken: string | null;
@@ -6,6 +7,7 @@ interface ISessionState {
   expiresIn: number | null;
   accessTokenTimestamp: number | null;
   user: SpotifyApi.CurrentUsersProfileResponse | null;
+  rehydrated: boolean;
 }
 
 const initialState: ISessionState = {
@@ -14,6 +16,7 @@ const initialState: ISessionState = {
   expiresIn: null,
   accessTokenTimestamp: null,
   user: null,
+  rehydrated: false,
 };
 
 const sessionReducer = (
@@ -42,6 +45,11 @@ const sessionReducer = (
       return {
         ...state,
         user: action.payload.user,
+      };
+    case "REHYDRATION_COMPLETE":
+      return {
+        ...state,
+        rehydrated: true,
       };
     default:
       return state;
