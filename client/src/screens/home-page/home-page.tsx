@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import spotifyApi from "../../api";
 import ContentCard from "../../components/generic/content-card/content-card";
-import PlaylistCard from "../../components/generic/content-card/playlist-card";
 import ContentSection from "../../components/generic/content-section/content-section";
 import Loader from "../../components/generic/loader/loader";
 import RecentlyPlayedCard from "../../components/generic/recently-played-card/recently-played-card";
 import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
+import handleRedirectClick from "../../utils";
+import { getAverageSizeImage } from "../../utils/images";
 
 const HomePage = () => {
   const history = useHistory();
@@ -58,7 +59,6 @@ const HomePage = () => {
 
       if (user)
         spotifyApi.getUserPlaylists(user.id, { limit: 8 }).then(({ body }) => {
-          console.log(body);
           setUserPlaylists(body);
         });
     }
@@ -67,12 +67,6 @@ const HomePage = () => {
   useEffect(() => {
     if (featuredPlaylists && newReleases) setIsLoading(false);
   }, [featuredPlaylists, newReleases]);
-
-  const handleNewReleaseRedirect = (item: SpotifyApi.AlbumObjectSimplified) => {
-    if (item.type === "album") {
-      history.push(`/album/${item.id}`);
-    }
-  };
 
   const timeOfDayGreeting = () => {
     const currentTime = new Date().getHours();
@@ -114,7 +108,20 @@ const HomePage = () => {
               {userPlaylists && (
                 <ContentSection title="Your playlists">
                   {userPlaylists.items.map((playlist) => (
-                    <PlaylistCard key={playlist.id} playlist={playlist} />
+                    <ContentCard
+                      key={playlist.id}
+                      title={playlist.name}
+                      subtitle={
+                        playlist.description ||
+                        `By ${playlist.owner.display_name}`
+                      }
+                      url={getAverageSizeImage(playlist.images).url}
+                      roundedVariant="rounded"
+                      onClick={() =>
+                        handleRedirectClick(playlist.id, "playlist", history)
+                      }
+                      handlePlay={() => handlePlayTrack(playlist.id)}
+                    />
                   ))}
                 </ContentSection>
               )}
@@ -124,7 +131,20 @@ const HomePage = () => {
               {featuredPlaylists && featuredPlaylists.playlists.items.length && (
                 <ContentSection title={featuredPlaylists.message}>
                   {featuredPlaylists.playlists.items.map((playlist) => (
-                    <PlaylistCard key={playlist.id} playlist={playlist} />
+                    <ContentCard
+                      key={playlist.id}
+                      title={playlist.name}
+                      subtitle={
+                        playlist.description ||
+                        `By ${playlist.owner.display_name}`
+                      }
+                      url={getAverageSizeImage(playlist.images).url}
+                      roundedVariant="rounded"
+                      onClick={() =>
+                        handleRedirectClick(playlist.id, "playlist", history)
+                      }
+                      handlePlay={() => handlePlayTrack(playlist.id)}
+                    />
                   ))}
                 </ContentSection>
               )}
@@ -142,7 +162,9 @@ const HomePage = () => {
                         .join(", ")}
                       url={item.images[0].url}
                       roundedVariant="rounded"
-                      onClick={() => handleNewReleaseRedirect(item)}
+                      onClick={() =>
+                        handleRedirectClick(item.id, "album", history)
+                      }
                     />
                   ))}
                 </ContentSection>

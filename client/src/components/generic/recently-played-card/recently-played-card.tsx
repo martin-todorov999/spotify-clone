@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RiPlayCircleFill } from "react-icons/ri";
-import { useSortImages } from "../../../hooks/utils/useSortImages";
+import useSortImages from "../../../hooks/utils/useSortImages";
 import { isFullTrack } from "../../search-page/track-row";
 
 interface IRecentlyPlayedCardProps {

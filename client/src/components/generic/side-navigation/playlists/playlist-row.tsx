@@ -5,6 +5,7 @@ import { useHistory } from "react-router";
 import { RootState } from "../../../../redux/reducers";
 import spotifyApi from "../../../../api";
 import ContextMenu from "../../context-menu/context-menu";
+import handleRedirectClick from "../../../../utils";
 
 interface IPlaylistRowProps {
   playlist: SpotifyApi.PlaylistObjectSimplified;
@@ -45,14 +46,10 @@ const PlaylistRow = ({
     setContextMenuOpen(true);
   };
 
-  const handlePlaylistRedirect = () => {
-    history.push(`/playlist/${playlist.id}`);
-  };
-
   return (
     <>
       <div
-        onClick={handlePlaylistRedirect}
+        onClick={() => handleRedirectClick(playlist.id, "playlist", history)}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         onContextMenu={handleContextMenu}

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { RiPlayCircleFill } from "react-icons/ri";
-import { useAverageSizeImage } from "../../hooks/utils/useSortImages";
+import { useHistory } from "react-router";
+import handleRedirectClick from "../../utils";
+import { getAverageSizeImage } from "../../utils/images";
 import TrackArtists from "../generic/track-row/track-artists";
 
 interface ITopResultProps {
@@ -9,6 +11,7 @@ interface ITopResultProps {
 }
 
 const TopResult = ({ result, handlePlay }: ITopResultProps) => {
+  const history = useHistory();
   const [hover, setHover] = useState<boolean>(false);
 
   const isArtist = (
@@ -17,12 +20,17 @@ const TopResult = ({ result, handlePlay }: ITopResultProps) => {
     return item.type === "artist";
   };
 
-  const image = useAverageSizeImage(
+  const image = getAverageSizeImage(
     isArtist(result) ? result.images : result.album.images
   );
 
   return (
     <div
+      onClick={() =>
+        !isArtist(result)
+          ? handleRedirectClick(result.album.id, "album", history)
+          : null
+      }
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 hover:shadow-xl h-full w-full md:w-96 rounded p-4 text-white transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"

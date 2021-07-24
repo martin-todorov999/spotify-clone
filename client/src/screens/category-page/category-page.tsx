@@ -8,6 +8,7 @@ import { RootState } from "../../redux/reducers";
 import CategoryInfo from "../../components/category-page/category-info";
 import ContentSection from "../../components/generic/content-section/content-section";
 import ContentCard from "../../components/generic/content-card/content-card";
+import handleRedirectClick from "../../utils";
 
 const CategoryPage = () => {
   const history = useHistory();
@@ -56,10 +57,6 @@ const CategoryPage = () => {
     if (category && playlists) setIsLoading(false);
   }, [category, playlists]);
 
-  const handleClickPlaylist = (playlistId: string) => {
-    history.push(`/playlist/${playlistId}`);
-  };
-
   return (
     <>
       {isLoading || !playlists || !category ? (
@@ -89,7 +86,9 @@ const CategoryPage = () => {
                     subtitle={playlist.description || ""}
                     url={playlist.images[0].url}
                     roundedVariant="rounded"
-                    onClick={() => handleClickPlaylist(playlist.id)}
+                    onClick={() =>
+                      handleRedirectClick(playlist.id, "playlist", history)
+                    }
                   />
                 ))}
               </ContentSection>

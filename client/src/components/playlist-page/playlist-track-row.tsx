@@ -2,7 +2,7 @@ import TimeAgo from "javascript-time-ago";
 import en from "javascript-time-ago/locale/en";
 import { BsPlayFill } from "react-icons/bs";
 import { useState } from "react";
-import { useSortImages } from "../../hooks/utils/useSortImages";
+import useSortImages from "../../hooks/utils/useSortImages";
 import TrackArtists from "../generic/track-row/track-artists";
 
 TimeAgo.addDefaultLocale(en);

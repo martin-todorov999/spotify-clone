@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { usePalette } from "react-palette";
 import useContrastText from "../../hooks/utils/useContrastText";
-import { useSortImages } from "../../hooks/utils/useSortImages";
+import useSortImages from "../../hooks/utils/useSortImages";
 
 interface IGenreCardProps {
   artistAndGenre: { artist: SpotifyApi.ArtistObjectFull; genre: string };

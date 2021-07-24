@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { useAverageSizeImage } from "../../../hooks/utils/useSortImages";
 import { setUri } from "../../../redux/actions/playback";
+import { getAverageSizeImage } from "../../../utils/images";
 import ContentCard from "./content-card";
 
 interface ITrackCardProps {
@@ -9,7 +9,7 @@ interface ITrackCardProps {
 
 const TrackCard = ({ track }: ITrackCardProps) => {
   const dispatch = useDispatch();
-  const image = useAverageSizeImage(track.album.images);
+  const image = getAverageSizeImage(track.album.images);
 
   const handlePlayTrack = () => {
     dispatch(setUri(track.uri));

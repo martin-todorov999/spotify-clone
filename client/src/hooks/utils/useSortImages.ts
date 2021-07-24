@@ -1,4 +1,4 @@
-export const useSortImages = (images: SpotifyApi.ImageObject[]) => {
+const useSortImages = (images: SpotifyApi.ImageObject[]) => {
   const sorted = images.sort(function (imageA, imageB) {
     if (imageA.height && imageB.height) {
       return imageA.height > imageB.height ? 1 : -1;
@@ -9,8 +9,4 @@ export const useSortImages = (images: SpotifyApi.ImageObject[]) => {
   return sorted;
 };
 
-export const useAverageSizeImage = (images: SpotifyApi.ImageObject[]) => {
-  const sortedImages = useSortImages(images);
-
-  return sortedImages[Math.round((sortedImages.length - 1) / 2) || 0];
-};
+export default useSortImages;

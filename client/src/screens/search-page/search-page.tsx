@@ -10,6 +10,7 @@ import TopResult from "../../components/search-page/top-result";
 import TrackRow from "../../components/search-page/track-row";
 import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
+import handleRedirectClick from "../../utils";
 
 const SearchPage = () => {
   const history = useHistory();
@@ -98,14 +99,10 @@ const SearchPage = () => {
     }
   }, [searchResults?.artists, searchResults?.tracks]);
 
-  const handlePlayTrack = (uri: string) => {
+  const handlePlay = (uri: string) => {
     if (accessToken) {
       dispatch(setUri(uri));
     }
-  };
-
-  const handleRedirectClick = (id: string, route: "playlist" | "album") => {
-    history.push(`/${route}/${id}`);
   };
 
   return (
@@ -121,10 +118,7 @@ const SearchPage = () => {
                   title="Top result"
                   containerClasses="mb-8 w-full md:w-min md:mr-4"
                 >
-                  <TopResult
-                    result={popularResult}
-                    handlePlay={handlePlayTrack}
-                  />
+                  <TopResult result={popularResult} handlePlay={handlePlay} />
                 </ContentSection>
               )}
               {searchResults.tracks?.items.length && (
@@ -137,7 +131,7 @@ const SearchPage = () => {
                     <TrackRow
                       key={track.id}
                       track={track}
-                      handlePlay={handlePlayTrack}
+                      handlePlay={handlePlay}
                     />
                   ))}
                 </ContentSection>
@@ -174,7 +168,10 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded"
-                    onClick={() => handleRedirectClick(result.id, "album")}
+                    onClick={() =>
+                      handleRedirectClick(result.id, "album", history)
+                    }
+                    handlePlay={() => handlePlay(result.uri)}
                   />
                 ))}
               </ContentSection>
@@ -191,7 +188,9 @@ const SearchPage = () => {
                       result.images.length ? result.images[0].url : undefined
                     }
                     roundedVariant="rounded"
-                    onClick={() => handleRedirectClick(result.id, "playlist")}
+                    onClick={() =>
+                      handleRedirectClick(result.id, "playlist", history)
+                    }
                   />
                 ))}
               </ContentSection>

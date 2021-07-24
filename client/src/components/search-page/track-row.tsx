@@ -1,7 +1,7 @@
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useSortImages } from "../../hooks/utils/useSortImages";
+import useSortImages from "../../hooks/utils/useSortImages";
 import TrackArtists from "../generic/track-row/track-artists";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
