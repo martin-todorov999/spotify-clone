@@ -1,5 +1,12 @@
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import {
+  Fragment,
+  RefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +19,7 @@ import Modal from "../../components/generic/modal/modal";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
 import { setUri } from "../../redux/actions/playback";
+import { getAverageSizeImage } from "../../utils/images";
 
 const PlaylistPage = () => {
   const dispatch = useDispatch();
@@ -23,7 +31,10 @@ const PlaylistPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [primaryColor, setPrimaryColor] = useState<string>("");
-  const { data } = usePalette(playlist?.images[0].url || "");
+  const { data } = usePalette(
+    playlist?.images.length ? playlist?.images[0].url : ""
+  );
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data.darkVibrant) {
@@ -32,15 +43,19 @@ const PlaylistPage = () => {
     }
   }, [data, dispatch]);
 
+  const fetchPlaylist = () => {
+    spotifyApi
+      .getPlaylist(id)
+      .then(({ body }) => setPlaylist(body))
+      .catch((error) => console.log(error));
+  };
+
   useEffect(() => {
     if (id) {
       if (accessToken && user) {
         spotifyApi.setAccessToken(accessToken);
 
-        spotifyApi
-          .getPlaylist(id)
-          .then(({ body }) => setPlaylist(body))
-          .catch((error) => console.log(error));
+        fetchPlaylist();
       } else {
         axios
           .get(`http://localhost:6969/playlist/${id}`)
@@ -52,6 +67,7 @@ const PlaylistPage = () => {
           });
       }
     }
+    // eslint-disable-next-line
   }, [id, accessToken, user]);
 
   useEffect(() => {
@@ -83,8 +99,8 @@ const PlaylistPage = () => {
             >
               <img
                 alt="playlist cover"
-                src={playlist?.images[0].url}
-                className="h-full shadow-2xl mr-8"
+                src={getAverageSizeImage(playlist.images).url}
+                className="h-full w-64 object-cover shadow-2xl mr-8"
               />
 
               <PlaylistInfo
@@ -99,6 +115,7 @@ const PlaylistPage = () => {
             </div>
 
             <div
+              ref={containerRef}
               style={{
                 // The digits or letters after primaryColor indicate opacity in hexidecimal
                 backgroundImage: `linear-gradient(${primaryColor}99, #1F2937 ${
@@ -110,8 +127,10 @@ const PlaylistPage = () => {
               <InteractionRow
                 id={playlist.id}
                 ownerId={playlist.owner.id}
-                isPlaylist
+                playlist={playlist}
+                containerRef={containerRef}
                 setOpenModal={setOpenModal}
+                refetchPlaylist={fetchPlaylist}
                 handlePlay={() => handlePlay(playlist.uri)}
               />
 

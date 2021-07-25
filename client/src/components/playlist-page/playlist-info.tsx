@@ -101,7 +101,7 @@ const PlaylistInfo = ({
         )}
 
         <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
-          {`${tracksCount} ${tracksCount > 1 ? "songs" : "song"},`}
+          {`${tracksCount} ${tracksCount !== 1 ? "songs" : "song"},`}
         </h3>
 
         <h3 className={`text-sm font-normal ${textSecondary}`}>

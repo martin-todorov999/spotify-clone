@@ -3,7 +3,7 @@ import { BsPlusSquareFill } from "react-icons/bs";
 import { IoRadio } from "react-icons/io5";
 import { HiHeart } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import spotifyApi from "../../../../api";
 import { RootState } from "../../../../redux/reducers";
 import NavItem from "../nav-item/nav-item";
@@ -11,8 +11,11 @@ import { setUri } from "../../../../redux/actions/playback";
 import PlaylistRow from "./playlist-row";
 
 const Playlists = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
-  const { accessToken } = useSelector((state: RootState) => state.session);
+  const { accessToken, user } = useSelector(
+    (state: RootState) => state.session
+  );
   const [playlists, setPlaylists] =
     useState<SpotifyApi.ListOfUsersPlaylistsResponse>();
   const [playback, setPlayback] =
@@ -26,7 +29,7 @@ const Playlists = () => {
       spotifyApi.setAccessToken(accessToken);
 
       spotifyApi.getUserPlaylists({ limit: 50 }).then(({ body }) => {
-        if (body) setPlaylists(body);
+        setPlaylists(body);
       });
 
       spotifyApi.getMyCurrentPlaybackState().then(({ body }) => {
@@ -43,20 +46,39 @@ const Playlists = () => {
     // eslint-disable-next-line
   }, [accessToken]);
 
+  const createPlaylist = () => {
+    if (accessToken && user) {
+      spotifyApi.getUserPlaylists(user.id, { limit: 50 }).then(({ body }) => {
+        const userPlaylists = body.items.filter(
+          (item) => item.owner.id === user.id
+        );
+
+        spotifyApi
+          .createPlaylist(`My playlist #${userPlaylists.length + 1}`)
+          .then(({ body: playlist }) => {
+            console.log(playlist);
+            history.push(`/playlist/${playlist.id}`);
+          });
+      });
+    }
+  };
+
   return (
     <>
       <h1 className="uppercase text-gray-400 font-medium m-4">Playlists</h1>
 
-      <NavItem
-        disableActive
-        icon={BsPlusSquareFill}
-        title="Create Playlist"
-        route={accessToken ? "/playlist/:id" : pathname}
-        popup={{
-          title: "Create a playlist",
-          subtitle: "Log in to create and share playlists.",
-        }}
-      />
+      <div onClick={createPlaylist}>
+        <NavItem
+          disableActive
+          icon={BsPlusSquareFill}
+          title="Create Playlist"
+          route="/"
+          popup={{
+            title: "Create a playlist",
+            subtitle: "Log in to create and share playlists.",
+          }}
+        />
+      </div>
 
       <NavItem
         disableActive

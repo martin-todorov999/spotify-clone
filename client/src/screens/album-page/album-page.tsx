@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
@@ -24,6 +24,7 @@ const AlbumPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [primaryColor, setPrimaryColor] = useState<string>("");
   const { data } = usePalette(album?.images[0].url || "");
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data.darkVibrant) {
@@ -101,6 +102,7 @@ const AlbumPage = () => {
             </div>
 
             <div
+              ref={containerRef}
               style={{
                 // The digits or letters after primaryColor indicate opacity in hexidecimal
                 backgroundImage: `linear-gradient(${primaryColor}99, #1F2937 ${
@@ -111,6 +113,7 @@ const AlbumPage = () => {
             >
               <InteractionRow
                 id={album.id}
+                containerRef={containerRef}
                 setOpenModal={setOpenModal}
                 handlePlay={() => handlePlay(album.uri)}
               />

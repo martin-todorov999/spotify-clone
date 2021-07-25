@@ -2,6 +2,7 @@ import { Fragment, RefObject, useEffect, useRef, useState } from "react";
 import { IDropDownItem } from "../dropdown/dropdown";
 
 interface IContextMenuProps {
+  menuItems?: IDropDownItem[];
   mouseX: number;
   mouseY: number;
   screenY: number;
@@ -11,6 +12,7 @@ interface IContextMenuProps {
 }
 
 const ContextMenu = ({
+  menuItems,
   mouseX,
   mouseY,
   screenY,
@@ -22,7 +24,7 @@ const ContextMenu = ({
   const [contextMenuHeight, setContextMenuHeight] = useState<number>(0);
   const [invertContextMenu, setInvertContextMenu] = useState<boolean>(false);
 
-  const menuItems: IDropDownItem[] = [
+  const contextMenuItems: IDropDownItem[] = menuItems || [
     {
       title: "Add to queue",
       onClick: () => console.log("add to queue"),
@@ -101,7 +103,7 @@ const ContextMenu = ({
       }}
       className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >
-      {menuItems.map((item) => (
+      {contextMenuItems.map((item) => (
         <Fragment key={item.title}>
           <button
             type="button"
