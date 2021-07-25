@@ -37,7 +37,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
     {
       title: "Profile",
       onClick: () => {
-        history.push("/user/USERNAME");
+        history.push(user ? `/user/${user.id}` : "/");
       },
     },
     {

@@ -9,6 +9,8 @@ const LibraryPage = () => {
 
   const renderLibraryResponse = () => {
     switch (type) {
+      case "playlists":
+        return <PlaylistsLibrary />;
       case "podcasts":
         return <PodcastsLibrary />;
       case "artists":
@@ -16,7 +18,7 @@ const LibraryPage = () => {
       case "albums":
         return <AlbumsLibrary />;
       default:
-        return <PlaylistsLibrary />;
+        return null;
     }
   };
 

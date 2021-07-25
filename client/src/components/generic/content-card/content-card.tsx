@@ -24,7 +24,7 @@ const ContentCard = ({
       onClick={onClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className="h-min w-60 md:w-44 p-4 hover:bg-gradient-to-tl from-gray-700 to-gray-800 flex flex-col rounded-lg shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer"
+      className="h-min w-60 md:w-44 p-4 hover:bg-gradient-to-tl from-gray-700 to-gray-800 flex flex-col rounded-lg shadow-md transition duration-200 ease-in-out cursor-pointer"
     >
       <div className="relative mb-4">
         <img

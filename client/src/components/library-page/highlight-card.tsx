@@ -23,7 +23,7 @@ const HighlightCard = ({
 }: IHighlightCardProps) => {
   return (
     <div
-      className={`bg-gradient-to-br ${from} ${via} ${to} w-full md:w-94 p-4 rounded flex flex-col flex-col-reverse text-white`}
+      className={`bg-gradient-to-br ${from} ${via} ${to} w-full md:w-94 p-4 rounded flex flex-col flex-col-reverse text-white shadow-md cursor-pointer`}
     >
       <div>
         <h1 className="text-3xl font-bold capitalize">{title}</h1>

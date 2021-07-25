@@ -62,7 +62,7 @@ const Playlists = () => {
         disableActive
         icon={HiHeart}
         title="Liked Songs"
-        route={accessToken ? "/collection/tracks" : pathname}
+        route={accessToken ? "/collection/playlists" : pathname}
         iconClasses="bg-gradient-to-br from-blue-900 via-purple-700 to-blue-300 rounded p-1"
         popup={{
           title: "Liked songs",
