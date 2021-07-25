@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { BsPlusSquareFill } from "react-icons/bs";
+import { IoRadio } from "react-icons/io5";
 import { HiHeart } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router";
@@ -30,8 +31,6 @@ const Playlists = () => {
 
       spotifyApi.getMyCurrentPlaybackState().then(({ body }) => {
         if (body) {
-          console.log(body);
-
           setPlayback(body);
           setIsPlaying(body.is_playing);
 
@@ -64,12 +63,22 @@ const Playlists = () => {
         icon={HiHeart}
         title="Liked Songs"
         route={accessToken ? "/collection/tracks" : pathname}
-        iconClasses="bg-gradient-to-br from-blue-900 via-purple-700 to-blue-300 rounded p-1 filter hover:brightness-125"
+        iconClasses="bg-gradient-to-br from-blue-900 via-purple-700 to-blue-300 rounded p-1"
         popup={{
           title: "Liked songs",
           subtitle: "Log in to view your liked songs.",
         }}
       />
+
+      {accessToken && (
+        <NavItem
+          disableActive
+          icon={IoRadio}
+          title="Your Episodes"
+          route="/collection/podcasts"
+          iconClasses="bg-gradient-to-br from-green-900 via-green-800 to-green-600 text-green-400 rounded p-1"
+        />
+      )}
 
       <hr className="m-4 mb-2 border-gray-600" />
 

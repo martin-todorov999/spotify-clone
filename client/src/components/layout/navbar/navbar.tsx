@@ -78,7 +78,11 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
       style={{ background: isScrolled && isPlaylistPage ? primaryColor : "" }}
       className={`${navbarClasses()} top-0 h-min md:h-12 w-full p-4 md:p-8 flex flex-col md:flex-row items-center justify-between transition duration-500 ease-out z-40`}
     >
-      <div className="flex flex-row items-center mb-4 md:mb-0">
+      <div
+        className={`flex flex-row items-center ${
+          (showLibraryMenu || showSearchBar) && "mb-4"
+        } md:mb-0`}
+      >
         <IconButton
           classes="bg-gray-900 text-white mr-4 transition duration-500 ease-out hidden md:block"
           onClick={handleBack}

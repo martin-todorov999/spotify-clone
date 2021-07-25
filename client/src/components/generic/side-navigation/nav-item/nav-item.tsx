@@ -26,9 +26,9 @@ const NavItem = ({
   popup,
 }: INavItemProps) => {
   const Icon = icon;
-  // const location = useLocation();
   const navLinkRef = useRef<HTMLAnchorElement>(null);
   const [open, setOpen] = useState<boolean>(false);
+  const [hover, setHover] = useState<boolean>(false);
   const { accessToken } = useSelector((state: RootState) => state.session);
 
   const handleOpenPopup = () => {
@@ -53,13 +53,17 @@ const NavItem = ({
           return match?.isExact || false;
         }}
         to={route || "/"}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
         onClick={popup && !accessToken ? handleOpenPopup : onClick}
         activeStyle={{ color: !disableActive ? "white" : "" }} // text-white inside activeClassName doesnt seem to work - probably related to class order with the regular classes overriding the active classes
         activeClassName={`${!disableActive && "bg-gray-800 shadow"}`}
-        className="text-gray-400 relative bg-transparent hover:text-white flex flex-row items-center justify-start rounded-lg cursor-pointer py-2 px-4 transition duration-150 ease-in-out"
+        className="text-gray-400 relative bg-transparent hover:text-white flex flex-row items-center justify-start rounded-lg cursor-pointer py-2 px-4 transition duration-200 ease-in-out"
       >
         <Icon
-          className={`text-3xl mr-4 font-normal ${iconClasses && iconClasses}`}
+          className={`text-2xl mr-4 font-normal transition duration-200 ease-in-out ${
+            iconClasses && iconClasses
+          } filter ${hover && "brightness-125"}`}
         />
         <h1 className="font-bold text-sm">{title}</h1>
       </NavLink>

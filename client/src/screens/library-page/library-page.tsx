@@ -1,5 +1,4 @@
 import { useParams } from "react-router";
-import ContentSection from "../../components/generic/content-section/content-section";
 import AlbumsLibrary from "../../components/library-page/albums-library";
 import ArtistsLibrary from "../../components/library-page/artists-library";
 import PlaylistsLibrary from "../../components/library-page/playlists-library";

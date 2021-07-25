@@ -11,6 +11,9 @@ module.exports = {
       backdropBrightness: {
         115: "1.15",
       },
+      width: {
+        94: "23.5rem",
+      },
     },
     minWidth: {
       32: "8rem",
@@ -28,11 +31,6 @@ module.exports = {
       sm: "24rem",
       "3xl": "48rem",
       "4xl": "56rem",
-    },
-    maxHeight: {
-      32: "8rem",
-      52: "13rem",
-      64: "16rem",
     },
   },
   variants: {

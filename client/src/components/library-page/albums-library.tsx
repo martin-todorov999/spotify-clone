@@ -30,7 +30,7 @@ const AlbumsLibrary = () => {
       {isLoading ? (
         <Loader />
       ) : (
-        <ContentSection title="Artists">
+        <ContentSection title="Albums">
           {albums?.items.map((album) => (
             <Fragment key={album.album.id}>
               <ContentCard
@@ -39,7 +39,7 @@ const AlbumsLibrary = () => {
                   .map((artist) => artist.name)
                   .join(", ")}
                 url={getAverageSizeImage(album.album.images).url}
-                roundedVariant="rounded-full"
+                roundedVariant="rounded"
                 onClick={() =>
                   handleRedirectClick(album.album.id, "album", history)
                 }

@@ -5,8 +5,7 @@ interface IContentCardProps {
   title: string;
   subtitle?: string;
   url?: string;
-  size?: "small" | "large";
-  roundedVariant: "rounded" | "rounded-3xl" | "rounded-full";
+  roundedVariant: "rounded" | "rounded-2xl" | "rounded-full";
   onClick: () => void;
   handlePlay?: () => void;
 }
@@ -15,7 +14,6 @@ const ContentCard = ({
   title,
   subtitle,
   url,
-  size,
   roundedVariant,
   onClick,
   handlePlay,
@@ -26,9 +24,7 @@ const ContentCard = ({
       onClick={onClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
-      className={`h-min ${
-        size === "large" ? "w-60" : "w-44"
-      } p-4 hover:bg-gradient-to-tl from-gray-700 to-gray-800 flex flex-col rounded-lg shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer`}
+      className="h-min w-60 md:w-44 p-4 hover:bg-gradient-to-tl from-gray-700 to-gray-800 flex flex-col rounded-lg shadow-md hover:shadow-xl transition duration-200 ease-in-out cursor-pointer"
     >
       <div className="relative mb-4">
         <img
@@ -37,9 +33,7 @@ const ContentCard = ({
             url ||
             "https://cdn.iconscout.com/icon/free/png-256/account-1439373-1214443.png"
           }
-          className={`${
-            size === "large" ? "w-52 h-52" : "w-36 h-36"
-          } bg-gray-400 object-cover ${roundedVariant}`}
+          className={`w-52 md:w-36 h-52 md:h-36 bg-gray-400 object-cover ${roundedVariant}`}
         />
         {hover && handlePlay && (
           <RiPlayCircleFill

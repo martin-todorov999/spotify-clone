@@ -10,6 +10,8 @@ export const sortImages = (images: SpotifyApi.ImageObject[]) => {
 };
 
 export const getAverageSizeImage = (images: SpotifyApi.ImageObject[]) => {
+  if (!images.length) return { url: "https://i.stack.imgur.com/y9DpT.jpg" };
+
   const sortedImages = sortImages(images);
 
   return sortedImages[Math.round((sortedImages.length - 1) / 2) || 0];
