@@ -25,13 +25,13 @@ const HomePage = () => {
   const [newReleases, setNewReleases] =
     useState<SpotifyApi.ListOfNewReleasesResponse>();
   const [recentlyPlayed, setRecentlyPlayed] =
-    useState<SpotifyApi.UsersRecentlyPlayedTracksResponse>();
+    useState<SpotifyApi.MultipleTracksResponse>();
   const [userPlaylists, setUserPlaylists] =
     useState<SpotifyApi.ListOfUsersPlaylistsResponse>();
   const [userShows, setUserShows] =
     useState<SpotifyApi.UsersSavedShowsResponse>();
   const [recommendedTracks, setRecommendedTracks] =
-    useState<SpotifyApi.RecommendationsFromSeedsResponse>();
+    useState<SpotifyApi.MultipleTracksResponse>();
 
   useEffect(() => {
     if (!accessToken) {
@@ -56,7 +56,9 @@ const HomePage = () => {
       spotifyApi.setAccessToken(accessToken);
 
       spotifyApi.getMyRecentlyPlayedTracks({ limit: 10 }).then(({ body }) => {
-        setRecentlyPlayed(body);
+        spotifyApi
+          .getTracks(body.items.map((item) => item.track.id))
+          .then(({ body: tracks }) => setRecentlyPlayed(tracks));
       });
 
       if (user) {
@@ -114,16 +116,13 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (recentlyPlayed?.items.length) {
+    if (recentlyPlayed?.tracks.length) {
       let artists: string[] = [];
       let tracks: string[] = [];
 
-      recentlyPlayed?.items.forEach((item) => {
-        artists = [
-          ...artists,
-          ...item.track.artists.map((artist) => artist.id),
-        ];
-        tracks = [...tracks, item.track.id];
+      recentlyPlayed?.tracks.forEach((track) => {
+        artists = [...artists, ...track.artists.map((artist) => artist.id)];
+        tracks = [...tracks, track.id];
       });
 
       artists = artists
@@ -140,7 +139,13 @@ const HomePage = () => {
           min_popularity: 50,
           limit: 8,
         })
-        .then(({ body }) => setRecommendedTracks(body));
+        .then(({ body }) => {
+          spotifyApi
+            .getTracks(body.tracks.map((track) => track.id))
+            .then(({ body: tracksResponse }) =>
+              setRecommendedTracks(tracksResponse)
+            );
+        });
     }
   }, [recentlyPlayed]);
 
@@ -150,19 +155,22 @@ const HomePage = () => {
         <Loader />
       ) : (
         <>
-          {accessToken && (
+          {accessToken && recentlyPlayed?.tracks.length && (
             <ContentSection title={timeOfDayGreeting()}>
-              {recentlyPlayed?.items.map((item) => (
+              {recentlyPlayed?.tracks.map((track) => (
                 <RecentlyPlayedCard
-                  key={item.played_at}
-                  track={item.track}
+                  key={track.id}
+                  track={track}
                   handlePlay={handlePlay}
+                  onClick={() =>
+                    handleRedirectClick(track.album.id, "album", history)
+                  }
                 />
               ))}
             </ContentSection>
           )}
 
-          {accessToken && userShows && (
+          {accessToken && userShows?.items.length && (
             <ContentSection title="Your top shows">
               {userShows?.items.map(({ show }) => (
                 <ContentCard
@@ -178,31 +186,31 @@ const HomePage = () => {
             </ContentSection>
           )}
 
-          {accessToken && (
+          {accessToken && recentlyPlayed?.tracks.length && (
             <ContentSection title="Recently played">
-              {recentlyPlayed?.items.slice(0, 8).map((item) => (
+              {recentlyPlayed?.tracks.slice(0, 8).map((track) => (
                 <ContentCard
-                  key={item.played_at}
-                  title={item.track.name}
-                  subtitle={item.track.artists
+                  key={track.id}
+                  title={track.name}
+                  subtitle={track.artists
                     .map((artist) => artist.name)
                     .join(", ")}
                   url={
-                    isFullTrack(item.track)
-                      ? getAverageSizeImage(item.track.album.images).url
+                    isFullTrack(track)
+                      ? getAverageSizeImage(track.album.images).url
                       : ""
                   }
                   roundedVariant="rounded"
-                  handlePlay={() => handlePlay(item.track.uri)}
+                  handlePlay={() => handlePlay(track.uri)}
                   onClick={() =>
-                    handleRedirectClick(item.track.id, "album", history)
+                    handleRedirectClick(track.album.id, "album", history)
                   }
                 />
               ))}
             </ContentSection>
           )}
 
-          {accessToken && (
+          {accessToken && recommendedTracks?.tracks.length && (
             <ContentSection
               title="Based on your recent listening"
               subtitle="Inspired by your recent activity."
@@ -222,7 +230,7 @@ const HomePage = () => {
                   roundedVariant="rounded"
                   handlePlay={() => handlePlay(track.uri)}
                   onClick={() =>
-                    handleRedirectClick(track.id, "album", history)
+                    handleRedirectClick(track.album.id, "album", history)
                   }
                 />
               ))}
@@ -269,7 +277,7 @@ const HomePage = () => {
             </ContentSection>
           )}
 
-          {accessToken && userPlaylists && (
+          {accessToken && userPlaylists?.items.length && (
             <ContentSection title="Your playlists">
               {userPlaylists.items.map((playlist) => (
                 <ContentCard
