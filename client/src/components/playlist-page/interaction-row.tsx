@@ -49,12 +49,14 @@ const InteractionRow = ({
   };
 
   useEffect(() => {
-    if (user && ownerId && playlist) {
+    if (playlist && ownerId && user) {
       spotifyApi
         .areFollowingPlaylist(ownerId, id, [user.id])
-        .then(({ body }) => {
-          setIsLiked(body[0]);
-        });
+        .then(({ body }) => setIsLiked(body[0]));
+    } else {
+      spotifyApi
+        .containsMySavedAlbums([id])
+        .then(({ body }) => setIsLiked(body[0]));
     }
   }, [user, id, ownerId, playlist]);
 
@@ -73,6 +75,10 @@ const InteractionRow = ({
       } else {
         spotifyApi.followPlaylist(id).then(() => setIsLiked(true));
       }
+    } else if (isLiked) {
+      spotifyApi.removeFromMySavedAlbums([id]).then(() => setIsLiked(false));
+    } else {
+      spotifyApi.addToMySavedAlbums([id]).then(() => setIsLiked(true));
     }
   };
 

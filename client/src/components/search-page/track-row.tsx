@@ -8,6 +8,7 @@ import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
 import { IDropDownItem } from "../generic/dropdown/dropdown";
 import ContextMenu from "../generic/context-menu/context-menu";
+import TrackDuration from "../playlist-page/track-duration";
 
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
@@ -39,6 +40,7 @@ const TrackRow = ({
   const [mouseY, setMouseY] = useState<number>(0);
   const [screenY, setScreenY] = useState<number>(0);
   const [screenX, setScreenX] = useState<number>(0);
+  const [isLiked, setIsLiked] = useState<boolean>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const smallestImage = useSortImages(
@@ -70,6 +72,20 @@ const TrackRow = ({
     }
   };
 
+  const handleLikeSong = () => {
+    if (isLiked) {
+      spotifyApi.removeFromMySavedTracks([track.id]).finally(() => {
+        setIsLiked(false);
+        setContextMenuOpen(false);
+      });
+    } else {
+      spotifyApi.addToMySavedTracks([track.id]).finally(() => {
+        setIsLiked(true);
+        setContextMenuOpen(false);
+      });
+    }
+  };
+
   useEffect(() => {
     setShowPause(
       !!playbackState && playbackState.is_playing && uri === track.uri
@@ -80,11 +96,19 @@ const TrackRow = ({
     {
       title: "Add to queue",
       onClick: () => handlePlay(track.uri),
+      divider: true,
     },
     {
       title: "Go to album",
       onClick: () =>
         isFullTrack(track) && history.push(`/album/${track.album.id}`),
+      divider: true,
+    },
+    {
+      title: isLiked
+        ? "Remove from your Liked Songs"
+        : "Save to your Liked Songs",
+      onClick: handleLikeSong,
     },
   ];
 
@@ -160,9 +184,14 @@ const TrackRow = ({
           </div>
         </div>
 
-        <div className="relative w-min md:w-32 flex flex-row items-center justify-center">
-          {parseDuration(track.duration_ms)}
-        </div>
+        <TrackDuration
+          duration={parseDuration(track.duration_ms)}
+          hover={hover}
+          isLiked={!!isLiked}
+          handleLikeSong={handleLikeSong}
+          contextMenuItems={contextMenuItems}
+          containerRef={containerRef}
+        />
       </div>
 
       {contextMenuOpen && (

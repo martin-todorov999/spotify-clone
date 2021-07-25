@@ -4,14 +4,13 @@ import { BsPlayFill } from "react-icons/bs";
 import { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router";
 import { useSelector } from "react-redux";
-import { HiHeart } from "react-icons/hi";
 import useSortImages from "../../hooks/utils/useSortImages";
 import TrackArtists from "../generic/track-row/track-artists";
 import ContextMenu from "../generic/context-menu/context-menu";
 import { IDropDownItem } from "../generic/dropdown/dropdown";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
-import ContextButton from "../generic/context-button/context-button";
+import TrackDuration from "./track-duration";
 
 TimeAgo.addDefaultLocale(en);
 
@@ -91,10 +90,12 @@ const PlaylistTrackRow = ({
     {
       title: "Add to queue",
       onClick: () => handlePlay(item.track.uri),
+      divider: true,
     },
     {
       title: "Go to album",
       onClick: () => history.push(`/album/${item.track.album.id}`),
+      divider: true,
     },
     {
       title: isLiked
@@ -165,17 +166,15 @@ const PlaylistTrackRow = ({
             {timeAgo.format(new Date(item.added_at))}
           </h3>
         </div>
-        <div className="w-32 flex flex-row items-center justify-evenly">
-          <HiHeart
-            className={`text-lime-500 text-lg ${!isLiked && "invisible"}`}
-          />
-          {parseDuration(item.track.duration_ms)}
-          <ContextButton
-            iconClasses={`text-lg ${!hover && "invisible"}`}
-            menuItems={contextMenuItems}
-            containerRef={containerRef}
-          />
-        </div>
+
+        <TrackDuration
+          duration={parseDuration(item.track.duration_ms)}
+          hover={hover}
+          isLiked={!!isLiked}
+          handleLikeSong={handleLikeSong}
+          contextMenuItems={contextMenuItems}
+          containerRef={containerRef}
+        />
       </div>
 
       {contextMenuOpen && (
