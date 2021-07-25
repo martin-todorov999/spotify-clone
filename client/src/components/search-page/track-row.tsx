@@ -55,10 +55,20 @@ const TrackRow = ({
   };
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (accessToken) {
       spotifyApi.setAccessToken(accessToken);
+
+      spotifyApi
+        .containsMySavedTracks([track.id])
+        .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
     }
-  }, [accessToken]);
+
+    return () => {
+      isSubscribed = false;
+    };
+  }, [accessToken, track.id]);
 
   const handlePlayTrack = () => {
     handlePlay(track.uri);
@@ -73,16 +83,18 @@ const TrackRow = ({
   };
 
   const handleLikeSong = () => {
-    if (isLiked) {
-      spotifyApi.removeFromMySavedTracks([track.id]).finally(() => {
-        setIsLiked(false);
-        setContextMenuOpen(false);
-      });
-    } else {
-      spotifyApi.addToMySavedTracks([track.id]).finally(() => {
-        setIsLiked(true);
-        setContextMenuOpen(false);
-      });
+    if (accessToken) {
+      if (isLiked) {
+        spotifyApi.removeFromMySavedTracks([track.id]).finally(() => {
+          setIsLiked(false);
+          setContextMenuOpen(false);
+        });
+      } else {
+        spotifyApi.addToMySavedTracks([track.id]).finally(() => {
+          setIsLiked(true);
+          setContextMenuOpen(false);
+        });
+      }
     }
   };
 
@@ -202,7 +214,6 @@ const TrackRow = ({
           screenY={screenY}
           containerRef={containerRef}
           menuItems={contextMenuItems}
-          disableInvertY
           contextMenuOpen={contextMenuOpen}
           setContextMenuOpen={setContextMenuOpen}
         />

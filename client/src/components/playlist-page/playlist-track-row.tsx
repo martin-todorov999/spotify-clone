@@ -55,31 +55,39 @@ const PlaylistTrackRow = ({
   const smallestImage = useSortImages(item.track.album.images)[0];
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (accessToken) {
       spotifyApi.setAccessToken(accessToken);
 
       spotifyApi
         .containsMySavedTracks([item.track.id])
-        .then(({ body }) => setIsLiked(body[0]));
+        .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [accessToken, item.track.id]);
 
   const handleLikeSong = () => {
-    if (isLiked) {
-      spotifyApi.removeFromMySavedTracks([item.track.id]).finally(() => {
-        setIsLiked(false);
-        setContextMenuOpen(false);
-      });
-    } else {
-      spotifyApi.addToMySavedTracks([item.track.id]).finally(() => {
-        setIsLiked(true);
-        setContextMenuOpen(false);
-      });
+    if (accessToken) {
+      if (isLiked) {
+        spotifyApi.removeFromMySavedTracks([item.track.id]).finally(() => {
+          setIsLiked(false);
+          setContextMenuOpen(false);
+        });
+      } else {
+        spotifyApi.addToMySavedTracks([item.track.id]).finally(() => {
+          setIsLiked(true);
+          setContextMenuOpen(false);
+        });
+      }
     }
   };
 
   const handleRemoveFromPlaylist = () => {
-    if (user && playlist.owner.id === user.id) {
+    if (accessToken && user && playlist.owner.id === user.id) {
       spotifyApi
         .removeTracksFromPlaylist(playlist.id, [{ uri: item.track.uri }])
         .finally(() => refetchPlaylist());
@@ -185,7 +193,6 @@ const PlaylistTrackRow = ({
           screenY={screenY}
           containerRef={containerRef}
           menuItems={contextMenuItems}
-          disableInvertY
           contextMenuOpen={contextMenuOpen}
           setContextMenuOpen={setContextMenuOpen}
         />

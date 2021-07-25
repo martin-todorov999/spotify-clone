@@ -22,7 +22,6 @@ const PlaylistRow = ({
 }: IPlaylistRowProps) => {
   const history = useHistory();
   const { uri } = useSelector((state: RootState) => state.playback);
-  const [hover, setHover] = useState<boolean>(false);
   const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [mouseX, setMouseX] = useState<number>(0);
   const [mouseY, setMouseY] = useState<number>(0);
@@ -58,8 +57,6 @@ const PlaylistRow = ({
             onClick={() =>
               handleRedirectClick(playlist.id, "playlist", history)
             }
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
             onContextMenu={handleContextMenu}
             className="flex flex-row justify-between items-center text-gray-400 hover:text-white cursor-pointer"
           >

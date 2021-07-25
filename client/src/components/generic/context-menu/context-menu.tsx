@@ -132,8 +132,8 @@ const ContextMenu = ({
       ref={contextMenuRef}
       onContextMenu={(e) => e.preventDefault()}
       style={{
-        [positionX!]: handleX(),
-        [positionY!]: handleY(),
+        [positionX || "left"]: handleX(),
+        [positionY || "top"]: handleY(),
       }}
       className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >
@@ -155,8 +155,3 @@ const ContextMenu = ({
 };
 
 export default ContextMenu;
-
-ContextMenu.defaultProps = {
-  positionX: "left",
-  positionY: "top",
-};

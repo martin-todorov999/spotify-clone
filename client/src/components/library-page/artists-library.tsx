@@ -36,7 +36,7 @@ const ArtistsLibrary = () => {
               subtitle={artist.type}
               url={getAverageSizeImage(artist.images).url}
               roundedVariant="rounded-full"
-              onClick={() => console.log(artist.name)}
+              onClick={() => null}
             />
           ))}
         </ContentSection>

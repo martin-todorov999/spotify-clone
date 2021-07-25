@@ -71,7 +71,7 @@ const PodcastsLibrary = () => {
               url={getAverageSizeImage(show.images).url}
               roundedVariant="rounded-2xl"
               handlePlay={() => handlePlay(show.uri)}
-              onClick={() => console.log(show.name)}
+              onClick={() => null}
             />
           ))}
         </ContentSection>

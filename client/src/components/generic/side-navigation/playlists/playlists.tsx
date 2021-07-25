@@ -18,8 +18,6 @@ const Playlists = () => {
   );
   const [playlists, setPlaylists] =
     useState<SpotifyApi.ListOfUsersPlaylistsResponse>();
-  const [playback, setPlayback] =
-    useState<SpotifyApi.CurrentPlaybackResponse>();
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const playlistContainerRef = useRef<HTMLDivElement>(null);
   const { pathname } = useLocation();
@@ -34,9 +32,7 @@ const Playlists = () => {
 
       spotifyApi.getMyCurrentPlaybackState().then(({ body }) => {
         if (body) {
-          setPlayback(body);
           setIsPlaying(body.is_playing);
-
           if (body.context && body.context.uri) {
             dispatch(setUri(body.context?.uri));
           }
@@ -56,7 +52,6 @@ const Playlists = () => {
         spotifyApi
           .createPlaylist(`My playlist #${userPlaylists.length + 1}`)
           .then(({ body: playlist }) => {
-            console.log(playlist);
             history.push(`/playlist/${playlist.id}`);
           });
       });
@@ -72,7 +67,7 @@ const Playlists = () => {
           disableActive
           icon={BsPlusSquareFill}
           title="Create Playlist"
-          route="/"
+          route={pathname}
           popup={{
             title: "Create a playlist",
             subtitle: "Log in to create and share playlists.",

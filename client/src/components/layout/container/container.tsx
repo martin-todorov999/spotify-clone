@@ -1,4 +1,4 @@
-import { MouseEventHandler, ReactNode } from "react";
+import { ReactNode } from "react";
 import Player from "../../generic/player/player";
 import Content from "../content/content";
 import SideNavigation from "../side-navigation/side-navigation";

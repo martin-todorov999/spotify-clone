@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { IconType } from "react-icons";
 import { useSelector } from "react-redux";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { RootState } from "../../../../redux/reducers";
 import { regexPathname } from "../../../../utils";
 import Popup from "../../popup/popup";

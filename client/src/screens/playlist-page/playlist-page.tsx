@@ -37,10 +37,12 @@ const PlaylistPage = () => {
   }, [data, dispatch]);
 
   const fetchPlaylist = () => {
-    spotifyApi
-      .getPlaylist(id)
-      .then(({ body }) => setPlaylist(body))
-      .catch(() => {});
+    if (accessToken) {
+      spotifyApi
+        .getPlaylist(id)
+        .then(({ body }) => setPlaylist(body))
+        .catch(() => {});
+    }
   };
 
   useEffect(() => {

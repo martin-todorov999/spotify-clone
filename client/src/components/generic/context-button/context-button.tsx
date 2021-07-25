@@ -21,7 +21,9 @@ const ContextButton = ({
   const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const buttonRef = useRef<HTMLDivElement>(null);
 
-  const handleContextMenu = (event: any) => {
+  const handleContextMenu = (
+    event: React.MouseEvent<SVGAElement, MouseEvent>
+  ) => {
     event.preventDefault();
 
     setMouseX(

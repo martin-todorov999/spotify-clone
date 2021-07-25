@@ -49,16 +49,18 @@ const InteractionRow = ({
   };
 
   useEffect(() => {
-    if (playlist && ownerId && user) {
-      spotifyApi
-        .areFollowingPlaylist(ownerId, id, [user.id])
-        .then(({ body }) => setIsLiked(body[0]));
-    } else {
-      spotifyApi
-        .containsMySavedAlbums([id])
-        .then(({ body }) => setIsLiked(body[0]));
+    if (accessToken) {
+      if (playlist && ownerId && user) {
+        spotifyApi
+          .areFollowingPlaylist(ownerId, id, [user.id])
+          .then(({ body }) => setIsLiked(body[0]));
+      } else {
+        spotifyApi
+          .containsMySavedAlbums([id])
+          .then(({ body }) => setIsLiked(body[0]));
+      }
     }
-  }, [user, id, ownerId, playlist]);
+  }, [accessToken, user, id, ownerId, playlist]);
 
   useEffect(() => {
     setShowLikeButton(playlist ? ownerId !== user?.id : true);
