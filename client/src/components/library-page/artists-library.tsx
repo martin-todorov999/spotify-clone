@@ -30,15 +30,14 @@ const ArtistsLibrary = () => {
       ) : (
         <ContentSection title="Artists">
           {artists?.artists.items.map((artist) => (
-            <Fragment key={artist.id}>
-              <ContentCard
-                title={artist.name}
-                subtitle={artist.type}
-                url={getAverageSizeImage(artist.images).url}
-                roundedVariant="rounded-full"
-                onClick={() => console.log(artist.name)}
-              />
-            </Fragment>
+            <ContentCard
+              key={artist.id}
+              title={artist.name}
+              subtitle={artist.type}
+              url={getAverageSizeImage(artist.images).url}
+              roundedVariant="rounded-full"
+              onClick={() => console.log(artist.name)}
+            />
           ))}
         </ContentSection>
       )}

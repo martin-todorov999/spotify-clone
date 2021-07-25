@@ -63,20 +63,19 @@ const PlaylistsLibrary = () => {
           />
 
           {playlists?.items.map((playlist) => (
-            <Fragment key={playlist.id}>
-              <ContentCard
-                title={playlist.name}
-                subtitle={
-                  playlist.description || `By ${playlist.owner.display_name}`
-                }
-                url={getAverageSizeImage(playlist.images).url}
-                roundedVariant="rounded"
-                handlePlay={() => handlePlay(playlist.uri)}
-                onClick={() =>
-                  handleRedirectClick(playlist.id, "playlist", history)
-                }
-              />
-            </Fragment>
+            <ContentCard
+              key={playlist.id}
+              title={playlist.name}
+              subtitle={
+                playlist.description || `By ${playlist.owner.display_name}`
+              }
+              url={getAverageSizeImage(playlist.images).url}
+              roundedVariant="rounded"
+              handlePlay={() => handlePlay(playlist.uri)}
+              onClick={() =>
+                handleRedirectClick(playlist.id, "playlist", history)
+              }
+            />
           ))}
         </ContentSection>
       )}

@@ -31,20 +31,15 @@ const AlbumsLibrary = () => {
         <Loader />
       ) : (
         <ContentSection title="Albums">
-          {albums?.items.map((album) => (
-            <Fragment key={album.album.id}>
-              <ContentCard
-                title={album.album.name}
-                subtitle={album.album.artists
-                  .map((artist) => artist.name)
-                  .join(", ")}
-                url={getAverageSizeImage(album.album.images).url}
-                roundedVariant="rounded"
-                onClick={() =>
-                  handleRedirectClick(album.album.id, "album", history)
-                }
-              />
-            </Fragment>
+          {albums?.items.map(({ album }) => (
+            <ContentCard
+              key={album.id}
+              title={album.name}
+              subtitle={album.artists.map((artist) => artist.name).join(", ")}
+              url={getAverageSizeImage(album.images).url}
+              roundedVariant="rounded"
+              onClick={() => handleRedirectClick(album.id, "album", history)}
+            />
           ))}
         </ContentSection>
       )}

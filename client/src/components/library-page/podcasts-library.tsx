@@ -67,16 +67,15 @@ const PodcastsLibrary = () => {
           />
 
           {shows?.items.map(({ show }) => (
-            <Fragment key={show.id}>
-              <ContentCard
-                title={show.name}
-                subtitle={show.publisher}
-                url={getAverageSizeImage(show.images).url}
-                roundedVariant="rounded-2xl"
-                handlePlay={() => handlePlay(show.uri)}
-                onClick={() => console.log(show.name)}
-              />
-            </Fragment>
+            <ContentCard
+              key={show.id}
+              title={show.name}
+              subtitle={show.publisher}
+              url={getAverageSizeImage(show.images).url}
+              roundedVariant="rounded-2xl"
+              handlePlay={() => handlePlay(show.uri)}
+              onClick={() => console.log(show.name)}
+            />
           ))}
         </ContentSection>
       )}
