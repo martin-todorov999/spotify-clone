@@ -40,18 +40,14 @@ const HomePage = () => {
         .then(({ data: { body } }) => {
           setFeaturedPlaylists(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
 
       axios
         .get("http://localhost:6969/browse/new-releases")
         .then(({ data: { body } }) => {
           setNewReleases(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
     } else {
       spotifyApi.setAccessToken(accessToken);
 
@@ -189,7 +185,7 @@ const HomePage = () => {
                   url={getAverageSizeImage(show.images).url}
                   roundedVariant="rounded-2xl"
                   handlePlay={() => handlePlay(show.uri)}
-                  onClick={() => console.log(show.name)}
+                  onClick={() => null}
                 />
               ))}
             </ContentSection>

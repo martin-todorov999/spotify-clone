@@ -1,12 +1,5 @@
 import axios from "axios";
-import {
-  Fragment,
-  RefObject,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +40,7 @@ const PlaylistPage = () => {
     spotifyApi
       .getPlaylist(id)
       .then(({ body }) => setPlaylist(body))
-      .catch((error) => console.log(error));
+      .catch(() => {});
   };
 
   useEffect(() => {
@@ -62,9 +55,7 @@ const PlaylistPage = () => {
           .then(({ data: { body } }) => {
             setPlaylist(body);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(() => {});
       }
     }
     // eslint-disable-next-line
@@ -142,6 +133,8 @@ const PlaylistPage = () => {
                     <PlaylistTrackRow
                       item={item}
                       index={index}
+                      playlist={playlist}
+                      refetchPlaylist={fetchPlaylist}
                       handlePlay={handlePlay}
                     />
                   )}

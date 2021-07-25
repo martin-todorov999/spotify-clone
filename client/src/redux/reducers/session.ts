@@ -1,5 +1,4 @@
 import { PayloadAction } from "@reduxjs/toolkit";
-import { REHYDRATE } from "redux-persist/lib/constants";
 
 interface ISessionState {
   accessToken: string | null;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
@@ -19,13 +19,15 @@ const AlbumPage = () => {
   const { user, accessToken } = useSelector(
     (state: RootState) => state.session
   );
+  const { uri: stateUri } = useSelector((state: RootState) => state.playback);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [album, setAlbum] = useState<SpotifyApi.AlbumObjectFull>();
+  const [playbackState, setPlaybackState] =
+    useState<SpotifyApi.CurrentPlaybackResponse>();
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [primaryColor, setPrimaryColor] = useState<string>("");
   const { data } = usePalette(album?.images[0].url || "");
   const containerRef = useRef<HTMLDivElement>(null);
-  const contextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data.darkVibrant) {
@@ -42,16 +44,14 @@ const AlbumPage = () => {
         spotifyApi
           .getAlbum(id)
           .then(({ body }) => setAlbum(body))
-          .catch((error) => console.log(error));
+          .catch(() => {});
       } else {
         axios
           .get(`http://localhost:6969/albums/${id}`)
           .then(({ data: { body } }) => {
             setAlbum(body);
           })
-          .catch((error) => {
-            console.log(error);
-          });
+          .catch(() => {});
       }
     }
   }, [id, accessToken, user]);
@@ -67,6 +67,14 @@ const AlbumPage = () => {
       dispatch(setUri(uri));
     }
   };
+
+  useEffect(() => {
+    if (accessToken) {
+      spotifyApi.getMyCurrentPlaybackState().then(({ body }) => {
+        setPlaybackState(body);
+      });
+    }
+  }, [accessToken, stateUri]);
 
   return (
     <>
@@ -122,11 +130,11 @@ const AlbumPage = () => {
               <TracksHeader simplified />
 
               {album?.tracks.items.map((item, index) => (
-                <div key={item.id} ref={contextRef}>
+                <div key={item.id}>
                   <TrackRow
                     track={item}
                     index={index}
-                    containerRef={contextRef}
+                    playbackState={playbackState}
                     handlePlay={handlePlay}
                   />
                 </div>

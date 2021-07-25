@@ -38,7 +38,9 @@ const PlaylistRow = ({
   };
 
   // MouseEvent and MouseEventHandler<HTMLDivElement> both didn't seem to work so any was used as a last resort
-  const handleContextMenu = (event: any) => {
+  const handleContextMenu = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     event.preventDefault();
 
     setMouseX(event.clientX);

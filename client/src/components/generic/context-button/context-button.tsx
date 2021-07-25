@@ -4,11 +4,16 @@ import ContextMenu from "../context-menu/context-menu";
 import { IDropDownItem } from "../dropdown/dropdown";
 
 interface IContextButtonProps {
+  iconClasses?: string;
   menuItems: IDropDownItem[];
   containerRef: RefObject<HTMLDivElement>;
 }
 
-const ContextButton = ({ menuItems, containerRef }: IContextButtonProps) => {
+const ContextButton = ({
+  iconClasses,
+  menuItems,
+  containerRef,
+}: IContextButtonProps) => {
   const [mouseX, setMouseX] = useState<number>(0);
   const [mouseY, setMouseY] = useState<number>(0);
   const [screenX, setScreenX] = useState<number>(0);
@@ -41,7 +46,9 @@ const ContextButton = ({ menuItems, containerRef }: IContextButtonProps) => {
       <div ref={buttonRef}>
         <HiOutlineDotsHorizontal
           onClick={handleContextMenu}
-          className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer"
+          className={`${
+            iconClasses || "text-4xl"
+          } text-gray-400 hover:text-white rounded-full cursor-pointer `}
         />
       </div>
 

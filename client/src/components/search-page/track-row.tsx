@@ -1,5 +1,5 @@
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import useSortImages from "../../hooks/utils/useSortImages";
@@ -12,7 +12,7 @@ import ContextMenu from "../generic/context-menu/context-menu";
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
   index?: number;
-  containerRef?: RefObject<HTMLDivElement>;
+  playbackState?: SpotifyApi.CurrentPlaybackResponse;
   handlePlay: (uri: string) => void;
 }
 
@@ -25,7 +25,7 @@ export const isFullTrack = (
 const TrackRow = ({
   track,
   index,
-  containerRef,
+  playbackState,
   handlePlay,
 }: ITrackRowProps) => {
   const history = useHistory();
@@ -39,7 +39,7 @@ const TrackRow = ({
   const [mouseY, setMouseY] = useState<number>(0);
   const [screenY, setScreenY] = useState<number>(0);
   const [screenX, setScreenX] = useState<number>(0);
-  const containerReff = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const smallestImage = useSortImages(
     isFullTrack(track) ? track.album.images : []
@@ -52,6 +52,12 @@ const TrackRow = ({
     return `${minutes}:${Number(seconds) < 10 ? "0" : ""}${seconds}`;
   };
 
+  useEffect(() => {
+    if (accessToken) {
+      spotifyApi.setAccessToken(accessToken);
+    }
+  }, [accessToken]);
+
   const handlePlayTrack = () => {
     handlePlay(track.uri);
     setShowPause(true);
@@ -59,15 +65,16 @@ const TrackRow = ({
 
   const handlePause = () => {
     if (accessToken) {
-      spotifyApi.setAccessToken(accessToken);
       spotifyApi.pause();
       setShowPause(false);
     }
   };
 
   useEffect(() => {
-    setShowPause(uri === track.uri);
-  }, [uri, track.uri]);
+    setShowPause(
+      !!playbackState && playbackState.is_playing && uri === track.uri
+    );
+  }, [playbackState, uri, track.uri]);
 
   const contextMenuItems: IDropDownItem[] = [
     {
@@ -81,7 +88,9 @@ const TrackRow = ({
     },
   ];
 
-  const handleContextMenu = (event: any) => {
+  const handleContextMenu = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     event.preventDefault();
 
     setMouseX(event.clientX - 256);
@@ -94,7 +103,7 @@ const TrackRow = ({
   return (
     <>
       <div
-        ref={containerReff}
+        ref={containerRef}
         onContextMenu={handleContextMenu}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
@@ -162,8 +171,9 @@ const TrackRow = ({
           mouseY={mouseY}
           screenX={screenX}
           screenY={screenY}
-          containerRef={containerReff}
+          containerRef={containerRef}
           menuItems={contextMenuItems}
+          disableInvertY
           contextMenuOpen={contextMenuOpen}
           setContextMenuOpen={setContextMenuOpen}
         />

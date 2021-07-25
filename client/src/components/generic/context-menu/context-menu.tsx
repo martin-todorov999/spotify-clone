@@ -7,6 +7,8 @@ interface IContextMenuProps {
   mouseY: number;
   screenX: number;
   screenY: number;
+  positionX?: "left" | "right";
+  positionY?: "top" | "bottom";
   disableInvertX?: boolean;
   disableInvertY?: boolean;
   containerRef: RefObject<HTMLDivElement>;
@@ -20,6 +22,8 @@ const ContextMenu = ({
   mouseY,
   screenX,
   screenY,
+  positionX,
+  positionY,
   disableInvertX,
   disableInvertY,
   containerRef,
@@ -35,34 +39,34 @@ const ContextMenu = ({
   const contextMenuItems: IDropDownItem[] = menuItems || [
     {
       title: "Add to queue",
-      onClick: () => console.log("add to queue"),
+      onClick: () => null,
     },
     {
       title: "Start playlist radio",
-      onClick: () => console.log("start playlist radio"),
+      onClick: () => null,
       divider: true,
     },
     {
       title: "Remove from profile",
-      onClick: () => console.log("remove from profile"),
+      onClick: () => null,
       divider: true,
     },
     {
       title: "Remove from Your Library",
-      onClick: () => console.log("remove from your library"),
+      onClick: () => null,
     },
     {
       title: "Create playlist",
-      onClick: () => console.log("craete playlist"),
+      onClick: () => null,
     },
     {
       title: "Create folder",
-      onClick: () => console.log("create folder"),
+      onClick: () => null,
       divider: true,
     },
     {
       title: "Share",
-      onClick: () => console.log("share"),
+      onClick: () => null,
     },
   ];
 
@@ -107,7 +111,7 @@ const ContextMenu = ({
     // eslint-disable-next-line
   }, [contextMenuOpen]);
 
-  const positionY = () => {
+  const handleY = () => {
     if (disableInvertY) return mouseY;
 
     if (invertContextMenuY) return mouseY - contextMenuHeight;
@@ -115,7 +119,7 @@ const ContextMenu = ({
     return mouseY;
   };
 
-  const positionX = () => {
+  const handleX = () => {
     if (disableInvertX) return mouseX;
 
     if (invertContextMenuX) return mouseX - contextMenuWidth;
@@ -128,8 +132,8 @@ const ContextMenu = ({
       ref={contextMenuRef}
       onContextMenu={(e) => e.preventDefault()}
       style={{
-        top: positionY(),
-        left: positionX(),
+        [positionX!]: handleX(),
+        [positionY!]: handleY(),
       }}
       className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >
@@ -151,3 +155,8 @@ const ContextMenu = ({
 };
 
 export default ContextMenu;
+
+ContextMenu.defaultProps = {
+  positionX: "left",
+  positionY: "top",
+};

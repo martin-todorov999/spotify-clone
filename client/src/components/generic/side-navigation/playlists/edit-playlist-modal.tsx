@@ -39,7 +39,7 @@ const EditPlaylistModal = ({
           name,
           description: description || undefined,
         })
-        .catch((error) => console.log(error))
+        .catch(() => {})
         .finally(() => {
           refetchPlaylist();
           closeModal();
