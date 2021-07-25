@@ -5,12 +5,13 @@ import { useHistory } from "react-router";
 import spotifyApi from "../../api";
 import ContentCard from "../../components/generic/content-card/content-card";
 import ContentSection from "../../components/generic/content-section/content-section";
+import Loader from "../../components/generic/loader/loader";
 import NoSearchResults from "../../components/search-page/no-search-results";
 import TopResult from "../../components/search-page/top-result";
 import TrackRow from "../../components/search-page/track-row";
 import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
-import handleRedirectClick from "../../utils";
+import { handleRedirectClick } from "../../utils";
 
 const SearchPage = () => {
   const history = useHistory();
@@ -23,6 +24,7 @@ const SearchPage = () => {
     SpotifyApi.ArtistObjectFull | SpotifyApi.TrackObjectFull
   >();
   const [noResults, setNoResults] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
@@ -63,6 +65,7 @@ const SearchPage = () => {
         !searchResults?.playlists?.items.length &&
         !searchResults?.tracks?.items.length
     );
+    setIsLoading(false);
   }, [searchResults]);
 
   useEffect(() => {
@@ -107,96 +110,113 @@ const SearchPage = () => {
 
   return (
     <>
-      {!query || noResults ? (
-        <NoSearchResults query={query} />
+      {isLoading ? (
+        <Loader />
       ) : (
-        searchResults && (
-          <>
-            <div className="flex flex-col md:flex-row items-center">
-              {popularResult && (
-                <ContentSection
-                  title="Top result"
-                  containerClasses="mb-8 w-full md:w-min md:mr-4"
-                >
-                  <TopResult result={popularResult} handlePlay={handlePlay} />
-                </ContentSection>
-              )}
-              {searchResults.tracks?.items.length && (
-                <ContentSection
-                  title="Songs"
-                  containerClasses="mb-8 flex-grow"
-                  childrenContainerClasses="flex flex-col"
-                >
-                  {searchResults.tracks?.items.slice(0, 4).map((track) => (
-                    <TrackRow
-                      key={track.id}
-                      track={track}
-                      handlePlay={handlePlay}
-                    />
-                  ))}
-                </ContentSection>
-              )}
-            </div>
+        <>
+          {!query || noResults ? (
+            <NoSearchResults query={query} />
+          ) : (
+            searchResults && (
+              <>
+                <div className="flex flex-col md:flex-row items-center">
+                  {popularResult && (
+                    <ContentSection
+                      title="Top result"
+                      containerClasses="mb-8 w-full md:w-min md:mr-4"
+                    >
+                      <TopResult
+                        result={popularResult}
+                        handlePlay={handlePlay}
+                      />
+                    </ContentSection>
+                  )}
+                  {searchResults.tracks?.items.length && (
+                    <ContentSection
+                      title="Songs"
+                      containerClasses="mb-8 flex-grow"
+                      childrenContainerClasses="flex flex-col"
+                    >
+                      {searchResults.tracks?.items.slice(0, 4).map((track) => (
+                        <TrackRow
+                          key={track.id}
+                          track={track}
+                          handlePlay={handlePlay}
+                        />
+                      ))}
+                    </ContentSection>
+                  )}
+                </div>
 
-            {searchResults.artists?.items.length && (
-              <ContentSection title="Artists">
-                {searchResults?.artists?.items.map((result) => (
-                  <ContentCard
-                    key={result.id}
-                    title={result.name}
-                    subtitle={result.type}
-                    url={
-                      result.images.length ? result.images[0].url : undefined
-                    }
-                    roundedVariant="rounded-full"
-                    onClick={() => console.log("artists")}
-                  />
-                ))}
-              </ContentSection>
-            )}
+                {searchResults.artists?.items.length && (
+                  <ContentSection title="Artists">
+                    {searchResults?.artists?.items.map((result) => (
+                      <ContentCard
+                        key={result.id}
+                        title={result.name}
+                        subtitle={result.type}
+                        url={
+                          result.images.length
+                            ? result.images[0].url
+                            : undefined
+                        }
+                        roundedVariant="rounded-full"
+                        onClick={() => console.log("artists")}
+                      />
+                    ))}
+                  </ContentSection>
+                )}
 
-            {searchResults.albums?.items.length && (
-              <ContentSection title="Albums">
-                {searchResults?.albums?.items.map((result) => (
-                  <ContentCard
-                    key={result.id}
-                    title={result.name}
-                    subtitle={result.artists
-                      .map((artist) => artist.name)
-                      .join(", ")}
-                    url={
-                      result.images.length ? result.images[0].url : undefined
-                    }
-                    roundedVariant="rounded"
-                    onClick={() =>
-                      handleRedirectClick(result.id, "album", history)
-                    }
-                    handlePlay={() => handlePlay(result.uri)}
-                  />
-                ))}
-              </ContentSection>
-            )}
+                {searchResults.albums?.items.length && (
+                  <ContentSection title="Albums">
+                    {searchResults?.albums?.items.map((result) => (
+                      <ContentCard
+                        key={result.id}
+                        title={result.name}
+                        subtitle={result.artists
+                          .map((artist) => artist.name)
+                          .join(", ")}
+                        url={
+                          result.images.length
+                            ? result.images[0].url
+                            : undefined
+                        }
+                        roundedVariant="rounded"
+                        onClick={() =>
+                          handleRedirectClick(result.id, "album", history)
+                        }
+                        handlePlay={() => handlePlay(result.uri)}
+                      />
+                    ))}
+                  </ContentSection>
+                )}
 
-            {searchResults.playlists?.items.length && (
-              <ContentSection title="Playlists">
-                {searchResults?.playlists?.items.map((result) => (
-                  <ContentCard
-                    key={result.id}
-                    title={result.name}
-                    subtitle={`By ${result.owner.display_name || "unknown"}`}
-                    url={
-                      result.images.length ? result.images[0].url : undefined
-                    }
-                    roundedVariant="rounded"
-                    onClick={() =>
-                      handleRedirectClick(result.id, "playlist", history)
-                    }
-                  />
-                ))}
-              </ContentSection>
-            )}
-          </>
-        )
+                {searchResults.playlists?.items.length && (
+                  <ContentSection title="Playlists">
+                    {searchResults?.playlists?.items.map((result) => (
+                      <ContentCard
+                        key={result.id}
+                        title={result.name}
+                        subtitle={`By ${
+                          result.owner.display_name || "unknown"
+                        }`}
+                        url={
+                          result.images.length
+                            ? result.images[0].url
+                            : undefined
+                        }
+                        roundedVariant="rounded"
+                        onClick={() =>
+                          handleRedirectClick(result.id, "playlist", history)
+                        }
+                      />
+                    ))}
+                  </ContentSection>
+                )}
+              </>
+            )
+          )}
+        </>
       )}
     </>
   );

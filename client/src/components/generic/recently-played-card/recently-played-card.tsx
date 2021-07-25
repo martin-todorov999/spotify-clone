@@ -6,11 +6,13 @@ import { isFullTrack } from "../../search-page/track-row";
 interface IRecentlyPlayedCardProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
   handlePlay: (uri: string) => void;
+  onClick: () => void;
 }
 
 const RecentlyPlayedCard = ({
   track,
   handlePlay,
+  onClick,
 }: IRecentlyPlayedCardProps) => {
   const [hover, setHover] = useState<boolean>(false);
   const smallestImage = useSortImages(
@@ -19,6 +21,7 @@ const RecentlyPlayedCard = ({
 
   return (
     <div
+      onClick={onClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className="hover:bg-gradient-to-tl from-gray-600 bg-gray-700 flex flex-row items-center h-20 w-72 relative rounded shadow-md cursor-pointer"

@@ -3,6 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { RootState } from "../../../redux/reducers";
+import { regexPathname } from "../../../utils";
 import NavBar from "../navbar/navbar";
 
 interface IProps {
@@ -17,15 +18,11 @@ const Content = ({ children }: IProps) => {
 
   const location = useLocation();
 
-  const regexPathname = () => {
-    return location.pathname.replace(/^\/([^/]*).*$/, "$1");
-  };
-
   useEffect(() => {
     setIsFulscreenPage(
-      regexPathname() === "playlist" ||
-        regexPathname() === "category" ||
-        regexPathname() === "album"
+      regexPathname(location.pathname) === "playlist" ||
+        regexPathname(location.pathname) === "category" ||
+        regexPathname(location.pathname) === "album"
     );
     // eslint-disable-next-line
   }, [location]);

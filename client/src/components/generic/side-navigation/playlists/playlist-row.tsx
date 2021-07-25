@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 import { RootState } from "../../../../redux/reducers";
 import spotifyApi from "../../../../api";
 import ContextMenu from "../../context-menu/context-menu";
-import handleRedirectClick from "../../../../utils";
+import { handleRedirectClick } from "../../../../utils";
 
 interface IPlaylistRowProps {
   playlist: SpotifyApi.PlaylistObjectSimplified;
@@ -48,37 +48,43 @@ const PlaylistRow = ({
 
   return (
     <>
-      <div
-        onClick={() => handleRedirectClick(playlist.id, "playlist", history)}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        onContextMenu={handleContextMenu}
-        className="flex flex-row justify-between items-center text-gray-400 hover:text-white cursor-pointer"
-      >
-        <h3 className="text-sm line-clamp-1 mb-3 mr-2">{playlist.name}</h3>
-        {playlist.uri === uri &&
-          (isPlaying ? (
-            <RiVolumeUpLine
-              onClick={handlePause}
-              className="cursor-pointer text-lg mr-2"
-            />
-          ) : (
-            <RiPauseLine
-              onClick={handlePlay}
-              className="cursor-pointer text-lg mr-2"
-            />
-          ))}
-      </div>
+      {playlist.name && (
+        <>
+          <div
+            onClick={() =>
+              handleRedirectClick(playlist.id, "playlist", history)
+            }
+            onMouseEnter={() => setHover(true)}
+            onMouseLeave={() => setHover(false)}
+            onContextMenu={handleContextMenu}
+            className="flex flex-row justify-between items-center text-gray-400 hover:text-white cursor-pointer"
+          >
+            <h3 className="text-sm line-clamp-1 mb-3 mr-2">{playlist.name}</h3>
+            {playlist.uri === uri &&
+              (isPlaying ? (
+                <RiVolumeUpLine
+                  onClick={handlePause}
+                  className="cursor-pointer text-lg mr-2"
+                />
+              ) : (
+                <RiPauseLine
+                  onClick={handlePlay}
+                  className="cursor-pointer text-lg mr-2"
+                />
+              ))}
+          </div>
 
-      {contextMenuOpen && (
-        <ContextMenu
-          mouseX={mouseX}
-          mouseY={mouseY}
-          screenY={screenY}
-          containerRef={containerRef}
-          contextMenuOpen={contextMenuOpen}
-          setContextMenuOpen={setContextMenuOpen}
-        />
+          {contextMenuOpen && (
+            <ContextMenu
+              mouseX={mouseX}
+              mouseY={mouseY}
+              screenY={screenY}
+              containerRef={containerRef}
+              contextMenuOpen={contextMenuOpen}
+              setContextMenuOpen={setContextMenuOpen}
+            />
+          )}
+        </>
       )}
     </>
   );

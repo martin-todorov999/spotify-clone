@@ -1,6 +1,6 @@
 import { History } from "history";
 
-const handleRedirectClick = (
+export const handleRedirectClick = (
   id: string,
   route: "playlist" | "album" | "category",
   history: History
@@ -8,4 +8,6 @@ const handleRedirectClick = (
   history.push(`/${route}/${id}`);
 };
 
-export default handleRedirectClick;
+export const regexPathname = (pathname: string) => {
+  return pathname.replace(/^\/([^/]*).*$/, "$1");
+};

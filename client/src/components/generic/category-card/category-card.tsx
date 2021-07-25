@@ -1,6 +1,6 @@
 import { useHistory } from "react-router";
 import useSortImages from "../../../hooks/utils/useSortImages";
-import handleRedirectClick from "../../../utils";
+import { handleRedirectClick } from "../../../utils";
 
 interface ICategoryCardProps {
   category: SpotifyApi.CategoryObject;
@@ -13,7 +13,7 @@ const CategoryCard = ({ category }: ICategoryCardProps) => {
   return (
     <div
       onClick={() => handleRedirectClick(category.id, "category", history)}
-      className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 hover:shadow-xl h-min w-min rounded-lg p-4 transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"
+      className="hover:bg-gradient-to-tl from-gray-700 to-gray-800 h-min w-min rounded-lg p-4 transition duration-200 ease-in-out cursor-pointer flex flex-col break-words"
     >
       <h1 className="text-white text-2xl font-semibold mb-4 line-clamp-1">
         {category.name}

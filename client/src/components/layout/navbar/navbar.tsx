@@ -5,10 +5,12 @@ import { useHistory, useLocation } from "react-router";
 import { authUrl } from "../../../api";
 import { logOut } from "../../../redux/actions/session";
 import { RootState } from "../../../redux/reducers";
+import { regexPathname } from "../../../utils";
 import Button from "../../generic/button/button";
 import DropDown from "../../generic/dropdown/dropdown";
 import IconButton from "../../generic/icon-button/icon-button";
 import SearchField from "../../generic/search-field/search-field";
+import LibraryMenu from "../../library-page/library-menu";
 
 interface INavBarProps {
   isScrolled: boolean;
@@ -20,6 +22,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
   const dispatch = useDispatch();
   const location = useLocation();
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
+  const [showLibraryMenu, setShowLibraryMenu] = useState<boolean>(false);
   const { accessToken, user } = useSelector(
     (state: RootState) => state.session
   );
@@ -34,7 +37,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
     {
       title: "Profile",
       onClick: () => {
-        history.push("/user/USERNAME");
+        history.push(user ? `/user/${user.id}` : "/");
       },
     },
     {
@@ -44,7 +47,8 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
   ];
 
   useEffect(() => {
-    setShowSearchBar(location.pathname === "/search");
+    setShowSearchBar(regexPathname(location.pathname) === "search");
+    setShowLibraryMenu(regexPathname(location.pathname) === "collection");
   }, [location]);
 
   const handleBack = () => {
@@ -63,7 +67,7 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
         isScrolled ? "bg-gray-800 shadow-lg" : "shadow-none"
       }`;
     } else {
-      classes = `shadow-lg ${isScrolled ? "bg-gray-800" : "bg-gray-900"}`;
+      classes = `${isScrolled ? "bg-gray-900 shadow-lg" : "bg-gray-800"}`;
     }
 
     return classes;
@@ -74,24 +78,26 @@ const NavBar = ({ isScrolled, isPlaylistPage }: INavBarProps) => {
       style={{ background: isScrolled && isPlaylistPage ? primaryColor : "" }}
       className={`${navbarClasses()} top-0 h-min md:h-12 w-full p-4 md:p-8 flex flex-col md:flex-row items-center justify-between transition duration-500 ease-out z-40`}
     >
-      <div className="flex flex-row items-center mb-4 md:mb-0">
+      <div
+        className={`flex flex-row items-center ${
+          (showLibraryMenu || showSearchBar) && "mb-4"
+        } md:mb-0`}
+      >
         <IconButton
-          classes={`${
-            isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } text-white mr-4 transition duration-500 ease-out hidden md:block`}
+          classes="bg-gray-900 text-white mr-4 transition duration-500 ease-out hidden md:block"
           onClick={handleBack}
         >
           <FaChevronLeft />
         </IconButton>
 
         <IconButton
-          classes={`${
-            isScrolled ? "bg-gray-700" : "bg-gray-800"
-          } text-white transition duration-500 ease-out hidden md:block`}
+          classes="bg-gray-900 text-white transition duration-500 ease-out hidden md:block"
           onClick={handleForward}
         >
           <FaChevronRight />
         </IconButton>
+
+        {showLibraryMenu && <LibraryMenu />}
 
         {showSearchBar && (
           <SearchField
