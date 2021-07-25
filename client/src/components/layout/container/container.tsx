@@ -8,8 +8,17 @@ interface IProps {
 }
 
 const Container = ({ children }: IProps) => {
+  const handleContextMenu = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.preventDefault();
+  };
+
   return (
-    <div className="bg-gray-800 flex flex-row h-screen">
+    <div
+      onContextMenu={handleContextMenu}
+      className="bg-gray-800 flex flex-row h-screen"
+    >
       <SideNavigation />
       <Content>{children}</Content>
       <Player />

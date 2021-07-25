@@ -31,9 +31,7 @@ const BrowseAll = () => {
         .then(({ data: { body } }) => {
           setCategories(body);
         })
-        .catch((error) => {
-          console.log(error);
-        })
+        .catch(() => {})
         .finally(() => setIsLoading(false));
     }
     // eslint-disable-next-line

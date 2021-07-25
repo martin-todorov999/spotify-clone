@@ -44,7 +44,7 @@ const PlaylistInfo = ({
       <h6 className={`uppercase text-xs font-bold ${textPrimary}`}>{type}</h6>
 
       <h1
-        className={`uppercase text-6xl xl:text-8xl font-black tracking-tight my-4 ${textPrimary}`}
+        className={`text-6xl xl:text-8xl font-black tracking-tight my-4 ${textPrimary}`}
       >
         {name}
       </h1>
@@ -101,7 +101,7 @@ const PlaylistInfo = ({
         )}
 
         <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
-          {`${tracksCount} ${tracksCount > 1 ? "songs" : "song"},`}
+          {`${tracksCount} ${tracksCount !== 1 ? "songs" : "song"},`}
         </h3>
 
         <h3 className={`text-sm font-normal ${textSecondary}`}>

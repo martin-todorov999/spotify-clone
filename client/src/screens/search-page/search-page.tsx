@@ -51,9 +51,7 @@ const SearchPage = () => {
         .then(({ data: { body } }) => {
           setSearchResults(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
     }
   };
 
@@ -161,7 +159,7 @@ const SearchPage = () => {
                             : undefined
                         }
                         roundedVariant="rounded-full"
-                        onClick={() => console.log("artists")}
+                        onClick={() => null}
                       />
                     ))}
                   </ContentSection>

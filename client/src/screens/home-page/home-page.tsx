@@ -25,7 +25,7 @@ const HomePage = () => {
   const [newReleases, setNewReleases] =
     useState<SpotifyApi.ListOfNewReleasesResponse>();
   const [recentlyPlayed, setRecentlyPlayed] =
-    useState<SpotifyApi.MultipleTracksResponse>();
+    useState<SpotifyApi.TrackObjectFull[]>();
   const [userPlaylists, setUserPlaylists] =
     useState<SpotifyApi.ListOfUsersPlaylistsResponse>();
   const [userShows, setUserShows] =
@@ -40,25 +40,30 @@ const HomePage = () => {
         .then(({ data: { body } }) => {
           setFeaturedPlaylists(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
 
       axios
         .get("http://localhost:6969/browse/new-releases")
         .then(({ data: { body } }) => {
           setNewReleases(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
     } else {
       spotifyApi.setAccessToken(accessToken);
 
-      spotifyApi.getMyRecentlyPlayedTracks({ limit: 10 }).then(({ body }) => {
+      spotifyApi.getMyRecentlyPlayedTracks({ limit: 20 }).then(({ body }) => {
         spotifyApi
           .getTracks(body.items.map((item) => item.track.id))
-          .then(({ body: tracks }) => setRecentlyPlayed(tracks));
+          .then(({ body: tracks }) => {
+            const deduplicatedTracks = tracks.tracks
+              .filter(
+                (track, index, self) =>
+                  index === self.findIndex((item) => item.id === track.id)
+              )
+              .slice(0, 10);
+
+            setRecentlyPlayed(deduplicatedTracks);
+          });
       });
 
       if (user) {
@@ -116,11 +121,11 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (recentlyPlayed?.tracks.length) {
+    if (recentlyPlayed?.length) {
       let artists: string[] = [];
       let tracks: string[] = [];
 
-      recentlyPlayed?.tracks.forEach((track) => {
+      recentlyPlayed?.forEach((track) => {
         artists = [...artists, ...track.artists.map((artist) => artist.id)];
         tracks = [...tracks, track.id];
       });
@@ -155,9 +160,9 @@ const HomePage = () => {
         <Loader />
       ) : (
         <>
-          {accessToken && recentlyPlayed?.tracks.length && (
+          {accessToken && recentlyPlayed?.length && (
             <ContentSection title={timeOfDayGreeting()}>
-              {recentlyPlayed?.tracks.map((track) => (
+              {recentlyPlayed?.map((track) => (
                 <RecentlyPlayedCard
                   key={track.id}
                   track={track}
@@ -180,15 +185,15 @@ const HomePage = () => {
                   url={getAverageSizeImage(show.images).url}
                   roundedVariant="rounded-2xl"
                   handlePlay={() => handlePlay(show.uri)}
-                  onClick={() => console.log(show.name)}
+                  onClick={() => null}
                 />
               ))}
             </ContentSection>
           )}
 
-          {accessToken && recentlyPlayed?.tracks.length && (
+          {accessToken && recentlyPlayed?.length && (
             <ContentSection title="Recently played">
-              {recentlyPlayed?.tracks.slice(0, 8).map((track) => (
+              {recentlyPlayed?.slice(0, 8).map((track) => (
                 <ContentCard
                   key={track.id}
                   title={track.name}

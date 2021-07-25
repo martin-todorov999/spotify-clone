@@ -22,10 +22,10 @@ const PlaylistRow = ({
 }: IPlaylistRowProps) => {
   const history = useHistory();
   const { uri } = useSelector((state: RootState) => state.playback);
-  const [hover, setHover] = useState<boolean>(false);
   const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [mouseX, setMouseX] = useState<number>(0);
   const [mouseY, setMouseY] = useState<number>(0);
+  const [screenX, setScreenX] = useState<number>(0);
   const [screenY, setScreenY] = useState<number>(0);
 
   const handlePause = () => {
@@ -37,11 +37,14 @@ const PlaylistRow = ({
   };
 
   // MouseEvent and MouseEventHandler<HTMLDivElement> both didn't seem to work so any was used as a last resort
-  const handleContextMenu = (event: any) => {
+  const handleContextMenu = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
     event.preventDefault();
 
     setMouseX(event.clientX);
     setMouseY(event.clientY);
+    setScreenX(event.screenX);
     setScreenY(event.screenY);
     setContextMenuOpen(true);
   };
@@ -54,8 +57,6 @@ const PlaylistRow = ({
             onClick={() =>
               handleRedirectClick(playlist.id, "playlist", history)
             }
-            onMouseEnter={() => setHover(true)}
-            onMouseLeave={() => setHover(false)}
             onContextMenu={handleContextMenu}
             className="flex flex-row justify-between items-center text-gray-400 hover:text-white cursor-pointer"
           >
@@ -78,7 +79,9 @@ const PlaylistRow = ({
             <ContextMenu
               mouseX={mouseX}
               mouseY={mouseY}
+              screenX={screenX}
               screenY={screenY}
+              disableInvertX
               containerRef={containerRef}
               contextMenuOpen={contextMenuOpen}
               setContextMenuOpen={setContextMenuOpen}

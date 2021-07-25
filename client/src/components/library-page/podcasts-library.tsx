@@ -1,11 +1,9 @@
 import axios from "axios";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router";
 import spotifyApi from "../../api";
 import { setUri } from "../../redux/actions/playback";
 import { RootState } from "../../redux/reducers";
-import { handleRedirectClick } from "../../utils";
 import { getAverageSizeImage } from "../../utils/images";
 import ContentCard from "../generic/content-card/content-card";
 import ContentSection from "../generic/content-section/content-section";
@@ -13,7 +11,6 @@ import Loader from "../generic/loader/loader";
 import HighlightCard from "./highlight-card";
 
 const PodcastsLibrary = () => {
-  const history = useHistory();
   const dispatch = useDispatch();
   const { accessToken, user } = useSelector(
     (state: RootState) => state.session
@@ -74,7 +71,7 @@ const PodcastsLibrary = () => {
               url={getAverageSizeImage(show.images).url}
               roundedVariant="rounded-2xl"
               handlePlay={() => handlePlay(show.uri)}
-              onClick={() => console.log(show.name)}
+              onClick={() => null}
             />
           ))}
         </ContentSection>

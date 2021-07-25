@@ -2,57 +2,71 @@ import { Fragment, RefObject, useEffect, useRef, useState } from "react";
 import { IDropDownItem } from "../dropdown/dropdown";
 
 interface IContextMenuProps {
+  menuItems?: IDropDownItem[];
   mouseX: number;
   mouseY: number;
+  screenX: number;
   screenY: number;
+  positionX?: "left" | "right";
+  positionY?: "top" | "bottom";
+  disableInvertX?: boolean;
+  disableInvertY?: boolean;
   containerRef: RefObject<HTMLDivElement>;
   contextMenuOpen: boolean;
   setContextMenuOpen: (open: boolean) => void;
 }
 
 const ContextMenu = ({
+  menuItems,
   mouseX,
   mouseY,
+  screenX,
   screenY,
+  positionX,
+  positionY,
+  disableInvertX,
+  disableInvertY,
   containerRef,
   contextMenuOpen,
   setContextMenuOpen,
 }: IContextMenuProps) => {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuHeight, setContextMenuHeight] = useState<number>(0);
-  const [invertContextMenu, setInvertContextMenu] = useState<boolean>(false);
+  const [contextMenuWidth, setContextMenuWidth] = useState<number>(0);
+  const [invertContextMenuX, setInvertContextMenuX] = useState<boolean>(false);
+  const [invertContextMenuY, setInvertContextMenuY] = useState<boolean>(false);
 
-  const menuItems: IDropDownItem[] = [
+  const contextMenuItems: IDropDownItem[] = menuItems || [
     {
       title: "Add to queue",
-      onClick: () => console.log("add to queue"),
+      onClick: () => null,
     },
     {
       title: "Start playlist radio",
-      onClick: () => console.log("start playlist radio"),
+      onClick: () => null,
       divider: true,
     },
     {
       title: "Remove from profile",
-      onClick: () => console.log("remove from profile"),
+      onClick: () => null,
       divider: true,
     },
     {
       title: "Remove from Your Library",
-      onClick: () => console.log("remove from your library"),
+      onClick: () => null,
     },
     {
       title: "Create playlist",
-      onClick: () => console.log("craete playlist"),
+      onClick: () => null,
     },
     {
       title: "Create folder",
-      onClick: () => console.log("create folder"),
+      onClick: () => null,
       divider: true,
     },
     {
       title: "Share",
-      onClick: () => console.log("share"),
+      onClick: () => null,
     },
   ];
 
@@ -82,26 +96,48 @@ const ContextMenu = ({
         containerRef.current.parentElement
       ) {
         setContextMenuHeight(contextMenuRef.current.clientHeight);
-        setInvertContextMenu(
+        setInvertContextMenuY(
           contextMenuRef.current.clientHeight + screenY >=
             containerRef.current.parentElement.clientHeight
+        );
+
+        setContextMenuWidth(contextMenuRef.current.clientWidth);
+        setInvertContextMenuX(
+          contextMenuRef.current.clientWidth + screenX >=
+            containerRef.current.parentElement.clientWidth
         );
       }
     }
     // eslint-disable-next-line
   }, [contextMenuOpen]);
 
+  const handleY = () => {
+    if (disableInvertY) return mouseY;
+
+    if (invertContextMenuY) return mouseY - contextMenuHeight;
+
+    return mouseY;
+  };
+
+  const handleX = () => {
+    if (disableInvertX) return mouseX;
+
+    if (invertContextMenuX) return mouseX - contextMenuWidth;
+
+    return mouseX;
+  };
+
   return (
     <div
       ref={contextMenuRef}
       onContextMenu={(e) => e.preventDefault()}
       style={{
-        top: invertContextMenu ? mouseY - contextMenuHeight : mouseY,
-        left: mouseX,
+        [positionX || "left"]: handleX(),
+        [positionY || "top"]: handleY(),
       }}
       className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >
-      {menuItems.map((item) => (
+      {contextMenuItems.map((item) => (
         <Fragment key={item.title}>
           <button
             type="button"

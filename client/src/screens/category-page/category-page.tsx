@@ -2,9 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router";
 import { usePalette } from "react-palette";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Loader from "../../components/generic/loader/loader";
-import { RootState } from "../../redux/reducers";
 import CategoryInfo from "../../components/category-page/category-info";
 import ContentSection from "../../components/generic/content-section/content-section";
 import ContentCard from "../../components/generic/content-card/content-card";
@@ -13,9 +12,6 @@ import { handleRedirectClick } from "../../utils";
 const CategoryPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { user, accessToken } = useSelector(
-    (state: RootState) => state.session
-  );
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<SpotifyApi.CategoryObject>();
   const [playlists, setPlaylists] =
@@ -38,18 +34,14 @@ const CategoryPage = () => {
         .then(({ data: { body } }) => {
           setCategory(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
 
       axios
         .get(`http://localhost:6969/categories/${id}/playlists`)
         .then(({ data: { body } }) => {
           setPlaylists(body);
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch(() => {});
     }
   }, [id]);
 
