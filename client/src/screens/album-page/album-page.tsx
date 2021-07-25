@@ -25,6 +25,7 @@ const AlbumPage = () => {
   const [primaryColor, setPrimaryColor] = useState<string>("");
   const { data } = usePalette(album?.images[0].url || "");
   const containerRef = useRef<HTMLDivElement>(null);
+  const contextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (data.darkVibrant) {
@@ -121,13 +122,14 @@ const AlbumPage = () => {
               <TracksHeader simplified />
 
               {album?.tracks.items.map((item, index) => (
-                <Fragment key={item.id}>
+                <div key={item.id} ref={contextRef}>
                   <TrackRow
                     track={item}
                     index={index}
+                    containerRef={contextRef}
                     handlePlay={handlePlay}
                   />
-                </Fragment>
+                </div>
               ))}
             </div>
           </div>

@@ -5,7 +5,10 @@ interface IContextMenuProps {
   menuItems?: IDropDownItem[];
   mouseX: number;
   mouseY: number;
+  screenX: number;
   screenY: number;
+  disableInvertX?: boolean;
+  disableInvertY?: boolean;
   containerRef: RefObject<HTMLDivElement>;
   contextMenuOpen: boolean;
   setContextMenuOpen: (open: boolean) => void;
@@ -15,14 +18,19 @@ const ContextMenu = ({
   menuItems,
   mouseX,
   mouseY,
+  screenX,
   screenY,
+  disableInvertX,
+  disableInvertY,
   containerRef,
   contextMenuOpen,
   setContextMenuOpen,
 }: IContextMenuProps) => {
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuHeight, setContextMenuHeight] = useState<number>(0);
-  const [invertContextMenu, setInvertContextMenu] = useState<boolean>(false);
+  const [contextMenuWidth, setContextMenuWidth] = useState<number>(0);
+  const [invertContextMenuX, setInvertContextMenuX] = useState<boolean>(false);
+  const [invertContextMenuY, setInvertContextMenuY] = useState<boolean>(false);
 
   const contextMenuItems: IDropDownItem[] = menuItems || [
     {
@@ -84,22 +92,44 @@ const ContextMenu = ({
         containerRef.current.parentElement
       ) {
         setContextMenuHeight(contextMenuRef.current.clientHeight);
-        setInvertContextMenu(
+        setInvertContextMenuY(
           contextMenuRef.current.clientHeight + screenY >=
             containerRef.current.parentElement.clientHeight
+        );
+
+        setContextMenuWidth(contextMenuRef.current.clientWidth);
+        setInvertContextMenuX(
+          contextMenuRef.current.clientWidth + screenX >=
+            containerRef.current.parentElement.clientWidth
         );
       }
     }
     // eslint-disable-next-line
   }, [contextMenuOpen]);
 
+  const positionY = () => {
+    if (disableInvertY) return mouseY;
+
+    if (invertContextMenuY) return mouseY - contextMenuHeight;
+
+    return mouseY;
+  };
+
+  const positionX = () => {
+    if (disableInvertX) return mouseX;
+
+    if (invertContextMenuX) return mouseX - contextMenuWidth;
+
+    return mouseX;
+  };
+
   return (
     <div
       ref={contextMenuRef}
       onContextMenu={(e) => e.preventDefault()}
       style={{
-        top: invertContextMenu ? mouseY - contextMenuHeight : mouseY,
-        left: mouseX,
+        top: positionY(),
+        left: positionX(),
       }}
       className="bg-gray-700 flex flex-col absolute z-40 shadow-lg rounded-md p-1 mx-4"
     >

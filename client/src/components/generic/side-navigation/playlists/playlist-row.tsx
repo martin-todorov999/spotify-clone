@@ -26,6 +26,7 @@ const PlaylistRow = ({
   const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [mouseX, setMouseX] = useState<number>(0);
   const [mouseY, setMouseY] = useState<number>(0);
+  const [screenX, setScreenX] = useState<number>(0);
   const [screenY, setScreenY] = useState<number>(0);
 
   const handlePause = () => {
@@ -42,6 +43,7 @@ const PlaylistRow = ({
 
     setMouseX(event.clientX);
     setMouseY(event.clientY);
+    setScreenX(event.screenX);
     setScreenY(event.screenY);
     setContextMenuOpen(true);
   };
@@ -78,7 +80,9 @@ const PlaylistRow = ({
             <ContextMenu
               mouseX={mouseX}
               mouseY={mouseY}
+              screenX={screenX}
               screenY={screenY}
+              disableInvertX
               containerRef={containerRef}
               contextMenuOpen={contextMenuOpen}
               setContextMenuOpen={setContextMenuOpen}

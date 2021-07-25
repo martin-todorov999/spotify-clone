@@ -44,7 +44,7 @@ const PlaylistInfo = ({
       <h6 className={`uppercase text-xs font-bold ${textPrimary}`}>{type}</h6>
 
       <h1
-        className={`uppercase text-6xl xl:text-8xl font-black tracking-tight my-4 ${textPrimary}`}
+        className={`text-6xl xl:text-8xl font-black tracking-tight my-4 ${textPrimary}`}
       >
         {name}
       </h1>

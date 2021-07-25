@@ -1,14 +1,18 @@
 import { BsPlayFill, BsPauseFill } from "react-icons/bs";
-import { useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import useSortImages from "../../hooks/utils/useSortImages";
 import TrackArtists from "../generic/track-row/track-artists";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
+import { IDropDownItem } from "../generic/dropdown/dropdown";
+import ContextMenu from "../generic/context-menu/context-menu";
 
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
   index?: number;
+  containerRef?: RefObject<HTMLDivElement>;
   handlePlay: (uri: string) => void;
 }
 
@@ -18,12 +22,24 @@ export const isFullTrack = (
   return (item as SpotifyApi.TrackObjectFull).album !== undefined;
 };
 
-const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
+const TrackRow = ({
+  track,
+  index,
+  containerRef,
+  handlePlay,
+}: ITrackRowProps) => {
+  const history = useHistory();
   const trackIndex = index || 0;
   const [hover, setHover] = useState<boolean>(false);
   const { uri } = useSelector((state: RootState) => state.playback);
   const { accessToken } = useSelector((state: RootState) => state.session);
   const [showPause, setShowPause] = useState<boolean>(false);
+  const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
+  const [mouseX, setMouseX] = useState<number>(0);
+  const [mouseY, setMouseY] = useState<number>(0);
+  const [screenY, setScreenY] = useState<number>(0);
+  const [screenX, setScreenX] = useState<number>(0);
+  const containerReff = useRef<HTMLDivElement>(null);
 
   const smallestImage = useSortImages(
     isFullTrack(track) ? track.album.images : []
@@ -53,67 +69,106 @@ const TrackRow = ({ track, index, handlePlay }: ITrackRowProps) => {
     setShowPause(uri === track.uri);
   }, [uri, track.uri]);
 
+  const contextMenuItems: IDropDownItem[] = [
+    {
+      title: "Add to queue",
+      onClick: () => handlePlay(track.uri),
+    },
+    {
+      title: "Go to album",
+      onClick: () =>
+        isFullTrack(track) && history.push(`/album/${track.album.id}`),
+    },
+  ];
+
+  const handleContextMenu = (event: any) => {
+    event.preventDefault();
+
+    setMouseX(event.clientX - 256);
+    setMouseY(event.clientY);
+    setScreenY(event.screenY);
+    setScreenX(event.screenX);
+    setContextMenuOpen(true);
+  };
+
   return (
-    <div
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-      className="flex flex-row text-gray-400 hover:bg-gray-700 p-2 rounded-md justify-between"
-    >
-      <div className="w-full md:w-6/12 flex flex-row items-center justify-start pr-2">
-        <div className="relative flex items-center justify-center mr-4">
-          {isFullTrack(track) ? (
-            <>
-              <img
-                alt="album art"
-                src={smallestImage.url}
-                className={`h-10 w-10 rounded-sm ${
-                  hover && "filter brightness-50"
-                }`}
-              />
-              {hover && (
-                <BsPlayFill
-                  onClick={handlePlayTrack}
-                  className="absolute text-white text-2xl cursor-pointer"
+    <>
+      <div
+        ref={containerReff}
+        onContextMenu={handleContextMenu}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+        className="flex flex-row text-gray-400 hover:bg-gray-700 p-2 rounded-md justify-between"
+      >
+        <div className="w-full md:w-6/12 flex flex-row items-center justify-start pr-2">
+          <div className="relative flex items-center justify-center mr-4">
+            {isFullTrack(track) ? (
+              <>
+                <img
+                  alt="album art"
+                  src={smallestImage.url}
+                  className={`h-10 w-10 rounded-sm ${
+                    hover && "filter brightness-50"
+                  }`}
                 />
-              )}
-            </>
-          ) : (
-            <div className="h-10 w-10 flex items-center justify-center">
-              <h3 className="text-lg font-normal">
-                {showPause ? (
-                  <BsPauseFill
-                    onClick={handlePause}
-                    className="text-lime-500 text-2xl cursor-pointer"
+                {hover && (
+                  <BsPlayFill
+                    onClick={handlePlayTrack}
+                    className="absolute text-white text-2xl cursor-pointer"
                   />
-                ) : (
-                  <>
-                    {hover ? (
-                      <BsPlayFill
-                        onClick={handlePlayTrack}
-                        className="text-white text-2xl cursor-pointer"
-                      />
-                    ) : (
-                      trackIndex + 1
-                    )}
-                  </>
                 )}
-              </h3>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col items-start justify-center">
-          <h3 className="text-white text-sm font-medium tracking-wide line-clamp-1">
-            {track.name}
-          </h3>
+              </>
+            ) : (
+              <div className="h-10 w-10 flex items-center justify-center">
+                <h3 className="text-lg font-normal">
+                  {showPause ? (
+                    <BsPauseFill
+                      onClick={handlePause}
+                      className="text-lime-500 text-2xl cursor-pointer"
+                    />
+                  ) : (
+                    <>
+                      {hover ? (
+                        <BsPlayFill
+                          onClick={handlePlayTrack}
+                          className="text-white text-2xl cursor-pointer"
+                        />
+                      ) : (
+                        trackIndex + 1
+                      )}
+                    </>
+                  )}
+                </h3>
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col items-start justify-center">
+            <h3 className="text-white text-sm font-medium tracking-wide line-clamp-1">
+              {track.name}
+            </h3>
 
-          <TrackArtists track={track} />
+            <TrackArtists track={track} />
+          </div>
+        </div>
+
+        <div className="relative w-min md:w-32 flex flex-row items-center justify-center">
+          {parseDuration(track.duration_ms)}
         </div>
       </div>
 
-      <div className="w-min md:w-32 flex flex-row items-center justify-center">
-        {parseDuration(track.duration_ms)}
-      </div>
-    </div>
+      {contextMenuOpen && (
+        <ContextMenu
+          mouseX={mouseX}
+          mouseY={mouseY}
+          screenX={screenX}
+          screenY={screenY}
+          containerRef={containerReff}
+          menuItems={contextMenuItems}
+          contextMenuOpen={contextMenuOpen}
+          setContextMenuOpen={setContextMenuOpen}
+        />
+      )}
+    </>
   );
 };
 

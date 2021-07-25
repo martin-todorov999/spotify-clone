@@ -1,18 +1,14 @@
 import { RiPlayCircleFill } from "react-icons/ri";
-import {
-  HiHeart,
-  HiOutlineHeart,
-  HiOutlineDotsHorizontal,
-} from "react-icons/hi";
+import { HiHeart, HiOutlineHeart } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
-import ContextMenu from "../generic/context-menu/context-menu";
 import { IDropDownItem } from "../generic/dropdown/dropdown";
 import EditPlaylistModal from "../generic/side-navigation/playlists/edit-playlist-modal";
 import { setUri } from "../../redux/actions/playback";
+import ContextButton from "../generic/context-button/context-button";
 
 interface IInteractionRowProps {
   id: string;
@@ -40,12 +36,7 @@ const InteractionRow = ({
   );
   const [isLiked, setIsLiked] = useState<boolean>(false);
   const [showLikeButton, setShowLikeButton] = useState<boolean>(true);
-  const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [openEditPlaylist, setOpenEditPlaylist] = useState<boolean>(false);
-  const [mouseX, setMouseX] = useState<number>(0);
-  const [mouseY, setMouseY] = useState<number>(0);
-  const [screenY, setScreenY] = useState<number>(0);
-  const buttonRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (accessToken) spotifyApi.setAccessToken(accessToken);
@@ -85,25 +76,6 @@ const InteractionRow = ({
     }
   };
 
-  const handleContextMenu = (event: any) => {
-    event.preventDefault();
-
-    setMouseX(
-      (buttonRef.current?.offsetLeft &&
-        buttonRef.current?.clientWidth &&
-        buttonRef.current?.offsetLeft - buttonRef.current?.clientWidth) ||
-        event.clientX
-    );
-    setMouseY(
-      (buttonRef.current?.offsetTop &&
-        buttonRef.current?.clientHeight &&
-        buttonRef.current?.offsetTop + buttonRef.current?.clientHeight) ||
-        event.clientY
-    );
-    setScreenY(event.screenY);
-    setContextMenuOpen(true);
-  };
-
   const contextMenuItems: IDropDownItem[] = [
     {
       title: "Add to queue",
@@ -114,7 +86,8 @@ const InteractionRow = ({
       onClick: () => setOpenEditPlaylist(true),
     },
     {
-      title: "Delete",
+      title:
+        playlist?.owner.id === user?.id ? "Delete" : "Remove from Your Library",
       onClick: handleDeletePlaylist,
     },
   ];
@@ -139,24 +112,7 @@ const InteractionRow = ({
           />
         ))}
 
-      <div ref={buttonRef}>
-        <HiOutlineDotsHorizontal
-          onClick={handleContextMenu}
-          className="text-4xl text-gray-400 hover:text-white rounded-full cursor-pointer"
-        />
-      </div>
-
-      {contextMenuOpen && (
-        <ContextMenu
-          menuItems={contextMenuItems}
-          mouseX={mouseX}
-          mouseY={mouseY}
-          screenY={screenY}
-          containerRef={containerRef}
-          contextMenuOpen={contextMenuOpen}
-          setContextMenuOpen={setContextMenuOpen}
-        />
-      )}
+      <ContextButton menuItems={contextMenuItems} containerRef={containerRef} />
 
       {openEditPlaylist && playlist && refetchPlaylist && (
         <EditPlaylistModal
