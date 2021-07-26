@@ -110,11 +110,11 @@ const ProfilePage = () => {
         <>
           {user && id === user.id && (
             <div className="flex flex-col h-full">
-              <div className="bg-gray-700 flex flex-row items-center justify-start h-96 p-8 pt-24">
+              <div className="bg-gray-700 flex flex-col lg:flex-row items-center justify-start h-min lg:h-96 p-8 pt-24">
                 <img
                   alt="playlist cover"
                   src={getAverageSizeImage(user?.images || []).url}
-                  className="h-full w-64 object-cover shadow-2xl rounded-full mr-8"
+                  className="h-64 w-64 object-cover shadow-2xl rounded-full lg:mr-8"
                 />
 
                 <InfoHeader

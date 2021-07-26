@@ -15,6 +15,7 @@ import useContrastText from "../../hooks/utils/useContrastText";
 import useEstimateTime from "../../hooks/utils/useEstimateTime";
 import { parseDuration } from "../../components/playlist-page/playlist-track-row";
 import InfoHeader from "../../components/playlist-page/playlist-info";
+import { getAverageSizeImage } from "../../utils/images";
 
 const AlbumPage = () => {
   const dispatch = useDispatch();
@@ -137,12 +138,12 @@ const AlbumPage = () => {
           <div className="bg-gray-700 flex flex-col h-full">
             <div
               style={{ background: primaryColor }}
-              className="flex flex-row items-center justify-start h-96 p-8 pt-24"
+              className="flex flex-col lg:flex-row items-center justify-start h-min lg:h-96 p-8 pt-24"
             >
               <img
                 alt="playlist cover"
-                src={album?.images[0].url}
-                className="h-full shadow-2xl mr-8"
+                src={getAverageSizeImage(album?.images).url}
+                className="h-64 w-64 object-cover shadow-2xl lg:mr-8"
               />
 
               <InfoHeader
