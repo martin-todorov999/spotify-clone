@@ -22,7 +22,8 @@ const Content = ({ children }: IProps) => {
     setIsFulscreenPage(
       regexPathname(location.pathname) === "playlist" ||
         regexPathname(location.pathname) === "category" ||
-        regexPathname(location.pathname) === "album"
+        regexPathname(location.pathname) === "album" ||
+        regexPathname(location.pathname) === "user"
     );
     // eslint-disable-next-line
   }, [location]);

@@ -135,13 +135,16 @@ const SearchPage = () => {
                       containerClasses="mb-8 flex-grow"
                       childrenContainerClasses="flex flex-col"
                     >
-                      {searchResults.tracks?.items.slice(0, 4).map((track) => (
-                        <TrackRow
-                          key={track.id}
-                          track={track}
-                          handlePlay={handlePlay}
-                        />
-                      ))}
+                      {searchResults.tracks?.items
+                        .slice(0, 4)
+                        .map((track, index, array) => (
+                          <TrackRow
+                            key={track.id}
+                            track={track}
+                            trackCount={array.length}
+                            handlePlay={handlePlay}
+                          />
+                        ))}
                     </ContentSection>
                   )}
                 </div>

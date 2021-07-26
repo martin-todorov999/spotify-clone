@@ -13,9 +13,8 @@ const Player = () => {
   }, [uri]);
 
   return accessToken && uri ? (
-    <div className="absolute bottom-0 w-full">
+    <div className="absolute bottom-0 w-full overflow-hidden">
       <SpotifyPlayer
-        // autoPlay
         showSaveIcon
         syncExternalDevice
         token={accessToken}

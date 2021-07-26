@@ -1,17 +1,20 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
 import spotifyApi from "../../api";
 import Loader from "../../components/generic/loader/loader";
 import { RootState } from "../../redux/reducers";
-import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import TracksHeader from "../../components/playlist-page/tracks-header";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import Modal from "../../components/generic/modal/modal";
 import TrackRow from "../../components/search-page/track-row";
 import { setUri } from "../../redux/actions/playback";
+import useContrastText from "../../hooks/utils/useContrastText";
+import useEstimateTime from "../../hooks/utils/useEstimateTime";
+import { parseDuration } from "../../components/playlist-page/playlist-track-row";
+import InfoHeader from "../../components/playlist-page/playlist-info";
 
 const AlbumPage = () => {
   const dispatch = useDispatch();
@@ -27,6 +30,13 @@ const AlbumPage = () => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [primaryColor, setPrimaryColor] = useState<string>("");
   const { data } = usePalette(album?.images[0].url || "");
+  const textPrimary = useContrastText(primaryColor)
+    ? "text-gray-900"
+    : "text-white";
+  const textSecondary = useContrastText(primaryColor)
+    ? "text-gray-800"
+    : "text-gray-300";
+  const estimatedTime = useEstimateTime(album?.tracks.total);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -76,6 +86,48 @@ const AlbumPage = () => {
     }
   }, [accessToken, stateUri]);
 
+  const albumDetails = (
+    <>
+      {album && (
+        <>
+          {album.artists.map((artist, index, array) => (
+            <Fragment key={artist.id}>
+              <h3 className={`text-sm font-bold mr-2 ${textPrimary}`}>
+                {artist.name}
+              </h3>
+
+              <h3
+                className={`text-sm font-bold mr-2 ${
+                  array.length - 1 !== index ? textPrimary : textSecondary
+                }`}
+              >
+                &bull;
+              </h3>
+            </Fragment>
+          ))}
+
+          <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
+            {album?.release_date.split("-")[0]}
+          </h3>
+
+          <h3 className={`text-sm font-bold mr-2 ${textSecondary}`}>&bull;</h3>
+
+          <h3 className={`text-sm font-normal mr-2 ${textSecondary}`}>
+            {`${album.tracks.total} ${
+              album.tracks.total !== 1 ? "songs" : "song"
+            },`}
+          </h3>
+
+          <h3 className={`text-sm font-normal ${textSecondary}`}>
+            {album.tracks.total === 1
+              ? parseDuration(album.tracks.items[0].duration_ms, true)
+              : `about ${estimatedTime} hr`}
+          </h3>
+        </>
+      )}
+    </>
+  );
+
   return (
     <>
       {isLoading || !album ? (
@@ -93,19 +145,10 @@ const AlbumPage = () => {
                 className="h-full shadow-2xl mr-8"
               />
 
-              <PlaylistInfo
+              <InfoHeader
                 type={album.album_type}
                 name={album.name}
-                artists={album.artists}
-                year={album.release_date.split("-")[0]}
-                tracksCount={
-                  album.album_type === "single" ? 1 : album.tracks.total
-                }
-                trackDuration={
-                  album.album_type === "single"
-                    ? album.tracks.items[0].duration_ms
-                    : undefined
-                }
+                detailsInfo={albumDetails}
                 primaryColor={primaryColor}
               />
             </div>
@@ -134,6 +177,7 @@ const AlbumPage = () => {
                   <TrackRow
                     track={item}
                     index={index}
+                    trackCount={album.tracks.total}
                     playbackState={playbackState}
                     handlePlay={handlePlay}
                   />

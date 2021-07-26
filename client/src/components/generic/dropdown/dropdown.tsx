@@ -5,6 +5,8 @@ export interface IDropDownItem {
   title: string;
   onClick: () => void;
   divider?: boolean;
+  isNested?: boolean;
+  hoverElement?: IDropDownItem[];
 }
 
 interface IDropDownProps {

@@ -3,7 +3,6 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
 import { useDispatch, useSelector } from "react-redux";
-import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import Loader from "../../components/generic/loader/loader";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import TracksHeader from "../../components/playlist-page/tracks-header";
@@ -13,6 +12,9 @@ import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
 import { setUri } from "../../redux/actions/playback";
 import { getAverageSizeImage } from "../../utils/images";
+import useContrastText from "../../hooks/utils/useContrastText";
+import useEstimateTime from "../../hooks/utils/useEstimateTime";
+import InfoHeader from "../../components/playlist-page/playlist-info";
 
 const PlaylistPage = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,13 @@ const PlaylistPage = () => {
   const { data } = usePalette(
     playlist?.images.length ? playlist?.images[0].url : ""
   );
+  const textPrimary = useContrastText(primaryColor)
+    ? "text-gray-900"
+    : "text-white";
+  const textSecondary = useContrastText(primaryColor)
+    ? "text-gray-800"
+    : "text-gray-300";
+  const estimatedTime = useEstimateTime(playlist?.tracks.total);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,20 +55,26 @@ const PlaylistPage = () => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (id) {
       if (accessToken && user) {
         spotifyApi.setAccessToken(accessToken);
 
-        fetchPlaylist();
+        if (isSubscribed) fetchPlaylist();
       } else {
         axios
           .get(`http://localhost:6969/playlist/${id}`)
-          .then(({ data: { body } }) => {
-            setPlaylist(body);
-          })
+          .then(({ data: { body } }) =>
+            isSubscribed ? setPlaylist(body) : null
+          )
           .catch(() => {});
       }
     }
+
+    return () => {
+      isSubscribed = false;
+    };
     // eslint-disable-next-line
   }, [id, accessToken, user]);
 
@@ -79,6 +94,45 @@ const PlaylistPage = () => {
     setIsLoading(true);
   }, [id]);
 
+  const playlistDetails = (
+    <>
+      {playlist && (
+        <>
+          <h3 className={`text-sm font-bold ${textPrimary}`}>
+            {playlist.owner.display_name}
+          </h3>
+
+          <h3 className={`text-sm font-bold mx-2 ${textSecondary}`}>&bull;</h3>
+
+          {playlist.followers.total > 0 && (
+            <>
+              <h3 className={`text-sm font-normal ${textSecondary}`}>
+                {`${playlist.followers.total
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${
+                  playlist.followers.total !== 1 ? "likes" : "like"
+                }`}
+              </h3>
+              <h3 className={`text-sm font-bold mx-2 ${textSecondary}`}>
+                &bull;
+              </h3>
+            </>
+          )}
+
+          <h3 className={`text-sm font-normal mr-1 ${textSecondary}`}>
+            {`${playlist.tracks.total} ${
+              playlist.tracks.total !== 1 ? "songs" : "song"
+            },`}
+          </h3>
+
+          <h3 className={`text-sm font-normal ${textSecondary}`}>
+            {`about ${estimatedTime} hr`}
+          </h3>
+        </>
+      )}
+    </>
+  );
+
   return (
     <>
       {isLoading || !playlist ? (
@@ -96,13 +150,11 @@ const PlaylistPage = () => {
                 className="h-full w-64 object-cover shadow-2xl mr-8"
               />
 
-              <PlaylistInfo
+              <InfoHeader
                 type={playlist.type}
                 name={playlist.name}
                 description={playlist.description}
-                ownerName={playlist.owner.display_name}
-                followers={playlist.followers.total}
-                tracksCount={playlist.tracks.total}
+                detailsInfo={playlistDetails}
                 primaryColor={primaryColor}
               />
             </div>

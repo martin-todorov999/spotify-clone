@@ -1,4 +1,5 @@
 import { Fragment, RefObject, useEffect, useRef, useState } from "react";
+import { AiFillCaretDown } from "react-icons/ai";
 import { IDropDownItem } from "../dropdown/dropdown";
 
 interface IContextMenuProps {
@@ -30,6 +31,7 @@ const ContextMenu = ({
   contextMenuOpen,
   setContextMenuOpen,
 }: IContextMenuProps) => {
+  const [hover, setHover] = useState<boolean>(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const [contextMenuHeight, setContextMenuHeight] = useState<number>(0);
   const [contextMenuWidth, setContextMenuWidth] = useState<number>(0);
@@ -127,6 +129,22 @@ const ContextMenu = ({
     return mouseX;
   };
 
+  const renderMenuItem = (item: IDropDownItem) => (
+    <>
+      <button
+        type="button"
+        onClick={item.onClick}
+        onMouseEnter={() => setHover(!!item.hoverElement || !!item.isNested)}
+        className="hover:bg-gray-600 py-2 px-4 rounded-sm cursor-pointer text-left text-white w-full h-full flex flex-row items-center justify-between"
+      >
+        {item.title}
+        {item.hoverElement && <AiFillCaretDown />}
+      </button>
+
+      {item.divider && <hr className="border-gray-600" />}
+    </>
+  );
+
   return (
     <div
       ref={contextMenuRef}
@@ -139,15 +157,15 @@ const ContextMenu = ({
     >
       {contextMenuItems.map((item) => (
         <Fragment key={item.title}>
-          <button
-            type="button"
-            onClick={item.onClick}
-            className="hover:bg-gray-600 py-2 px-4 rounded-sm cursor-pointe text-left text-white w-full h-full"
-          >
-            {item.title}
-          </button>
+          {renderMenuItem(item)}
 
-          {item.divider && <hr className="border-gray-600" />}
+          {item.hoverElement &&
+            hover &&
+            item.hoverElement.map((hoverItem) => (
+              <Fragment key={hoverItem.title}>
+                {renderMenuItem(hoverItem)}
+              </Fragment>
+            ))}
         </Fragment>
       ))}
     </div>

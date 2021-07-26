@@ -34,19 +34,21 @@ const HomePage = () => {
     useState<SpotifyApi.MultipleTracksResponse>();
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (!accessToken) {
       axios
         .get("http://localhost:6969/browse/featured-playlists")
-        .then(({ data: { body } }) => {
-          setFeaturedPlaylists(body);
-        })
+        .then(({ data: { body } }) =>
+          isSubscribed ? setFeaturedPlaylists(body) : null
+        )
         .catch(() => {});
 
       axios
         .get("http://localhost:6969/browse/new-releases")
-        .then(({ data: { body } }) => {
-          setNewReleases(body);
-        })
+        .then(({ data: { body } }) =>
+          isSubscribed ? setNewReleases(body) : null
+        )
         .catch(() => {});
     } else {
       spotifyApi.setAccessToken(accessToken);
@@ -55,35 +57,43 @@ const HomePage = () => {
         spotifyApi
           .getTracks(body.items.map((item) => item.track.id))
           .then(({ body: tracks }) => {
-            const deduplicatedTracks = tracks.tracks
-              .filter(
-                (track, index, self) =>
-                  index === self.findIndex((item) => item.id === track.id)
-              )
-              .slice(0, 10);
+            if (isSubscribed) {
+              const deduplicatedTracks = tracks.tracks
+                .filter(
+                  (track, index, self) =>
+                    index === self.findIndex((item) => item.id === track.id)
+                )
+                .slice(0, 10);
 
-            setRecentlyPlayed(deduplicatedTracks);
+              setRecentlyPlayed(deduplicatedTracks);
+            }
           });
       });
 
       if (user) {
         spotifyApi
           .getUserPlaylists(user.id, { limit: 8 })
-          .then(({ body }) => setUserPlaylists(body));
+          .then(({ body }) => (isSubscribed ? setUserPlaylists(body) : null));
 
         spotifyApi
           .getMySavedShows({ limit: 8 })
-          .then(({ body }) => setUserShows(body));
+          .then(({ body }) => (isSubscribed ? setUserShows(body) : null));
 
         spotifyApi
           .getFeaturedPlaylists({ limit: 8, locale: "en" })
-          .then(({ body }) => setFeaturedPlaylists(body));
+          .then(({ body }) =>
+            isSubscribed ? setFeaturedPlaylists(body) : null
+          );
 
         spotifyApi
           .getNewReleases({ limit: 8, country: "us" })
-          .then(({ body }) => setNewReleases(body));
+          .then(({ body }) => (isSubscribed ? setNewReleases(body) : null));
       }
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [accessToken, user]);
 
   useEffect(() => {
@@ -121,6 +131,8 @@ const HomePage = () => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (recentlyPlayed?.length) {
       let artists: string[] = [];
       let tracks: string[] = [];
@@ -148,10 +160,14 @@ const HomePage = () => {
           spotifyApi
             .getTracks(body.tracks.map((track) => track.id))
             .then(({ body: tracksResponse }) =>
-              setRecommendedTracks(tracksResponse)
+              isSubscribed ? setRecommendedTracks(tracksResponse) : null
             );
         });
     }
+
+    return () => {
+      isSubscribed = false;
+    };
   }, [recentlyPlayed]);
 
   return (
