@@ -6,7 +6,7 @@ interface IContentCardProps {
   subtitle?: string;
   url?: string;
   roundedVariant: "rounded" | "rounded-2xl" | "rounded-full";
-  onClick: () => void;
+  onClick?: () => void;
   handlePlay?: () => void;
 }
 

@@ -6,7 +6,6 @@ import { usePalette } from "react-palette";
 import spotifyApi from "../../api";
 import Loader from "../../components/generic/loader/loader";
 import { RootState } from "../../redux/reducers";
-import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import TracksHeader from "../../components/playlist-page/tracks-header";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import Modal from "../../components/generic/modal/modal";
@@ -15,6 +14,7 @@ import { setUri } from "../../redux/actions/playback";
 import useContrastText from "../../hooks/utils/useContrastText";
 import useEstimateTime from "../../hooks/utils/useEstimateTime";
 import { parseDuration } from "../../components/playlist-page/playlist-track-row";
+import InfoHeader from "../../components/playlist-page/playlist-info";
 
 const AlbumPage = () => {
   const dispatch = useDispatch();
@@ -145,7 +145,7 @@ const AlbumPage = () => {
                 className="h-full shadow-2xl mr-8"
               />
 
-              <PlaylistInfo
+              <InfoHeader
                 type={album.album_type}
                 name={album.name}
                 detailsInfo={albumDetails}

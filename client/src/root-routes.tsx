@@ -26,14 +26,15 @@ const RootRoutes = () => {
         <Route exact path="/album/:id" component={AlbumPage} />
 
         {accessToken && (
-          <>
-            <Route
-              exact
-              path="/collection/:type(playlists|podcasts|artists|albums)"
-              component={LibraryPage}
-            />
-            <Route exact path="/user/:id" component={ProfilePage} />
-          </>
+          <Route
+            exact
+            path="/collection/:type(playlists|podcasts|artists|albums)"
+            component={LibraryPage}
+          />
+        )}
+
+        {accessToken && (
+          <Route exact path="/user/:id" component={ProfilePage} />
         )}
 
         <Redirect to="/" />

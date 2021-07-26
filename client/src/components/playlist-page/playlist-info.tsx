@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import useContrastText from "../../hooks/utils/useContrastText";
 
-interface IPlaylistInfoProps {
+interface IInfoHeaderProps {
   type: string;
   name: string;
   description?: string | null;
@@ -9,13 +9,13 @@ interface IPlaylistInfoProps {
   detailsInfo?: ReactNode;
 }
 
-const PlaylistInfo = ({
+const InfoHeader = ({
   type,
   name,
   description,
   primaryColor,
   detailsInfo,
-}: IPlaylistInfoProps) => {
+}: IInfoHeaderProps) => {
   const textPrimary = useContrastText(primaryColor)
     ? "text-gray-900"
     : "text-white";
@@ -44,4 +44,4 @@ const PlaylistInfo = ({
   );
 };
 
-export default PlaylistInfo;
+export default InfoHeader;

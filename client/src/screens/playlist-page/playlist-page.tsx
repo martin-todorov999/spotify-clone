@@ -3,7 +3,6 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router";
 import { usePalette } from "react-palette";
 import { useDispatch, useSelector } from "react-redux";
-import PlaylistInfo from "../../components/playlist-page/playlist-info";
 import Loader from "../../components/generic/loader/loader";
 import InteractionRow from "../../components/playlist-page/interaction-row";
 import TracksHeader from "../../components/playlist-page/tracks-header";
@@ -15,6 +14,7 @@ import { setUri } from "../../redux/actions/playback";
 import { getAverageSizeImage } from "../../utils/images";
 import useContrastText from "../../hooks/utils/useContrastText";
 import useEstimateTime from "../../hooks/utils/useEstimateTime";
+import InfoHeader from "../../components/playlist-page/playlist-info";
 
 const PlaylistPage = () => {
   const dispatch = useDispatch();
@@ -55,20 +55,26 @@ const PlaylistPage = () => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
+
     if (id) {
       if (accessToken && user) {
         spotifyApi.setAccessToken(accessToken);
 
-        fetchPlaylist();
+        if (isSubscribed) fetchPlaylist();
       } else {
         axios
           .get(`http://localhost:6969/playlist/${id}`)
-          .then(({ data: { body } }) => {
-            setPlaylist(body);
-          })
+          .then(({ data: { body } }) =>
+            isSubscribed ? setPlaylist(body) : null
+          )
           .catch(() => {});
       }
     }
+
+    return () => {
+      isSubscribed = false;
+    };
     // eslint-disable-next-line
   }, [id, accessToken, user]);
 
@@ -144,7 +150,7 @@ const PlaylistPage = () => {
                 className="h-full w-64 object-cover shadow-2xl mr-8"
               />
 
-              <PlaylistInfo
+              <InfoHeader
                 type={playlist.type}
                 name={playlist.name}
                 description={playlist.description}
