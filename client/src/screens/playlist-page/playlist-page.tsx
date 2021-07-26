@@ -13,6 +13,8 @@ import { RootState } from "../../redux/reducers";
 import spotifyApi from "../../api";
 import { setUri } from "../../redux/actions/playback";
 import { getAverageSizeImage } from "../../utils/images";
+import useContrastText from "../../hooks/utils/useContrastText";
+import useEstimateTime from "../../hooks/utils/useEstimateTime";
 
 const PlaylistPage = () => {
   const dispatch = useDispatch();
@@ -27,6 +29,13 @@ const PlaylistPage = () => {
   const { data } = usePalette(
     playlist?.images.length ? playlist?.images[0].url : ""
   );
+  const textPrimary = useContrastText(primaryColor)
+    ? "text-gray-900"
+    : "text-white";
+  const textSecondary = useContrastText(primaryColor)
+    ? "text-gray-800"
+    : "text-gray-300";
+  const estimatedTime = useEstimateTime(playlist?.tracks.total);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -79,6 +88,45 @@ const PlaylistPage = () => {
     setIsLoading(true);
   }, [id]);
 
+  const playlistDetails = (
+    <>
+      {playlist && (
+        <>
+          <h3 className={`text-sm font-bold ${textPrimary}`}>
+            {playlist.owner.display_name}
+          </h3>
+
+          <h3 className={`text-sm font-bold mx-2 ${textSecondary}`}>&bull;</h3>
+
+          {playlist.followers.total > 0 && (
+            <>
+              <h3 className={`text-sm font-normal ${textSecondary}`}>
+                {`${playlist.followers.total
+                  .toString()
+                  .replace(/\B(?=(\d{3})+(?!\d))/g, ",")} ${
+                  playlist.followers.total !== 1 ? "likes" : "like"
+                }`}
+              </h3>
+              <h3 className={`text-sm font-bold mx-2 ${textSecondary}`}>
+                &bull;
+              </h3>
+            </>
+          )}
+
+          <h3 className={`text-sm font-normal mr-1 ${textSecondary}`}>
+            {`${playlist.tracks.total} ${
+              playlist.tracks.total !== 1 ? "songs" : "song"
+            },`}
+          </h3>
+
+          <h3 className={`text-sm font-normal ${textSecondary}`}>
+            {`about ${estimatedTime} hr`}
+          </h3>
+        </>
+      )}
+    </>
+  );
+
   return (
     <>
       {isLoading || !playlist ? (
@@ -100,9 +148,7 @@ const PlaylistPage = () => {
                 type={playlist.type}
                 name={playlist.name}
                 description={playlist.description}
-                ownerName={playlist.owner.display_name}
-                followers={playlist.followers.total}
-                tracksCount={playlist.tracks.total}
+                detailsInfo={playlistDetails}
                 primaryColor={primaryColor}
               />
             </div>

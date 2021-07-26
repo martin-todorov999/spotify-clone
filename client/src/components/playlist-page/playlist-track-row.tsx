@@ -60,15 +60,17 @@ const PlaylistTrackRow = ({
     if (accessToken) {
       spotifyApi.setAccessToken(accessToken);
 
-      spotifyApi
-        .containsMySavedTracks([item.track.id])
-        .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
+      if (playlist.tracks.total < 50 || hover) {
+        spotifyApi
+          .containsMySavedTracks([item.track.id])
+          .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
+      }
     }
 
     return () => {
       isSubscribed = false;
     };
-  }, [accessToken, item.track.id]);
+  }, [accessToken, hover, item.track.id, playlist.tracks.total]);
 
   const handleLikeSong = () => {
     if (accessToken) {
@@ -179,6 +181,7 @@ const PlaylistTrackRow = ({
           duration={parseDuration(item.track.duration_ms)}
           hover={hover}
           isLiked={!!isLiked}
+          showLikedOnHover={playlist.tracks.total > 50}
           handleLikeSong={handleLikeSong}
           contextMenuItems={contextMenuItems}
           containerRef={containerRef}

@@ -7,6 +7,7 @@ interface ITrackDurationProps {
   duration: string;
   hover: boolean;
   isLiked: boolean;
+  showLikedOnHover?: boolean;
   handleLikeSong: () => void;
   contextMenuItems: IDropDownItem[];
   containerRef: RefObject<HTMLDivElement>;
@@ -16,6 +17,7 @@ const TrackDuration = ({
   duration,
   hover,
   isLiked,
+  showLikedOnHover,
   handleLikeSong,
   contextMenuItems,
   containerRef,
@@ -25,7 +27,9 @@ const TrackDuration = ({
       {isLiked ? (
         <HiHeart
           onClick={handleLikeSong}
-          className="text-lime-500 text-lg cursor-pointer"
+          className={`text-lime-500 text-lg cursor-pointer ${
+            showLikedOnHover && !hover && "invisible"
+          }`}
         />
       ) : (
         <HiOutlineHeart

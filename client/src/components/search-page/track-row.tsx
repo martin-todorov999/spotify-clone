@@ -13,6 +13,7 @@ import TrackDuration from "../playlist-page/track-duration";
 interface ITrackRowProps {
   track: SpotifyApi.TrackObjectFull | SpotifyApi.TrackObjectSimplified;
   index?: number;
+  trackCount: number;
   playbackState?: SpotifyApi.CurrentPlaybackResponse;
   handlePlay: (uri: string) => void;
 }
@@ -26,6 +27,7 @@ export const isFullTrack = (
 const TrackRow = ({
   track,
   index,
+  trackCount,
   playbackState,
   handlePlay,
 }: ITrackRowProps) => {
@@ -60,15 +62,17 @@ const TrackRow = ({
     if (accessToken) {
       spotifyApi.setAccessToken(accessToken);
 
-      spotifyApi
-        .containsMySavedTracks([track.id])
-        .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
+      if (trackCount < 50 || hover) {
+        spotifyApi
+          .containsMySavedTracks([track.id])
+          .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
+      }
     }
 
     return () => {
       isSubscribed = false;
     };
-  }, [accessToken, track.id]);
+  }, [accessToken, trackCount, hover, track.id]);
 
   const handlePlayTrack = () => {
     handlePlay(track.uri);
@@ -200,6 +204,7 @@ const TrackRow = ({
           duration={parseDuration(track.duration_ms)}
           hover={hover}
           isLiked={!!isLiked}
+          showLikedOnHover={trackCount > 50}
           handleLikeSong={handleLikeSong}
           contextMenuItems={contextMenuItems}
           containerRef={containerRef}
