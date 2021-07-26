@@ -51,6 +51,8 @@ const PlaylistTrackRow = ({
   const [screenX, setScreenX] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isLiked, setIsLiked] = useState<boolean>();
+  const [userPlaylists, setUserPlaylists] =
+    useState<SpotifyApi.PlaylistObjectSimplified[]>();
 
   const smallestImage = useSortImages(item.track.album.images)[0];
 
@@ -65,12 +67,37 @@ const PlaylistTrackRow = ({
           .containsMySavedTracks([item.track.id])
           .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
       }
+
+      if (user) {
+        spotifyApi
+          .getUserPlaylists(user.id, { limit: 10 })
+          .then(({ body }) =>
+            isSubscribed
+              ? setUserPlaylists(
+                  body.items
+                    .filter(
+                      (playlistItem) =>
+                        playlistItem.owner.id === user.id &&
+                        playlistItem.id !== playlist.id
+                    )
+                    .slice(0, 5)
+                )
+              : null
+          );
+      }
     }
 
     return () => {
       isSubscribed = false;
     };
-  }, [accessToken, hover, item.track.id, playlist.tracks.total]);
+  }, [
+    accessToken,
+    user,
+    hover,
+    item.track.id,
+    playlist.tracks.total,
+    playlist.id,
+  ]);
 
   const handleLikeSong = () => {
     if (accessToken) {
@@ -96,6 +123,25 @@ const PlaylistTrackRow = ({
     }
   };
 
+  const handleAddToPlaylist = (playlistId: string) => {
+    if (accessToken) {
+      spotifyApi
+        .addTracksToPlaylist(playlistId, [item.track.uri])
+        .finally(() => setContextMenuOpen(false));
+    }
+  };
+
+  const playlistMenuItems: IDropDownItem[] =
+    userPlaylists?.map((userPlaylist) => {
+      const menuItem: IDropDownItem = {
+        isNested: true,
+        title: userPlaylist.name,
+        onClick: () => handleAddToPlaylist(userPlaylist.id),
+      };
+
+      return menuItem;
+    }) || [];
+
   const contextMenuItems: IDropDownItem[] = [
     {
       title: "Add to queue",
@@ -116,6 +162,11 @@ const PlaylistTrackRow = ({
     {
       title: "Remove from this playlist",
       onClick: handleRemoveFromPlaylist,
+    },
+    {
+      title: "Add to playlist...",
+      hoverElement: playlistMenuItems,
+      onClick: () => null,
     },
   ];
 

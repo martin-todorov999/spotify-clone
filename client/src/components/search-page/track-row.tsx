@@ -35,7 +35,9 @@ const TrackRow = ({
   const trackIndex = index || 0;
   const [hover, setHover] = useState<boolean>(false);
   const { uri } = useSelector((state: RootState) => state.playback);
-  const { accessToken } = useSelector((state: RootState) => state.session);
+  const { accessToken, user } = useSelector(
+    (state: RootState) => state.session
+  );
   const [showPause, setShowPause] = useState<boolean>(false);
   const [contextMenuOpen, setContextMenuOpen] = useState<boolean>(false);
   const [mouseX, setMouseX] = useState<number>(0);
@@ -44,6 +46,8 @@ const TrackRow = ({
   const [screenX, setScreenX] = useState<number>(0);
   const [isLiked, setIsLiked] = useState<boolean>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [userPlaylists, setUserPlaylists] =
+    useState<SpotifyApi.PlaylistObjectSimplified[]>();
 
   const smallestImage = useSortImages(
     isFullTrack(track) ? track.album.images : []
@@ -67,12 +71,26 @@ const TrackRow = ({
           .containsMySavedTracks([track.id])
           .then(({ body }) => (isSubscribed ? setIsLiked(body[0]) : null));
       }
+
+      if (user) {
+        spotifyApi
+          .getUserPlaylists(user.id, { limit: 10 })
+          .then(({ body }) =>
+            isSubscribed
+              ? setUserPlaylists(
+                  body.items
+                    .filter((item) => item.owner.id === user.id)
+                    .slice(0, 5)
+                )
+              : null
+          );
+      }
     }
 
     return () => {
       isSubscribed = false;
     };
-  }, [accessToken, trackCount, hover, track.id]);
+  }, [accessToken, user, trackCount, hover, track.id]);
 
   const handlePlayTrack = () => {
     handlePlay(track.uri);
@@ -102,11 +120,30 @@ const TrackRow = ({
     }
   };
 
+  const handleAddToPlaylist = (playlistId: string) => {
+    if (accessToken) {
+      spotifyApi
+        .addTracksToPlaylist(playlistId, [track.uri])
+        .finally(() => setContextMenuOpen(false));
+    }
+  };
+
   useEffect(() => {
     setShowPause(
       !!playbackState && playbackState.is_playing && uri === track.uri
     );
   }, [playbackState, uri, track.uri]);
+
+  const playlistMenuItems: IDropDownItem[] =
+    userPlaylists?.map((playlist) => {
+      const menuItem: IDropDownItem = {
+        isNested: true,
+        title: playlist.name,
+        onClick: () => handleAddToPlaylist(playlist.id),
+      };
+
+      return menuItem;
+    }) || [];
 
   const contextMenuItems: IDropDownItem[] = [
     {
@@ -125,6 +162,11 @@ const TrackRow = ({
         ? "Remove from your Liked Songs"
         : "Save to your Liked Songs",
       onClick: handleLikeSong,
+    },
+    {
+      title: "Add to playlist...",
+      hoverElement: playlistMenuItems,
+      onClick: () => null,
     },
   ];
 
